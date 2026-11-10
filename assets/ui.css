@@ -787,7 +787,7 @@ table.responsive tr{box-shadow:var(--shadow-sm)}
 }
 @media (min-width:960px){
  .page-head-inner{min-height:150px}
- .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:10px;width:230px;height:116px;background:url("predio-escola.svg?v=6.0.0") right bottom/contain no-repeat;pointer-events:none;opacity:.95}
+ .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:6px;width:240px;height:136px;background:var(--escola) right bottom/contain no-repeat;pointer-events:none}
  .page-head-text{max-width:calc(100% - 300px)}
  .page-icon{width:52px;height:52px;border-radius:15px;font-size:1.35rem}
  .auth-hero{justify-items:start;text-align:left}
@@ -1073,7 +1073,7 @@ html:has(dialog[open]){overflow:hidden}
 /* Faixa de título: prédio da escola em traço no lugar dos livros e do relógio */
 @media (max-width:959px){
  .page-head-inner{padding-right:calc(var(--gutter) + 92px)}
- .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:8px;width:88px;height:44px;background:url("predio-escola.svg?v=6.0.0") right bottom/contain no-repeat;pointer-events:none}
+ .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:6px;width:92px;height:52px;background:var(--escola) right bottom/contain no-repeat;pointer-events:none}
 }
 
 /* Botão "Administração / Mais opções" no topo: deixa claro que há mais áreas no painel lateral */
@@ -1238,6 +1238,18 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 .tico-btn{flex:none;display:grid;place-items:center;width:64px;height:64px;padding:0;border:0;border-radius:50%;background:none;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .tico-btn .tico{width:64px;height:64px}
 .tico-btn:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+
+/* Escola em lápis de cor: as árvores mudam com a estação do ano (o boot.js marca html[data-season]) */
+:root{--escola:url("escola-primavera.svg?v=6.0.0")}
+:root[data-season="verao"]{--escola:url("escola-verao.svg?v=6.0.0")}
+:root[data-season="outono"]{--escola:url("escola-outono.svg?v=6.0.0")}
+:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=6.0.0")}
+@media (min-width:960px){
+ .auth-art{aspect-ratio:364/205;width:min(46%,380px)}
+ .auth-art .auth-school{filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
+ .auth-tico{left:43%;bottom:90%;width:14%}
+ .auth-cloud.c1{top:-14%}.auth-cloud.c2{top:4%}
+}
 
 /* ---------- 14. Alto contraste do sistema e impressão ---------- */
 @media (forced-colors:active){

@@ -7,6 +7,18 @@ const fail = (message) => {
  document.getElementById('fatalText').textContent = message;
 };
 document.getElementById('reload').onclick = () => location.reload();
+// Estação do ano no Brasil (hemisfério sul): as árvores da escola mudam com ela.
+function season(d = new Date()) {
+ const md = (d.getMonth() + 1) * 100 + d.getDate();
+ if (md >= 1221 || md < 320) return 'verao';
+ if (md < 621) return 'outono';
+ if (md < 922) return 'inverno';
+ return 'primavera';
+}
+const now = season();
+document.documentElement.dataset.season = now;
+const school = document.getElementById('authSchool');
+if (school) school.src = `./assets/escola-${now}.svg?v=6.0.0`;
 // A barra avança aos poucos enquanto o portal carrega e completa quando tudo estiver pronto.
 const bar = document.getElementById('bootBar');
 let progress = 8;

@@ -13,3 +13,6 @@ node_modules/
 tests/*.png
 playwright-report/
 test-results/
+
+# Cópia antiga do site, guardada só como referência local.
+presenca/

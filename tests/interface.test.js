@@ -223,9 +223,12 @@ test('visual escolar: sem cursor próprio, sem cenários de jogo e sem mascote a
  assert.doesNotMatch(html+css+app,/arco-iris|arvore\.svg|ceu-limpo|paisagem|tico-fly|auth-scene|weatherScene|ticoHome/);
  assert.doesNotMatch(read('assets/boot.js'),/giz-po|pointermove/);
  for(const f of ['arco-iris','arvore','estudos','sol','raio']) assert.ok(!existsSync(new URL(`../assets/${f}.svg`,import.meta.url)),f);
- // Faixa de título com o prédio da escola em traço, no lugar dos livros e do relógio.
- assert.match(css,/url\("predio-escola\.svg/);
- assert.ok(existsSync(new URL('../assets/predio-escola.svg',import.meta.url)));
+ // Faixa de título com a escola em lápis de cor; as árvores mudam com a estação do ano.
+ for(const s of ['primavera','verao','outono','inverno']){
+  assert.ok(existsSync(new URL(`../assets/escola-${s}.svg`,import.meta.url)),s);
+  if(s!=='primavera')assert.ok(css.includes(`:root[data-season="${s}"]{--escola:url("escola-${s}.svg`),s);
+ }
+ assert.ok(read('assets/boot.js').includes('document.documentElement.dataset.season = now'));
 });
 
 test('carregamento: logotipo, nome e barra de progresso, com falha sempre visível',()=>{
@@ -238,7 +241,7 @@ test('carregamento: logotipo, nome e barra de progresso, com falha sempre visív
 
 test('login: painel azul com tópicos da escola e o prédio em traço',()=>{
  assert.match(html,/class="auth-points"/);
- assert.match(html,/class="auth-school" src="\.\/assets\/predio-escola-claro\.svg/);
+ assert.match(html,/class="auth-school" id="authSchool" src="\.\/assets\/escola-primavera\.svg/);
  assert.match(app,/function setStudentMood\(tone\)/);
 });
 
