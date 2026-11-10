@@ -1,0 +1,156 @@
+/* Presença+ 5.3.5 | revisão de interface
+   Camada final de ergonomia. Camada final de ergonomia, sem marcas d’água ou elementos promocionais. */
+:root{
+  --ui-radius:14px;
+  --ui-radius-sm:10px;
+  --ui-shadow:0 3px 14px rgba(15,35,52,.055);
+  --ui-shadow-hover:0 6px 20px rgba(15,35,52,.075);
+}
+
+/* Base mais calma: menos cartões “flutuando”, mais hierarquia visual. */
+body.portal-layout{background:var(--bg)}
+body.portal-layout #view{max-width:1500px;margin-inline:auto}
+body.portal-layout .panel{border-radius:var(--ui-radius);box-shadow:var(--ui-shadow)}
+body.portal-layout .panel>h2:first-child,
+body.portal-layout .panel>h3:first-child{margin-top:0}
+body.portal-layout .panel>p{max-width:78ch}
+
+/* Controles previsíveis e confortáveis. */
+body.portal-layout :is(input,select,textarea){min-height:45px;padding:10px 12px;border-radius:var(--ui-radius-sm)}
+body.portal-layout textarea{min-height:104px}
+body.portal-layout :is(button,.primary,.outline,.danger){display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;border-radius:var(--ui-radius-sm)}
+body.portal-layout :is(button,.primary,.outline,.danger) .fi{font-size:1rem}
+body.portal-layout button:not(:disabled):hover{box-shadow:none}
+body.portal-layout .primary{font-weight:720}
+body.portal-layout .outline{font-weight:650}
+body.portal-layout .danger{font-weight:650}
+
+/* Visão geral: resumo funcional, sem frases decorativas e sem cartões espremidos. */
+body.portal-layout.desktop-overview-mode .hero-panel.admin-home{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,280px);align-items:center;
+  min-height:168px;padding:24px 28px;border-radius:18px;
+}
+body.portal-layout.desktop-overview-mode .admin-home .hero-copy h2{font-size:clamp(1.8rem,2.5vw,2.55rem);margin:3px 0 8px}
+body.portal-layout.desktop-overview-mode .admin-home .hero-copy p{font-size:.98rem;margin:0 0 16px}
+body.portal-layout .hero-kicker{display:block;margin-bottom:3px;font-size:.69rem;font-weight:820;letter-spacing:.11em;opacity:.82}
+body.portal-layout.desktop-overview-mode .admin-home .hero-side.hero-summary{gap:7px;padding:0;text-align:right}
+body.portal-layout.desktop-overview-mode .admin-home .hero-summary small{color:#dcefe8;font-size:.82rem;line-height:1.35}
+body.portal-layout.desktop-overview-mode .admin-home .hero-summary strong{font-size:1.35rem;line-height:1.2;max-width:none}
+body.portal-layout.desktop-overview-mode .admin-home .hero-progress,
+body.portal-layout.desktop-overview-mode .admin-home .hero-side-line{display:none}
+
+body.portal-layout.desktop-overview-mode .dashboard-metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+body.portal-layout.desktop-overview-mode .desktop-metric{min-height:116px;padding:16px;grid-template-columns:46px minmax(0,1fr) 12px;gap:11px}
+body.portal-layout.desktop-overview-mode .desktop-metric .metric-icon{width:46px;height:46px;border-radius:13px}
+body.portal-layout.desktop-overview-mode .desktop-metric .metric-copy strong{font-size:2.1rem}
+body.portal-layout.desktop-overview-mode .desktop-metric .metric-copy span{font-size:.9rem}
+body.portal-layout.desktop-overview-mode .desktop-metric .metric-copy small{font-size:.79rem}
+
+/* Área Alunos: cada aba mostra apenas a ação relevante ao contexto. */
+body.portal-layout .student-hub .hub-top{margin-bottom:14px;padding-bottom:0}
+body.portal-layout .student-hub .hub-top h2{font-size:1.28rem;letter-spacing:-.025em}
+body.portal-layout .student-hub .hub-top p{max-width:62ch;font-size:.84rem}
+body.portal-layout .student-hub-actions{align-items:center}
+body.portal-layout .student-hub-actions button{white-space:nowrap}
+body.portal-layout .student-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:5px;background:var(--soft);border-color:var(--line)}
+body.portal-layout .student-tabs button{display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 12px}
+body.portal-layout .student-tabs button .fi{font-size:1.05rem}
+body.portal-layout .student-tabs button.selected{box-shadow:0 1px 5px rgba(12,36,58,.08)}
+
+body.portal-layout .streamlined-filters{display:grid;grid-template-columns:minmax(220px,2fr) minmax(160px,1fr) minmax(150px,1fr) auto;align-items:end;gap:10px;margin:14px 0 10px;padding:13px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+body.portal-layout .streamlined-filters label{margin:0}
+body.portal-layout .streamlined-filters .filter-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;min-height:45px}
+body.portal-layout .list-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:7px 0 11px;color:var(--muted);font-size:.78rem}
+body.portal-layout .list-summary span{font-weight:720;color:var(--ink)}
+body.portal-layout .list-summary small{font-size:.76rem}
+
+body.portal-layout .context-note{display:flex;align-items:flex-start;gap:10px;max-width:850px;margin:12px 0 16px;padding:11px 13px;border:1px solid var(--line);border-radius:11px;background:var(--soft);color:var(--muted)}
+body.portal-layout .context-note .fi{margin-top:2px;color:var(--accent)}
+body.portal-layout .context-note p{margin:0;font-size:.82rem;line-height:1.5}
+
+body.portal-layout .hub-search{max-width:760px;align-items:end}
+body.portal-layout .hub-search button{white-space:nowrap}
+body.portal-layout .application-section{margin-top:24px}
+body.portal-layout .application-card{border-radius:12px;box-shadow:none}
+
+/* Tabelas: leitura mais direta, sem excesso de contraste. */
+body.portal-layout table.responsive{font-size:.84rem}
+body.portal-layout table.responsive thead th{background:var(--soft);font-size:.69rem;letter-spacing:.055em}
+body.portal-layout table.responsive tbody tr{background:var(--surface)}
+body.portal-layout table.responsive tbody tr:hover{background:color-mix(in srgb,var(--soft) 52%,var(--surface))}
+body.portal-layout table.responsive td{padding-top:13px;padding-bottom:13px}
+body.portal-layout .table-scroll{border-radius:11px;border:1px solid var(--line)}
+body.portal-layout .table-scroll table tr:last-child td{border-bottom:0}
+body.portal-layout .pager{margin-top:14px}
+
+/* Atalhos reais no lugar de blocos vazios de “eventos”. */
+body.portal-layout .quick-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:9px}
+body.portal-layout .quick-links a{display:grid;grid-template-columns:36px minmax(0,1fr);align-items:center;gap:10px;min-height:64px;padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);color:var(--ink);text-decoration:none}
+body.portal-layout .quick-links a>.fi{display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:var(--soft);color:var(--accent);font-size:1.08rem}
+body.portal-layout .quick-links a span{display:grid;gap:2px;min-width:0}
+body.portal-layout .quick-links a strong{font-size:.86rem;line-height:1.25}
+body.portal-layout .quick-links a small{font-size:.74rem;line-height:1.3}
+body.portal-layout .quick-links a:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));background:var(--soft)}
+body.portal-layout .staff-quick-links{grid-template-columns:1fr}
+
+/* Fluxo de registro: o campo principal fica evidente, sem texto técnico competindo. */
+body.portal-layout .entry-panel{max-width:900px}
+body.portal-layout .entry-panel>h3{font-size:1.2rem;margin-bottom:8px}
+body.portal-layout .entry-panel form{gap:14px}
+body.portal-layout .entry-panel input[type=search]{min-height:52px;font-size:1rem}
+body.portal-layout .selected-student{border:1px solid var(--line);padding:16px}
+
+/* Modal: título e fechamento permanecem visíveis em formulários longos. */
+body.portal-layout dialog{padding:0;border-radius:16px;box-shadow:0 22px 60px rgba(8,25,35,.24)}
+body.portal-layout dialog .dialog-head{position:sticky;top:0;z-index:2;margin:0;padding:18px 20px 13px;background:var(--surface);border-bottom:1px solid var(--line)}
+body.portal-layout dialog #modalBody{padding:18px 20px 22px}
+body.portal-layout dialog #modalError{margin-inline:20px}
+
+/* Login: texto mais leve e foco na tarefa. */
+#authView .auth-main{max-width:1040px}
+#authView .auth-intro h1{letter-spacing:-.045em}
+#authView .login-card{border-radius:16px;box-shadow:0 8px 32px rgba(13,45,38,.06)}
+#authView .access-tabs{border:1px solid var(--line)}
+#authView .access-tabs button{min-height:48px}
+#authView .auth-links{flex-wrap:wrap;justify-content:flex-start;column-gap:18px;row-gap:5px}
+
+/* Desktop intermediário: prioridade para legibilidade, não para quantidade de colunas. */
+@media (min-width:780px) and (max-width:1099px){
+  body.portal-layout.desktop-overview-mode .dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.portal-layout.desktop-overview-mode .hero-panel.admin-home{grid-template-columns:1fr}
+  body.portal-layout.desktop-overview-mode .admin-home .hero-side.hero-summary{display:none}
+  body.portal-layout .streamlined-filters{grid-template-columns:minmax(220px,2fr) minmax(150px,1fr);}
+  body.portal-layout .streamlined-filters .filter-actions{justify-content:flex-start}
+}
+@media (min-width:1600px){
+  body.portal-layout.desktop-overview-mode .dashboard-metrics{grid-template-columns:repeat(6,minmax(0,1fr))}
+}
+
+/* Mobile: uma coluna, ações grandes e sem rolagem lateral. */
+@media (max-width:779px){
+  body.portal-layout #view{max-width:100%}
+  body.portal-layout .student-tabs{grid-template-columns:1fr}
+  body.portal-layout .student-tabs button{justify-content:flex-start;padding-inline:13px}
+  body.portal-layout .student-hub-actions{width:100%}
+  body.portal-layout .student-hub-actions button{flex:1 1 100%;width:100%}
+  body.portal-layout .streamlined-filters{grid-template-columns:1fr;margin-top:10px;padding:11px}
+  body.portal-layout .streamlined-filters .filter-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+  body.portal-layout .streamlined-filters .filter-actions button:only-child{grid-column:1/-1}
+  body.portal-layout .list-summary{align-items:flex-start;flex-direction:column;gap:2px}
+  body.portal-layout .hub-search{flex-direction:column;align-items:stretch;max-width:none}
+  body.portal-layout .hub-search button{width:100%}
+  body.portal-layout .quick-links{grid-template-columns:1fr}
+  body.portal-layout.desktop-overview-mode .dashboard-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.portal-layout .table-scroll{border:0;border-radius:0}
+  body.portal-layout table.responsive tbody tr{padding:12px;border:1px solid var(--line);border-radius:11px;margin-bottom:9px;background:var(--surface)}
+  body.portal-layout table.responsive td{padding:6px 0}
+  #authView .auth-main{padding-top:8px}
+}
+@media(max-width:380px){
+  body.portal-layout.desktop-overview-mode .dashboard-metrics{grid-template-columns:1fr}
+  body.portal-layout .streamlined-filters .filter-actions{grid-template-columns:1fr}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body.portal-layout .quick-links a{transition:none!important}
+}

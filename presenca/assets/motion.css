@@ -1,0 +1,43 @@
+/* Presença+ | Movimento discreto, sem bibliotecas ou animação contínua.
+   Somente opacity/transform são usados nos movimentos de entrada. */
+:root{--motion-fast:130ms;--motion-normal:170ms;--motion-ease:cubic-bezier(.2,.7,.2,1)}
+
+/* A animação antiga era reiniciada quando a pesquisa ou atualização refazia o HTML.
+   A navegação agora anima uma única vez pelo controlador de rotas. */
+#view>.panel,#view>.grid-two,#view>.welcome,#view>.metrics{animation:none}
+
+/* Feedback imediato e curto, sem alterar largura, altura ou posição do layout. */
+:is(.primary,.outline,.danger,#logout,.student-tabs button,.access-tabs button,
+    .chip,.result,.pager button,.page-header .toolbar button){
+ transition:background-color var(--motion-fast) ease,border-color var(--motion-fast) ease,
+            color var(--motion-fast) ease,box-shadow var(--motion-fast) ease;
+}
+:is(input:not([type="checkbox"]),select,textarea){
+ transition:border-color var(--motion-fast) ease,background-color var(--motion-fast) ease;
+}
+:is(.student-tabs button,.access-tabs button,.chip)[aria-pressed="true"],
+.student-tabs button.selected,.access-tabs button.selected,.chip.active{
+ transition:background-color var(--motion-normal) ease,color var(--motion-normal) ease,
+            box-shadow var(--motion-normal) ease;
+}
+
+/* Menus, avisos e diálogos aparecem apenas quando abertos. */
+#flash:not([hidden]),#connection:not([hidden]){animation:motion-feedback var(--motion-normal) var(--motion-ease) both}
+dialog[open]{animation:motion-dialog var(--motion-normal) var(--motion-ease) both}
+#authView:not([hidden]) .login-card{animation:motion-auth 210ms var(--motion-ease) both}
+@keyframes motion-feedback{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@keyframes motion-dialog{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes motion-auth{from{opacity:.85;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* Hover existe apenas em dispositivos que realmente possuem mouse. */
+@media (hover:hover) and (pointer:fine){
+ #nav a,#mobileNav a,.student-tabs button,.chip,.result{transition:background-color var(--motion-fast) ease,
+  color var(--motion-fast) ease,border-color var(--motion-fast) ease,transform var(--motion-fast) var(--motion-ease)}
+ #nav a:hover:not(.active),.result:hover{transform:translateX(2px)}
+ :is(.primary,.outline,.danger,.student-tabs button,.chip):not(:disabled):active{transform:translateY(1px)}
+}
+
+/* Acessibilidade: nenhuma animação é forçada quando o sistema solicita menos movimento. */
+@media (prefers-reduced-motion:reduce){
+ *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}

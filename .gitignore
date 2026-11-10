@@ -1,0 +1,15 @@
+# Nunca publique o banco e scripts legados nem informações sensíveis.
+*.db
+*.sqlite
+*.sqlite3
+*.env
+.env.*
+__pycache__/
+*.pyc
+original/
+*.zip
+
+node_modules/
+tests/*.png
+playwright-report/
+test-results/

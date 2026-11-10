@@ -1,0 +1,5 @@
+export const SCHOOL_EMAIL=/^[0-9]{7,16}(sp)?@al\.educacao\.sp\.gov\.br$/i;
+export const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const dateBR=v=>v?new Intl.DateTimeFormat('pt-BR',v.length>10?{dateStyle:'short',timeStyle:'short',timeZone:'America/Sao_Paulo'}:{dateStyle:'short'}).format(new Date(v.length===10?v+'T12:00:00':v)):'—';
+export function errorText(e){if(/database error saving new user/i.test(e?.message||''))return 'Não foi possível registrar a solicitação de acesso. Confira se o RA corresponde ao e-mail escolar e se ainda não existe uma conta para este endereço.';if(e?.code==='42501')return 'Seu acesso não permite esta operação. Atualize a sessão ou procure a Direção.';if(e?.code==='23505')return 'Já existe um registro com esse RA, e-mail ou identificação.';if(/fetch|network|timeout/i.test(e?.message||''))return 'Falha de conexão. Confira a internet. Em caso de dúvida, consulte o histórico antes de repetir.';return e?.message||'Não foi possível concluir a operação.';}
+export const roleName=r=>({aluno:'Aluno',secretaria:'Secretaria',admin:'Direção'}[r]||'Conta');

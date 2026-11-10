@@ -1,0 +1,169 @@
+/* Presença+ Alpha 1.0 | Aba Alunos baseada na referência visual enviada. */
+@media (min-width:780px){
+  body.portal-layout.staff-shell.students-page #content{padding-bottom:26px}
+  body.portal-layout.staff-shell.students-page .page-header{
+    display:flex;min-height:72px;margin-bottom:32px;padding-block:13px
+  }
+  body.portal-layout.staff-shell.students-page .page-header .page-copy{display:none!important}
+  body.portal-layout.staff-shell.students-page .page-header #pageUtility{
+    display:block!important;flex:1 1 auto;width:min(585px,58vw);max-width:585px;margin:0
+  }
+  body.portal-layout.staff-shell .dashboard-search kbd{
+    flex:none;padding:5px 8px;border:1px solid #d4dfec;border-radius:7px;background:#f4f7fb;
+    color:#667a9a;font:650 .69rem/1 ui-sans-serif,system-ui,sans-serif;box-shadow:none
+  }
+  body.portal-layout.staff-shell.dark .dashboard-search kbd{background:#18253a;border-color:#33445c;color:#b9c9e2}
+}
+
+body.portal-layout .student-reference-shell{display:grid;gap:0;margin:0;padding:0;background:transparent;border:0;box-shadow:none}
+body.portal-layout .student-reference-top{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:stretch;gap:18px;
+  margin:0 0 20px;padding:17px 20px;border:1px solid var(--ref-line,var(--line));border-radius:13px;
+  background:var(--surface);box-shadow:0 3px 10px rgba(14,46,84,.035)
+}
+body.portal-layout .student-reference-tabs{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;margin:0;padding:0;
+  border:1px solid var(--ref-line,var(--line));border-radius:10px;background:#f7f9fc;overflow:hidden
+}
+body.portal-layout.dark .student-reference-tabs{background:#111d2d}
+body.portal-layout .student-reference-tabs button{
+  position:relative;display:flex;align-items:center;justify-content:center;gap:13px;min-height:60px;margin:0;padding:10px 18px;
+  border:0;border-right:1px solid var(--ref-line,var(--line));border-radius:0;background:transparent;color:#1c3158;
+  font-size:.91rem;font-weight:560;box-shadow:none
+}
+body.portal-layout .student-reference-tabs button:last-child{border-right:0}
+body.portal-layout.dark .student-reference-tabs button{color:#e8f0ff}
+body.portal-layout .student-reference-tabs button .fi{font-size:1.34rem;color:#0b326e}
+body.portal-layout.dark .student-reference-tabs button .fi{color:#a8c7ff}
+body.portal-layout .student-reference-tabs button.selected{background:#f9fbfe;color:#0766e8;font-weight:760;box-shadow:none}
+body.portal-layout.dark .student-reference-tabs button.selected{background:#152238;color:#76aaff}
+body.portal-layout .student-reference-tabs button.selected .fi{color:#0766e8}
+body.portal-layout .student-reference-tabs button.selected::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:#0c71ff
+}
+body.portal-layout .student-reference-top-action{display:flex;align-items:stretch}
+body.portal-layout .student-reference-top-action button{
+  min-width:190px;min-height:60px;padding:0 22px;border-radius:10px;background:#0d6ff0;color:#fff;border-color:#0d6ff0;
+  font-size:.91rem;font-weight:720;box-shadow:0 5px 12px rgba(13,111,240,.14)
+}
+body.portal-layout .student-reference-top-action button:hover{background:#0866dd;border-color:#0866dd}
+body.portal-layout .student-reference-top-action button .fi{font-size:1.08rem}
+
+body.portal-layout .student-reference-filter-card{
+  margin:0 0 20px;padding:20px 20px 18px;border:1px solid var(--ref-line,var(--line));border-radius:13px;
+  background:var(--surface);box-shadow:0 3px 10px rgba(14,46,84,.035)
+}
+body.portal-layout .student-reference-filters{
+  display:grid;grid-template-columns:minmax(240px,1.18fr) minmax(200px,1fr) minmax(200px,1fr) auto;align-items:end;gap:16px
+}
+body.portal-layout .student-reference-filters label{display:grid;gap:8px;margin:0;color:#12284f;font-size:.75rem;font-weight:760}
+body.portal-layout.dark .student-reference-filters label{color:#dce9ff}
+body.portal-layout .student-reference-filters label>span{display:block}
+body.portal-layout .student-reference-filters input,
+body.portal-layout .student-reference-filters select{
+  height:47px;min-height:47px;padding:0 14px;border:1px solid #cfdaea;border-radius:9px;background:#fff;color:#17294b;
+  font-size:.82rem;font-weight:520;box-shadow:none
+}
+body.portal-layout.dark .student-reference-filters input,
+body.portal-layout.dark .student-reference-filters select{background:#111d2d;border-color:#304058;color:#edf4ff}
+body.portal-layout .student-search-control{position:relative;display:flex;align-items:center}
+body.portal-layout .student-search-control>.fi{position:absolute;left:15px;z-index:1;color:#0b356f;font-size:1rem}
+body.portal-layout .student-search-control input{width:100%;padding-left:43px}
+body.portal-layout .student-filter-buttons{display:flex;align-items:center;gap:16px;min-height:47px}
+body.portal-layout .student-filter-buttons button{height:47px;min-height:47px;padding:0 17px;border-radius:9px;white-space:nowrap;font-size:.78rem;font-weight:720}
+body.portal-layout .student-filter-separator{width:1px;height:35px;background:#d4deeb}
+body.portal-layout.dark .student-filter-separator{background:#33445d}
+body.portal-layout .student-advanced-panel{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--ref-line,var(--line))}
+body.portal-layout .student-advanced-panel[hidden]{display:none!important}
+
+body.portal-layout .student-reference-list-card{
+  padding:0 20px 17px;border:1px solid var(--ref-line,var(--line));border-radius:13px;background:var(--surface);
+  box-shadow:0 3px 10px rgba(14,46,84,.035);overflow:hidden
+}
+body.portal-layout .student-list-head{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:62px;padding:0 0 0 1px
+}
+body.portal-layout .student-list-head>strong{font-size:.92rem;color:#10264d}
+body.portal-layout.dark .student-list-head>strong{color:#edf4ff}
+body.portal-layout .student-list-head label{display:flex;align-items:center;gap:10px;color:#293f63;font-size:.78rem;font-weight:500}
+body.portal-layout.dark .student-list-head label{color:#cbd8eb}
+body.portal-layout .student-list-head select{
+  width:195px;height:43px;min-height:43px;padding:0 14px;border:1px solid #cfdaea;border-radius:9px;background:#fff;color:#17294b;font-size:.78rem
+}
+body.portal-layout.dark .student-list-head select{background:#111d2d;border-color:#304058;color:#edf4ff}
+
+body.portal-layout .student-reference-table-wrap{overflow:auto;border:1px solid var(--ref-line,var(--line));border-radius:10px}
+body.portal-layout .student-reference-table{width:100%;min-width:1040px;border-collapse:separate;border-spacing:0;color:#10264d;font-size:.78rem}
+body.portal-layout.dark .student-reference-table{color:#edf4ff}
+body.portal-layout .student-reference-table th{
+  height:49px;padding:0 13px;border-bottom:1px solid var(--ref-line,var(--line));background:#f5f8fc;color:#506386;
+  text-align:left;font-size:.66rem;font-weight:760;letter-spacing:.025em;white-space:nowrap
+}
+body.portal-layout.dark .student-reference-table th{background:#172338;color:#b7c7de}
+body.portal-layout .student-reference-table th>span{margin-left:6px;color:#36547e;font-size:.47rem}
+body.portal-layout .student-reference-table td{
+  min-height:66px;padding:13px;border-bottom:1px solid var(--ref-line,var(--line));vertical-align:middle;background:var(--surface)
+}
+body.portal-layout .student-reference-table tbody tr:last-child td{border-bottom:0}
+body.portal-layout .student-reference-table tbody tr:hover td{background:#fbfcfe}
+body.portal-layout.dark .student-reference-table tbody tr:hover td{background:#152238}
+body.portal-layout .student-reference-table td>strong{display:block;font-size:.78rem;font-weight:760;color:#0b2147;white-space:nowrap}
+body.portal-layout.dark .student-reference-table td>strong{color:#f0f5ff}
+body.portal-layout .student-reference-table td>small{display:block;margin-top:3px;color:#627492;font-size:.7rem;white-space:nowrap}
+body.portal-layout .student-reference-table .select-col{width:43px;text-align:center}
+body.portal-layout .student-reference-table input[type=checkbox]{width:19px;height:19px;accent-color:#0d6ff0}
+body.portal-layout .student-reference-table .pill{padding:6px 13px;border-radius:999px;background:#e8f1ff;color:#0864d9;font-size:.69rem;font-weight:760}
+body.portal-layout .student-reference-table .pill.warn{background:#fff1d6;color:#a36000}
+body.portal-layout .student-reference-table .pill.block{background:#ffe5e8;color:#b82135}
+body.portal-layout .student-reference-table .last-occurrence{color:#617391;font-size:.82rem}
+body.portal-layout .student-row-actions{display:flex;align-items:center;gap:8px;justify-content:flex-start;white-space:nowrap}
+body.portal-layout .student-row-actions button{min-height:41px;height:41px;padding:0 13px;border-radius:9px;font-size:.74rem;font-weight:720}
+body.portal-layout .student-row-actions button.square{width:41px;min-width:41px;padding:0}
+body.portal-layout .student-row-actions button .fi{font-size:.92rem}
+body.portal-layout .student-empty{margin:0;padding:35px;border:1px solid var(--ref-line,var(--line));border-radius:10px;background:var(--surface)}
+
+body.portal-layout .student-reference-pager{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:16px
+}
+body.portal-layout .student-page-size select{
+  width:180px;height:44px;min-height:44px;padding:0 14px;border:1px solid #cfdaea;border-radius:9px;background:#fff;color:#17294b;font-size:.78rem
+}
+body.portal-layout.dark .student-page-size select{background:#111d2d;border-color:#304058;color:#edf4ff}
+body.portal-layout .student-page-nav{display:flex;align-items:center;gap:11px;color:#20375d;font-size:.78rem}
+body.portal-layout.dark .student-page-nav{color:#d8e4f7}
+body.portal-layout .student-page-nav button{width:47px;height:44px;min-height:44px;padding:0;border-radius:9px}
+
+body.portal-layout .student-secondary-panel{margin:0;padding:20px;border:1px solid var(--ref-line,var(--line));border-radius:13px;background:var(--surface);box-shadow:0 3px 10px rgba(14,46,84,.035)}
+body.portal-layout .student-reference-shell .class-hub-content{margin:0;padding:20px;border:1px solid var(--ref-line,var(--line));border-radius:13px;background:var(--surface);box-shadow:0 3px 10px rgba(14,46,84,.035)}
+
+@media (max-width:1180px) and (min-width:780px){
+  body.portal-layout .student-reference-filters{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.portal-layout .student-filter-buttons{justify-content:flex-start}
+}
+@media (max-width:779px){
+  body.portal-layout .student-reference-top{grid-template-columns:1fr;padding:12px;gap:10px;border-radius:14px}
+  body.portal-layout .student-reference-tabs{grid-template-columns:1fr}
+  body.portal-layout .student-reference-tabs button{justify-content:flex-start;min-height:48px;border-right:0;border-bottom:1px solid var(--line)}
+  body.portal-layout .student-reference-tabs button:last-child{border-bottom:0}
+  body.portal-layout .student-reference-top-action button{width:100%;min-width:0;min-height:49px}
+  body.portal-layout .student-reference-filter-card{padding:13px}
+  body.portal-layout .student-reference-filters{grid-template-columns:1fr;gap:11px}
+  body.portal-layout .student-filter-buttons{display:grid;grid-template-columns:1fr;gap:8px}
+  body.portal-layout .student-filter-separator{display:none}
+  body.portal-layout .student-list-head{align-items:flex-start;flex-direction:column;padding:14px 0}
+  body.portal-layout .student-list-head label{width:100%;justify-content:space-between}
+  body.portal-layout .student-list-head select{width:min(210px,60vw)}
+  body.portal-layout .student-reference-list-card{padding:0 12px 12px}
+  body.portal-layout .student-reference-table-wrap{border:0;border-radius:0;overflow:visible}
+  body.portal-layout .student-reference-table{min-width:0;display:block}
+  body.portal-layout .student-reference-table thead{display:none}
+  body.portal-layout .student-reference-table tbody{display:grid;gap:10px}
+  body.portal-layout .student-reference-table tr{display:grid;grid-template-columns:32px 1fr;border:1px solid var(--line);border-radius:12px;padding:11px;background:var(--surface)}
+  body.portal-layout .student-reference-table td{display:block;min-height:0;padding:5px 4px;border:0;background:transparent}
+  body.portal-layout .student-reference-table td.select-col{grid-row:1/span 6;grid-column:1;width:auto;padding-top:7px}
+  body.portal-layout .student-reference-table td:not(.select-col){grid-column:2}
+  body.portal-layout .student-row-actions{flex-wrap:wrap}
+  body.portal-layout .student-reference-pager{align-items:stretch;flex-direction:column}
+  body.portal-layout .student-page-size select{width:100%}
+  body.portal-layout .student-page-nav{justify-content:space-between}
+}

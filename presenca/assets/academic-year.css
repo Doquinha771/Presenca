@@ -1,0 +1,24 @@
+/* Virada de ano letivo: somente layout; nenhuma animação repetitiva ou biblioteca adicional. */
+.annual-pending,.renewal-panel,.annual-calendar{max-width:100%;min-width:0}
+.annual-pending{width:min(100%,780px);margin:clamp(12px,4vh,40px) auto;padding:clamp(20px,4vw,36px);display:grid;gap:13px}
+.annual-pending h2{font-size:clamp(1.35rem,2.5vw,1.85rem);margin:0}
+.annual-pending p{max-width:65ch;margin:0;line-height:1.55}
+.annual-pending>button{justify-self:start}
+.annual-last{background:var(--surface2,var(--surface,#f5f7fa));border:1px solid var(--border,#ddd);border-radius:12px;padding:16px;display:grid;gap:7px}
+.annual-last small{font-weight:700;letter-spacing:.06em}
+.annual-last strong{font-size:1.05rem;overflow-wrap:anywhere}
+.annual-stat{border-radius:12px;border:1px solid var(--border,#ddd);background:var(--surface2,var(--surface,#f5f7fa));padding:18px;display:grid;gap:5px}
+.annual-stat small{letter-spacing:.06em;font-weight:700}
+.annual-stat strong{font-size:clamp(1.6rem,3vw,2.3rem);font-variant-numeric:tabular-nums}
+.annual-filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.annual-filters button{min-height:42px}
+.renewal-panel .hub-search{margin-block:12px;min-width:0}
+.renewal-panel .table-scroll{max-width:100%;min-width:0;overflow-x:auto}
+.annual-calendar{margin-top:16px}
+.annual-calendar h3{margin-top:0}
+.annual-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:end}
+.annual-form label,.annual-form input{min-width:0;width:100%}
+.annual-form button{grid-column:1/-1;justify-self:start}
+#renewalClassLabel[hidden]{display:none!important}
+@media(max-width:760px){.annual-form{grid-template-columns:1fr}.annual-form button{width:100%}.annual-pending{margin:12px auto}.renewal-panel .hub-top{align-items:flex-start}.annual-filters button{flex:1 1 auto}}
+@media(prefers-reduced-motion:reduce){.annual-pending,.renewal-panel,.annual-calendar{animation:none!important;transition:none!important}}

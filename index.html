@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#034ea2"><meta name="color-scheme" content="light dark"><meta name="description" content="Presença+ — acompanhamento escolar e registro de atrasos."><meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'self'; object-src 'none'; form-action 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' https://cdn-uicons.flaticon.com; img-src 'self' data:; font-src 'self' https://cdn-uicons.flaticon.com; connect-src 'self' https://svidahhpqozfaletpcbq.supabase.co; upgrade-insecure-requests"><link rel="icon" href="./assets/logo.png"><link rel="stylesheet" href="https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"><link rel="stylesheet" href="./assets/ui.css?v=6.0.0"><title>Presença+ | Gestão escolar</title></head>
+<body>
+<a class="skip" href="#content">Pular para o conteúdo</a>
+<div id="connection" role="status" hidden>Sem internet. Os registros serão enviados quando a conexão voltar.</div>
+
+<div id="boot" class="boot-screen" role="status" aria-live="polite"><div class="boot-panel"><span data-tico="happy" data-tico-class="boot-tico"></span><p class="boot-name"><img class="boot-logo" src="./assets/logo.png?v=6.0.0" alt="" width="28" height="28">Presença<span>+</span></p><p class="boot-text">Carregando o portal da escola…</p><div class="boot-progress" aria-hidden="true"><span id="bootBar"></span></div></div></div>
+<div id="fatal" class="boot-screen" hidden><div class="boot-card"><h1>Não foi possível abrir</h1><p id="fatalText">Verifique sua conexão e tente novamente.</p><button id="reload" class="primary wide">Tentar novamente</button></div></div>
+
+<section id="authView" class="auth" hidden>
+ <header class="auth-hero">
+  <div class="brand"><img src="./assets/logo.png" alt="" width="36" height="36"><strong>Presença<span>+</span></strong></div>
+  <h1>Frequência escolar, <em>sem complicação.</em></h1>
+  <p>Atrasos, matrículas e comunicados da escola em um só lugar.</p>
+  <ul class="auth-points"><li><i class="fi fi-rr-clock" aria-hidden="true"></i><span>Atrasos registrados na hora, com histórico sempre à mão.</span></li><li><i class="fi fi-rr-megaphone" aria-hidden="true"></i><span>Comunicados da escola para alunos e equipe.</span></li><li><i class="fi fi-rr-users" aria-hidden="true"></i><span>Matrículas, séries e turmas organizadas.</span></li></ul>
+  <div class="auth-art" aria-hidden="true"><img class="auth-cloud c1" src="./assets/nuvem.svg?v=6.0.0" alt=""><img class="auth-cloud c2" src="./assets/nuvem.svg?v=6.0.0" alt=""><img class="auth-school" src="./assets/predio-escola-claro.svg?v=6.0.0" alt="" width="300" height="150"><span data-tico="happy" data-tico-class="auth-tico"></span></div>
+ </header>
+ <main class="auth-card">
+  <fieldset class="access-switch"><legend>Quem vai entrar?</legend><div class="segmented" role="group" aria-label="Tipo de acesso"><button type="button" data-access="aluno" class="selected" aria-pressed="true"><i class="fi fi-rr-graduation-cap" aria-hidden="true"></i><span>Sou aluno</span></button><button type="button" data-access="equipe" aria-pressed="false"><i class="fi fi-rr-school" aria-hidden="true"></i><span>Sou da escola</span></button></div></fieldset>
+  <h2 id="authTitle">Entrar</h2>
+  <p id="authSubtitle" class="muted"></p>
+  <form id="authForm">
+   <div id="signupFields" hidden><label>Nome completo<input name="name" autocomplete="name" maxlength="120"></label><div id="studentSignup"><label>RA<input name="ra" inputmode="numeric" maxlength="18" placeholder="Ex.: 000123456789sp"></label><label>Série e turma<input name="grade" maxlength="90" placeholder="Ex.: 3º ano A"></label><label>Data de nascimento<input name="birth" type="date" autocomplete="bday"></label></div></div>
+   <label id="emailField">E-mail escolar<input name="email" type="email" autocomplete="email" inputmode="email" placeholder="000123456789sp@al.educacao.sp.gov.br" required></label>
+   <label id="passwordField">Senha<span class="password-wrap"><input name="password" type="password" autocomplete="current-password" required><button type="button" class="reveal" id="revealPassword" aria-pressed="false" aria-label="Mostrar senha"><i class="fi fi-rr-eye" aria-hidden="true"></i></button></span></label>
+   <label id="consentField" class="check" hidden><input name="consent" type="checkbox"><span>Li os <a href="./termos.html" target="_blank" rel="noopener noreferrer">Termos de Uso</a> e a <a href="./privacidade.html" target="_blank" rel="noopener noreferrer">Política de Privacidade</a>. Estou ciente de que o acesso aos registros depende de matrícula escolar registrada e e-mail confirmado. Esta confirmação de leitura não constitui consentimento genérico para o tratamento de dados pessoais.</span></label>
+   <p id="authMessage" class="message" role="status" aria-live="polite" hidden></p>
+   <button id="authSubmit" class="primary wide">Entrar</button>
+  </form>
+  <p id="accessExplain" class="access-explain">Alunos usam o e-mail escolar e criam a própria senha.</p>
+  <nav class="auth-links" aria-label="Outras opções de acesso"><button type="button" data-auth="login">Já tenho conta</button><button type="button" data-auth="signup">Criar minha conta</button><button type="button" data-auth="recover">Esqueci a senha</button></nav>
+ </main>
+ <footer class="site-footer"><span>feito pelos alunos do 3-A e com apoio da direção. Dúvidas? Procure a secretaria.</span><span class="legal-links"><a id="termsLink" href="./termos.html">Termos de Uso</a><a id="privacyLink" href="./privacidade.html">Política de Privacidade</a><a href="https://www.flaticon.com/uicons" target="_blank" rel="noopener noreferrer">Ícones Uicons por Flaticon</a></span></footer>
+</section>
+
+<div id="dashboard" class="shell" hidden>
+ <header class="site-header">
+  <div class="site-header-inner">
+   <a class="brand" href="#/overview" aria-label="Presença+, ir para o início"><img src="./assets/logo.png" alt="" width="32" height="32"><strong>Presença<span>+</span></strong></a>
+   <nav id="topNav" class="top-nav" aria-label="Navegação principal"></nav>
+   <div class="topbar-tools">
+    <button id="textSize" class="icon-btn" type="button" aria-pressed="false" title="Modo leitura: texto maior"><i class="fi fi-rr-glasses" aria-hidden="true"></i><span class="sr-only">Modo leitura: texto maior</span></button>
+    <button id="theme" class="icon-btn" type="button" aria-pressed="false" title="Modo escuro"><i class="fi fi-rr-moon" aria-hidden="true"></i><span class="sr-only">Modo escuro</span></button>
+    <button id="menu" class="account-btn" type="button" aria-expanded="false" aria-controls="sidebar"><span id="menuAvatar" class="avatar" aria-hidden="true"></span><span class="account-text"><strong id="menuName"></strong><small id="menuRole"></small></span><i class="fi fi-rr-angle-small-down" aria-hidden="true"></i><span class="sr-only">Abrir menu da conta</span></button>
+   </div>
+  </div>
+ </header>
+ <aside id="sidebar" aria-label="Menu da conta e administração">
+  <div class="side-user"><span id="avatar" class="avatar" aria-hidden="true"></span><div><strong id="userName"></strong><small id="userRole"></small></div></div>
+  <p id="schoolLabel" class="school"></p>
+  <nav id="nav" aria-label="Todas as áreas"></nav>
+  <button id="logout" class="outline wide"><i class="fi fi-rr-exit" aria-hidden="true"></i><span>Sair da conta</span></button>
+ </aside>
+ <button id="navScrim" type="button" aria-label="Fechar menu" hidden></button>
+ <main id="content" tabindex="-1">
+  <div class="page-head"><div class="page-head-inner"><span id="pageIcon" class="page-icon" aria-hidden="true"></span><div class="page-head-text"><h1 id="pageTitle"></h1><p id="pageDescription"></p></div></div></div>
+  <div class="page-body">
+  <div id="flash" class="message" role="status" aria-live="polite" hidden></div>
+  <div id="view" aria-live="polite"></div>
+  </div>
+  <footer class="app-footer"><span>feito pelos alunos do 3-A e com apoio da direção.</span><span class="legal-links"><a href="./termos.html" target="_blank" rel="noopener noreferrer">Termos de Uso</a><a href="./privacidade.html" target="_blank" rel="noopener noreferrer">Política de Privacidade</a><a href="https://www.flaticon.com/uicons" target="_blank" rel="noopener noreferrer">Ícones Uicons por Flaticon</a></span></footer>
+ </main>
+ <nav id="mobileNav" aria-label="Atalhos" hidden></nav>
+</div>
+
+<dialog id="modal" aria-labelledby="modalTitle"><div class="dialog-head"><h2 id="modalTitle"></h2><button id="closeModal" class="icon-btn" type="button" aria-label="Fechar janela"><i class="fi fi-rr-cross" aria-hidden="true"></i></button></div><div id="modalBody"></div><p id="modalError" class="message error" role="alert" hidden></p></dialog>
+<noscript>Ative o JavaScript para acessar o Presença+.</noscript><script src="./assets/tico.js?v=6.0.0" defer></script><script src="./assets/boot.js?v=6.0.0" defer></script></body></html>
