@@ -1224,12 +1224,8 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 @media (min-width:960px){
  .auth-art{display:block;position:absolute;right:40px;bottom:36px;width:min(44%,360px);aspect-ratio:2/1.25;pointer-events:none}
  .auth-art .auth-school{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto}
- .auth-cloud{position:absolute;width:30%;height:auto;opacity:.8;animation:auth-cloud 38s linear infinite}
- .auth-cloud.c1{top:2%;animation-delay:-6s}
- .auth-cloud.c2{top:22%;width:22%;opacity:.4;animation-duration:52s;animation-delay:-30s}
  .auth-tico{position:absolute;left:64%;bottom:55.5%;width:16%;height:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18))}
 }
-@keyframes auth-cloud{from{transform:translateX(-40%)}to{transform:translateX(320%)}}
 
 /* Início do aluno: Tico ao lado do recado; tocar nele faz um pulinho e muda a frase */
 .s-tico-row{display:flex;align-items:center;gap:12px}
@@ -1246,12 +1242,10 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 :root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.0.0")}
 @media (min-width:960px){
  .auth-hero{align-content:start;padding-top:clamp(104px,14vh,150px)}
- .auth-art{aspect-ratio:364/205;width:min(calc(100% - 96px),calc((100vh - 470px) * 1.55),680px);right:auto;left:50%;bottom:0;transform:translateX(-50%)}
- .auth-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;background:linear-gradient(180deg,#3c9d4f,#2f8a43);z-index:1}
+ .auth-art{aspect-ratio:364/205;width:var(--art-w);right:auto;left:50%;bottom:0;transform:translateX(-50%)}
  .auth-art{z-index:2}
  .auth-art .auth-school{filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
  .auth-tico{left:43%;bottom:90%;width:14%}
- .auth-cloud.c1{top:-14%}.auth-cloud.c2{top:4%}
 }
 
 .message.warn{background:var(--warn-bg);color:var(--warn);border-color:color-mix(in srgb,var(--warn-line) 40%,transparent)}
@@ -1321,6 +1315,78 @@ button.cal-day:hover{border-color:var(--primary);background:var(--primary-soft)}
 .site-header.fit-4 .top-more{margin-left:2px;padding:0 8px}
 .site-header.fit-4 .top-more-count{display:none}
 .site-header.fit-4 .topbar-tools{gap:0}
+
+/* Login: céu com nuvens que atravessam o painel, chão de grama e a escola em cima dele */
+.auth-sky,.auth-ground{display:none}
+@media (min-width:960px){
+ .auth-hero{container-type:inline-size}
+ .auth-hero{--art-w:min(calc(100cqw - 96px),calc((100vh - 600px) * 1.55),680px)}
+ .auth-sky{display:block;position:absolute;left:0;right:0;bottom:72px;height:calc(var(--art-w) * .5632 + 70px);z-index:0;overflow:hidden;pointer-events:none}
+ .sky-cloud{position:absolute;left:0;height:auto;opacity:.92;will-change:transform;animation:sky-pass 70s linear infinite}
+ /* Cada nuvem entra inteira pela esquerda e sai inteira pela direita: nunca some no meio do caminho. */
+ .sky-cloud.k1{top:30%;width:calc(var(--art-w) * .3);animation-duration:85s;animation-delay:-20s}
+ .sky-cloud.k2{top:8%;width:calc(var(--art-w) * .34);animation-duration:70s;animation-delay:-48s}
+ .sky-cloud.k3{top:52%;width:calc(var(--art-w) * .24);opacity:.8;animation-duration:105s;animation-delay:-75s}
+ .sky-cloud.k4{top:0;width:calc(var(--art-w) * .2);opacity:.75;animation-duration:120s;animation-delay:-95s}
+ .auth-ground{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;height:110px;background:url("chao-grama.svg?v=5.0.0") 0 0/600px 100% repeat-x;pointer-events:none}
+ .ground-tufo,.ground-moita{position:absolute;height:auto;transform-origin:50% 100%}
+ .ground-tufo{width:64px;animation:grama-vento 4.8s ease-in-out infinite alternate}
+ .ground-moita{width:118px;animation:moita-vento 7s ease-in-out infinite alternate}
+ .ground-moita.m1{left:3%;bottom:62px}.ground-moita.m2{right:4%;bottom:58px;width:96px;animation-delay:-3s}
+ .ground-tufo.t1{left:18%;bottom:66px;animation-delay:-1.2s}.ground-tufo.t2{right:20%;bottom:70px;width:52px;animation-delay:-2.6s}.ground-tufo.t3{left:44%;bottom:14px;width:46px;animation-delay:-.6s}
+ .auth-art{bottom:72px}
+}
+@media (min-width:960px) and (max-height:800px){
+ .auth-points{display:none}
+ .auth-hero{--art-w:min(calc(100cqw - 96px),calc((100vh - 420px) * 1.55),680px)}
+}
+@keyframes sky-pass{from{left:0;transform:translateX(-100%)}to{left:100%;transform:translateX(0)}}
+@keyframes grama-vento{from{transform:rotate(-3deg)}to{transform:rotate(4deg)}}
+@keyframes moita-vento{from{transform:scaleX(1) skewX(-1.5deg)}to{transform:scaleX(1.02) skewX(1.5deg)}}
+@media (prefers-reduced-motion:reduce){
+ .sky-cloud{animation:none!important}
+ .sky-cloud.k1{left:30%}.sky-cloud.k2{left:8%}.sky-cloud.k3{left:70%}.sky-cloud.k4{left:62%}
+ .ground-tufo,.ground-moita{animation:none!important}
+}
+
+/* Login: animações dos botões (todas desligam com "reduzir movimento") */
+/* Abas "Sou aluno / Sou da escola": um marcador desliza para a opção escolhida */
+.auth-card .segmented{position:relative;isolation:isolate}
+.auth-card .segmented::before{content:"";position:absolute;z-index:-1;top:4px;bottom:4px;left:4px;width:calc(50% - 6px);border-radius:8px;background:var(--surface);box-shadow:var(--shadow);transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.auth-card .segmented:has([data-access="equipe"].selected)::before{transform:translateX(calc(100% + 4px))}
+.auth-card .segmented button.selected{background:transparent;box-shadow:none}
+.auth-card .segmented button .fi{transition:transform .3s cubic-bezier(.3,1.4,.5,1)}
+.auth-card .segmented button.selected .fi{transform:scale(1.18) rotate(-6deg)}
+.auth-card .segmented button:hover:not(.selected){color:var(--ink)}
+.auth-card .segmented button:active{transform:scale(.96)}
+/* Entrar: sobe ao passar o mouse, um brilho atravessa, afunda ao clicar e mostra que está carregando */
+#authSubmit{position:relative;overflow:hidden;transition:transform .18s var(--ease),box-shadow .18s var(--ease),background-color .18s}
+#authSubmit::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg) translateX(-120%);pointer-events:none}
+#authSubmit:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 22px -12px var(--primary)}
+#authSubmit:hover:not(:disabled)::after{animation:btn-shine .8s ease}
+#authSubmit:active:not(:disabled){transform:translateY(0) scale(.98)}
+#authSubmit:disabled{opacity:.85;cursor:progress}
+#authSubmit:disabled::before{content:"";display:inline-block;width:16px;height:16px;margin-right:10px;vertical-align:-3px;border-radius:50%;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;animation:btn-spin .7s linear infinite}
+/* Mostrar senha: o olho dá uma piscadinha ao trocar */
+.reveal .fi{transition:transform .2s var(--ease)}
+.reveal:hover .fi{transform:scale(1.15)}
+.reveal[aria-pressed="true"] .fi{animation:eye-blink .35s ease}
+.reveal:active{transform:translateY(-50%) scale(.9)}
+/* Links "Criar minha conta" e "Esqueci a senha": sublinhado que cresce do centro */
+.auth-links button{position:relative}
+.auth-links button::after{content:"";position:absolute;left:50%;right:50%;bottom:8px;height:2px;border-radius:2px;background:currentColor;transition:left .22s var(--ease),right .22s var(--ease)}
+.auth-links button:hover{text-decoration:none}
+.auth-links button:hover::after,.auth-links button:focus-visible::after{left:4px;right:4px}
+.auth-links button:active{transform:scale(.96)}
+/* Tópicos do painel azul: o ícone se destaca ao passar o mouse */
+.auth-points li .fi{transition:transform .25s cubic-bezier(.3,1.4,.5,1),background-color .25s}
+.auth-points li:hover .fi{transform:translateY(-3px) rotate(-6deg);background:rgba(255,255,255,.24)}
+/* Formulário trocando de modo (entrar, criar conta, recuperar): entra suave */
+#authForm.swap{animation:form-swap .32s var(--ease)}
+@keyframes btn-shine{to{transform:skewX(-20deg) translateX(520%)}}
+@keyframes btn-spin{to{transform:rotate(360deg)}}
+@keyframes eye-blink{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.1)}}
+@keyframes form-swap{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Revisão de acabamento */
 .ach-card em{color:color-mix(in srgb,var(--c) 70%,#000)}

@@ -417,6 +417,7 @@ function auth(next='login'){
   :'Use seu e-mail institucional. Se a Direção já adicionou você, o acesso sai na hora.')
   :recover?'Enviaremos um link de recuperação para o e-mail cadastrado.'
   :access==='aluno'?'Use seu e-mail escolar e sua senha.':'Use seu e-mail institucional e sua senha.';
+ const formEl=$('authForm');formEl.classList.remove('swap');void formEl.offsetWidth;formEl.classList.add('swap');
  $('authSubmit').textContent={login:'Entrar',signup:'Criar minha conta',recover:'Enviar link',reset:'Salvar nova senha'}[next];
  // O link da tela atual não aparece de novo: só as outras opções.
  document.querySelectorAll('[data-auth]').forEach(b=>{b.hidden=reset||b.dataset.auth===next;});

@@ -161,6 +161,12 @@ try{
   assert.ok(r.right<=r.left&&!r.overflow,`cabeçalho apertado em ${width}px${wide?' com letras largas':''}: ${JSON.stringify(r)}`);
   await page.locator('#theme').click({timeout:3000});checks++;await context.close();
  }
+ // Login: as nuvens atravessam o painel inteiro (entram fora da tela à esquerda e saem fora à direita) e a escola fica no chão de grama.
+ {const {context,page}=await setup('aluno',1366,true);
+  const lane=await page.evaluate(()=>{const c=document.querySelector('.sky-cloud.k1'),a=c.getAnimations()[0],hero=document.querySelector('.auth-hero').getBoundingClientRect();const at=t=>{a.pause();a.effect.updateTiming({delay:0});a.currentTime=t*a.effect.getTiming().duration;const b=c.getBoundingClientRect();return {left:b.left,right:b.right};};const r={start:at(.0001),end:at(.9999),hero:{left:hero.left,right:hero.right}};a.play();return r;});
+  assert.ok(lane.start.right<=lane.hero.left+1,'nuvem começa fora do painel, à esquerda');assert.ok(lane.end.left>=lane.hero.right-1,'nuvem termina fora do painel, à direita');
+  const ground=await page.locator('.auth-ground').boundingBox(),school=await page.locator('.auth-school').boundingBox();assert.ok(school.y+school.height>ground.y&&school.y+school.height<ground.y+ground.height,'escola em cima do chão de grama');
+  checks++;await context.close();}
  // ---------- Interface: o que antes era conferido lendo o texto do código, agora usando o site ----------
  {const {context,page}=await setup('admin');await page.goto(base+'#/students');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
   // Computador: navegação no topo, sem barra inferior; título por extenso; item ativo marcado.

@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 60">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 120">
  <title>Nuvem</title>
- <path d="M26 52h70c10 0 17-7 17-15s-7-14-16-14c-2-11-11-18-22-18c-9 0-17 5-20 13c-3-2-6-3-10-3c-9 0-16 7-16 15v1C20 32 14 38 14 44s5 8 12 8z" fill="#ffffff" fill-opacity=".9" stroke="#ffffff" stroke-opacity=".55" stroke-width="2"/>
+ <defs><filter id="g" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="31" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="3" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9 .35" numOctaves="2" seed="34" result="g"/><feColorMatrix in="g" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -8 6.28" result="m"/><feComposite in="d" in2="m" operator="in"/></filter><filter id="h" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="35" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="3" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9 .35" numOctaves="2" seed="38" result="g"/><feColorMatrix in="g" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -8 5.64" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs>
+ <path d="M30 104C10 104 6 80 22 72C14 52 34 38 52 48C58 22 92 16 106 38C116 22 146 22 152 46C172 38 196 52 190 74C210 78 210 104 190 104Z" fill="#ffffff" filter="url(#g)"/>
+ <path d="M30 104C10 104 6 80 22 72C14 52 34 38 52 48C58 22 92 16 106 38C116 22 146 22 152 46C172 38 196 52 190 74C210 78 210 104 190 104Z" fill="none" stroke="#a9d2f7" stroke-width="7" stroke-linejoin="round" filter="url(#h)"/>
+ <path d="M48 86q20 10 44 0M110 90q22 8 46-2" fill="none" stroke="#d6ebfc" stroke-width="6" stroke-linecap="round" filter="url(#h)"/>
 </svg>

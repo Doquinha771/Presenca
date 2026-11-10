@@ -2,6 +2,9 @@
 
 Todas as mudanças em um só lugar, das mais novas para as mais antigas. Documentos de referência que continuam valendo: [Permissões](PERMISSOES.md), [E-mails do Supabase](EMAILS_SUPABASE.md), [Armazenamento](ARMAZENAMENTO_20261106.md), [Virada do ano letivo](VIRADA_ANO_LETIVO_20260923.md), [Exportações](EXPORTACOES.md), [Validação](VALIDACAO.md), [Avaliação institucional](AVALIACAO_INSTITUCIONAL.md) e [Limites jurídicos](LIMITES_JURIDICOS_E_OPERACIONAIS.md).
 
+## Digital 5.0 — cenário do login em giz de cera (10/11/2026)
+- Chão de grama com margaridas, tufos e moitas que balançam com o vento, e nuvens que atravessam o painel inteiro, sem sumir no meio. Desenhos refeitos a partir dos modelos de "Desenhos Presenca" (`node scripts/gerar-cenario.mjs`). A escola e o Tico ficam em cima do chão.
+
 ## Digital 5.0 — cabeçalho que se ajusta (10/11/2026)
 - No teste do GitHub (Linux, letras mais largas), o menu do topo invadia o botão do modo escuro. O cabeçalho agora mede o espaço e compacta em etapas: some o nome da conta, depois os textos de "Administração" e "Registrar atraso" (fica o ícone), depois a fonte do menu diminui. Um teste confere 960 a 1366 px, com letras normais e largas.
 
