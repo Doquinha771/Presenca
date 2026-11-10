@@ -26,8 +26,8 @@ try{
  assert.equal(await page.locator('#applicationsTitle').count(),1);
  assert.equal(await page.locator('.application-card').count(),1);
  await page.locator('[data-action="enrollment-from-application"]').click();
- assert.equal(await page.locator('#modal [name="ra"]').inputValue(),'0000222');
- assert.equal(await page.locator('#modal [name="email"]').inputValue(),'0000222@al.educacao.sp.gov.br');
+ assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').inputValue(),'0000222');
+ assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="email"]').inputValue(),'0000222@al.educacao.sp.gov.br');
  await page.locator('#modal').evaluate(el=>el.close());
  await page.locator('[data-action="students-tab"][data-id="classes"]').click();
  await page.waitForFunction(()=>document.querySelector('.student-tabs button.selected')?.dataset.id==='classes');
@@ -153,6 +153,69 @@ try{
  // Login: a escola ocupa a lateral esquerda e não cobre o texto.
  {const {context,page}=await setup('aluno',1366,true);const art=await page.locator('.auth-art').boundingBox(),hero=await page.locator('.auth-hero').boundingBox(),pts=await page.locator('.auth-points').boundingBox();
   assert.ok(art.width>=hero.width*0.6,'escola larga');assert.ok(art.y>=pts.y+pts.height-2,'escola abaixo dos tópicos');checks++;await context.close();}
+ // ---------- Interface: o que antes era conferido lendo o texto do código, agora usando o site ----------
+ {const {context,page}=await setup('admin');await page.goto(base+'#/students');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  // Computador: navegação no topo, sem barra inferior; título por extenso; item ativo marcado.
+  assert.equal(await page.locator('#topNav').isVisible(),true,'navegação no topo');assert.equal(await page.locator('#mobileNav').isVisible(),false,'sem barra inferior no computador');
+  assert.equal(await page.locator('#pageTitle').innerText(),'Alunos');assert.equal(await page.locator('#topNav a[data-page="students"]').getAttribute('aria-current'),'page');
+  // Alunos: três abas que trocam o conteúdo de verdade.
+  assert.equal(await page.locator('.student-tabs [role="tab"], .student-tabs button').count(),3,'três abas');
+  const listHtml=await page.locator('#view').innerHTML();await page.locator('[data-action="students-tab"][data-id="classes"]').click();await page.locator('[data-action="students-tab"][data-id="classes"][aria-selected="true"]').waitFor();assert.notEqual(await page.locator('#view').innerHTML(),listHtml,'aba Turmas troca o conteúdo');
+  await page.locator('[data-action="students-tab"][data-id="list"]').click();await page.locator('[data-action="students-tab"][data-id="list"][aria-selected="true"]').waitFor();
+  // Painel da conta abre pelo botão e fecha com Esc.
+  await page.locator('#menu').click();await page.locator('#sidebar.open').waitFor();await page.keyboard.press('Escape');await page.locator('#sidebar.open').waitFor({state:'detached'});
+  // Preferências: modo escuro e texto maior ligam e avisam o leitor de tela.
+  await page.locator('#theme').click();assert.equal(await page.locator('#theme').getAttribute('aria-pressed'),'true');assert.ok(await page.evaluate(()=>document.body.classList.contains('dark')));
+  await page.locator('#textSize').click();assert.equal(await page.locator('#textSize').getAttribute('aria-pressed'),'true');assert.ok(await page.evaluate(()=>document.body.classList.contains('large-text')));
+  // Nenhum estilo inline (a CSP bloquearia) e foco visível no teclado.
+  assert.equal(await page.locator('#view [style]').count(),0,'sem style inline');
+  await page.keyboard.press('Tab');assert.ok(await page.evaluate(()=>{const s=getComputedStyle(document.activeElement);return s.outlineStyle!=='none'&&parseFloat(s.outlineWidth)>=2;}),'foco visível');
+  checks++;await context.close();}
+ {const {context,page}=await setup('admin');await page.goto(base+'#/history');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  const heads=await page.locator('#view thead th').allInnerTexts();for(const h of ['Quando','Aluno','Situação','Observação','Registrado por','Ações'])assert.ok(heads.map(x=>x.trim().toLowerCase()).includes(h.toLowerCase()),h);
+  await page.locator('[data-action="history-actions"]').first().click();await page.locator('#modal[open], .history-menu, [role="menu"]').first().waitFor();
+  checks++;await context.close();}
+ {const {context,page}=await setup('admin');await page.goto(base+'#/overview');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  for(const label of ['Na semana','No mês','Em atenção','Alunos'])assert.equal(await page.locator('.staff-tiles .tile',{hasText:label}).count(),1,label);
+  assert.equal(await page.locator('.dashboard-trend-svg').count(),1,'gráfico de 14 dias');
+  // A equipe não tem a página de conquistas.
+  assert.equal(await page.locator('#topNav a[data-page="achievements"], #nav a[data-page="achievements"]').count(),0,'conquistas fora do menu da equipe');
+  checks++;await context.close();}
+ {const {context,page}=await setup('aluno');await page.goto(base+'#/overview');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  assert.equal(await page.locator('#pageTitle').innerText(),'Olá, João!');
+  assert.ok(['Tudo certo','Atenção','Limite atingido'].includes((await page.locator('#statusTitle').innerText()).trim()),'situação em linguagem simples');
+  assert.equal(await page.locator('.ach-link[href="#/achievements"]').count(),1,'um atalho para conquistas no Início');
+  await page.goto(base+'#/achievements');await page.locator('.ach-card').first().waitFor();
+  assert.equal(await page.locator('.ach-card').count(),10,'dez medalhas');assert.ok(await page.locator('.ach-bar[role="progressbar"]').count()>=1,'barras com papel de progresso');
+  await page.goto(base+'#/history');await page.locator('.lh-month').first().waitFor();
+  for(const label of ['Conta no limite','Perdoado','Anulado'])assert.ok(await page.getByText(label,{exact:false}).count()>=1,label);
+  checks++;await context.close();}
+ {const {context,page}=await setup('admin',390);await page.goto(base+'#/history');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  // Celular: barra inferior, sem navegação do topo; tabelas viram cartões com o nome da coluna; botões fáceis de tocar.
+  assert.equal(await page.locator('#mobileNav').isVisible(),true);assert.equal(await page.locator('#topNav').isVisible(),false);
+  assert.ok(await page.evaluate(()=>{const td=document.querySelector('table.responsive td');return td&&getComputedStyle(td,'::before').content.length>2;}),'células com rótulo no celular');
+  const small=await page.evaluate(()=>[...document.querySelectorAll('#view button,#mobileNav a,#mobileNav button')].filter(b=>b.offsetParent&&b.getBoundingClientRect().height<40).map(b=>b.textContent.trim()||b.getAttribute('aria-label')));
+  assert.deepEqual(small,[],'alvos de toque com pelo menos 40px');
+  checks++;await context.close();}
+ // Cadastro de aluno pela secretaria: e-mail sugerido pelo RA, sem senha provisória, e RA/e-mail que não batem são recusados.
+ {const {context,page}=await setup('admin');await page.goto(base+'#/students');await page.locator('[data-action="enrollment-new"]').click();await page.locator('#modal[open] [name="ra"]').waitFor();
+  await page.locator('#modal form:not(#inlineClassForm) [name="name"]').fill('Ana Teste');await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').fill('0000222');
+  assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="email"]').inputValue(),'0000222@al.educacao.sp.gov.br','e-mail sugerido a partir do RA');
+  await page.locator('#modal form:not(#inlineClassForm) [name="email"]').fill('outro@al.educacao.sp.gov.br');await page.locator('#modal form:not(#inlineClassForm) [name="birth"]').fill('2008-05-05');
+  const cls=await page.locator('#enrollmentClassSelect option').nth(1).getAttribute('value');if(cls)await page.locator('#enrollmentClassSelect').selectOption(cls);
+  await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();await page.getByText('Confira o RA e o e-mail institucional').waitFor();
+  assert.equal(await page.evaluate(()=>window.__calls.filter(c=>c.args?.p_action==='enrollment').length),0,'nada salvo com RA e e-mail diferentes');
+  await page.locator('#modal form:not(#inlineClassForm) [name="email"]').fill('0000222@al.educacao.sp.gov.br');await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();
+  await page.waitForFunction(()=>window.__calls.some(c=>c.args?.p_action==='enrollment'));
+  const call=await page.evaluate(()=>window.__calls.find(c=>c.args?.p_action==='enrollment'));assert.equal(call.args.p_args.email,'0000222@al.educacao.sp.gov.br');assert.ok(!('password' in call.args.p_args),'sem senha provisória');
+  assert.equal(await page.evaluate(()=>window.__calls.filter(c=>/provision/.test(c.name+(c.args?.p_action||''))).length),0,'não cria acesso automático');
+  checks++;await context.close();}
+ // Banco sem as atualizações: cada tela mostra um aviso só, com o passo a passo, e o resto do portal segue funcionando.
+ {const context=await browser.newContext({viewport:{width:1366,height:900}});await context.addInitScript(()=>{window.__testRole='admin';window.__missing=['storage_manage','staff_manage','calendar_manage'];});
+  await context.route('https://cdn.jsdelivr.net/**',r=>r.fulfill({contentType:'text/javascript',body:fixture}));const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'#/overview');await page.locator('#dashboard').waitFor({state:'visible'});
+  for(const name of ['storage','team','calendar']){await page.goto(base+'#/'+name);await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));assert.equal(await page.locator('.setup-card').count(),1,`aviso único em ${name}`);assert.match(await page.locator('.setup-card a').getAttribute('href'),/supabase\.com\/dashboard\/project\/[a-z0-9]+\/sql\/new/);}
+  await page.goto(base+'#/history');await page.locator('#view table, #view .history-card').first().waitFor();assert.equal(await page.locator('.setup-card').count(),0,'resto do portal normal');
+  checks++;await context.close();}
  // Acessibilidade (axe-core): nenhuma violação nas telas principais, no modo claro e no escuro.
  {const axeSource=await fs.readFile(require.resolve('axe-core/axe.min.js'),'utf8');
   const screens=[['admin','overview'],['admin','entry'],['admin','students'],['admin','team'],['admin','calendar'],['admin','reports'],['aluno','overview'],['aluno','achievements'],['aluno','history'],['aluno','']];
