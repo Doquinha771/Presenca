@@ -153,5 +153,17 @@ try{
  // Login: a escola ocupa a lateral esquerda e não cobre o texto.
  {const {context,page}=await setup('aluno',1366,true);const art=await page.locator('.auth-art').boundingBox(),hero=await page.locator('.auth-hero').boundingBox(),pts=await page.locator('.auth-points').boundingBox();
   assert.ok(art.width>=hero.width*0.6,'escola larga');assert.ok(art.y>=pts.y+pts.height-2,'escola abaixo dos tópicos');checks++;await context.close();}
+ // Acessibilidade (axe-core): nenhuma violação nas telas principais, no modo claro e no escuro.
+ {const axeSource=await fs.readFile(require.resolve('axe-core/axe.min.js'),'utf8');
+  const screens=[['admin','overview'],['admin','entry'],['admin','students'],['admin','team'],['admin','calendar'],['admin','reports'],['aluno','overview'],['aluno','achievements'],['aluno','history'],['aluno','']];
+  for(const dark of [false,true])for(const [role,name] of screens){
+   const signedOut=name==='';const context=await browser.newContext({viewport:{width:1366,height:900},bypassCSP:true,reducedMotion:'reduce'});
+   await context.addInitScript(({role,signedOut,dark})=>{window.__testRole=role;window.__signedOut=signedOut;if(dark)try{localStorage.setItem('presenca-theme','dark');}catch{}},{role,signedOut,dark});
+   await context.route('https://cdn.jsdelivr.net/**',r=>r.fulfill({contentType:'text/javascript',body:fixture}));
+   const page=await context.newPage();await page.goto(base+(name?'#/'+name:''));await page.locator(signedOut?'#authView':'#dashboard').waitFor({state:'visible'});await page.waitForFunction(()=>!document.getElementById('view')?.hasAttribute('aria-busy'));
+   await page.addScriptTag({content:axeSource});
+   const v=await page.evaluate(async()=>(await axe.run(document,{resultTypes:['violations']})).violations.map(x=>`${x.id}: ${x.nodes[0]?.target.join(' ')}`));
+   assert.deepEqual(v,[],`acessibilidade em ${role}/${name||'login'}${dark?' (escuro)':''}`);checks++;await context.close();
+  }}
  assert.deepEqual(errors,[]);console.log(`${checks} verificações de navegador passaram (rede Supabase simulada).`);
 }finally{await browser.close();server.close();}

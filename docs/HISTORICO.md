@@ -2,6 +2,11 @@
 
 Todas as mudanças em um só lugar, das mais novas para as mais antigas. Documentos de referência que continuam valendo: [Permissões](PERMISSOES.md), [E-mails do Supabase](EMAILS_SUPABASE.md), [Armazenamento](ARMAZENAMENTO_20261106.md), [Virada do ano letivo](VIRADA_ANO_LETIVO_20260923.md), [Exportações](EXPORTACOES.md), [Validação](VALIDACAO.md), [Avaliação institucional](AVALIACAO_INSTITUCIONAL.md) e [Limites jurídicos](LIMITES_JURIDICOS_E_OPERACIONAIS.md).
 
+## Digital 5.0 — revisão de acabamento e acessibilidade (10/11/2026, noite)
+- **Calendário escolar refeito:** o ano inteiro em meses, com feriado, recesso e férias em cores diferentes, fins de semana e o dia de hoje marcados. Tocar num dia preenche o cadastro (dois toques marcam um período). Mostra os dias letivos previstos no ano.
+- **Acabamento:** o botão "Registrar atraso" não some mais na própria página; Relatórios sem espaço vazio (dias letivos entram no resumo); textos não grudam nos formulários; meses do histórico do aluno em faixa clara; escola mais suave no modo escuro.
+- **Acessibilidade:** verificação automática (axe-core) em 10 telas, no modo claro e no escuro, dentro de `npm run test:browser`. Corrigidos contraste, ordem de títulos, atributo das abas de Alunos e regiões do login.
+
 ## Digital 5.0 — calendário, fila sem internet e organização (10/11/2026)
 - **Calendário escolar** (`sql/14_calendario_escolar.sql`): a Direção cadastra feriados, recessos e férias. A sequência sem atraso pula esses dias, o gráfico de 14 dias marca os dias sem aula e os Relatórios mostram os dias letivos do mês.
 - **Fila sem internet:** sem conexão, o atraso fica guardado no aparelho como "pendente de envio" e é enviado sozinho quando a internet volta, sem duplicar (o identificador do registro é o mesmo). A observação ganha o horário em que foi feito.
