@@ -18,7 +18,7 @@ function season(d = new Date()) {
 const now = season();
 document.documentElement.dataset.season = now;
 const school = document.getElementById('authSchool');
-if (school) school.src = `./assets/escola-${now}.svg?v=6.0.0`;
+if (school) school.src = `./assets/escola-${now}.svg?v=5.0.0`;
 // A barra avança aos poucos enquanto o portal carrega e completa quando tudo estiver pronto.
 const bar = document.getElementById('bootBar');
 let progress = 8;
@@ -30,7 +30,7 @@ const timer = setTimeout(() => { clearInterval(step); fail('O carregamento demor
 // Impede que outro site abra o portal escondido dentro de uma moldura.
 if (window.top !== window.self && location.hostname !== 'localhost') window.top.location = location.href;
 // A versão no endereço obriga o navegador a baixar a atualização inteira, sem misturar arquivos antigos.
-import('./app.js?v=6.0.0').then(() => {
+import('./app.js?v=5.0.0').then(() => {
  clearTimeout(timer);
  clearInterval(step);
  if (bar) bar.style.width = '100%';

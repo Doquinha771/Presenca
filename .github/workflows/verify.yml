@@ -26,6 +26,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: npm ci
       - run: npm test && npm run check
       - name: Validar migração e permissões em banco descartável
         env:
@@ -49,8 +50,11 @@ jobs:
           psql -v ON_ERROR_STOP=1 -f sql/12_armazenamento.sql
           psql -v ON_ERROR_STOP=1 -f tests/database.sql
           node tests/concurrency.mjs
+          # Atualizações instaladas depois dos testes acima (que desfazem tudo ao final).
+          psql -v ON_ERROR_STOP=1 -f sql/13_equipe_e_otimizacao.sql
+          psql -v ON_ERROR_STOP=1 -f sql/14_calendario_escolar.sql
+          psql -v ON_ERROR_STOP=1 -f tests/equipe-calendario-db.sql
       - name: Instalar navegador para testes
         run: |
-          npm install --no-save --package-lock=false playwright@1.58.2
           npx playwright install --with-deps chromium
       - run: npm run test:browser

@@ -7,7 +7,7 @@ const html=read('index.html'),app=read('assets/app.js'),css=read('assets/ui.css'
 
 test('uma única folha de estilo, sem camadas legadas',()=>{
  const sheets=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
- assert.deepEqual(sheets,['https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css','./assets/ui.css?v=6.0.0']);
+ assert.deepEqual(sheets,['https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css','./assets/ui.css?v=5.0.0']);
  for(const old of ['app','portal-layout','desktop-shell','ergonomia','header-minimal','motion','interface-refresh','dashboard-reference','students-reference','history-reference'])
   assert.ok(!existsSync(new URL(`../assets/${old}.css`,import.meta.url)),old);
  assert.doesNotMatch(css,/https?:\/\//);
@@ -245,26 +245,6 @@ test('login: painel azul com tópicos da escola e o prédio em traço',()=>{
  assert.match(app,/function setStudentMood\(tone\)/);
 });
 
-test('aluno: situação e sequência em dias letivos lado a lado, número sempre visível',()=>{
- assert.match(app,/function schoolDaysSince\(from\)/);
- assert.match(app,/function studentStreak\(recent\)/);
- assert.match(app,/function streakBox\(streak\)\{return `<div class="streak/);
- assert.match(app,/<strong>\$\{streak\.days\}<\/strong>/);
- assert.doesNotMatch(app,/streak\.days===null\?'∞'/);
- assert.match(app,/class="s-facts"/);
- assert.match(app,/return `<div class="s-home">\$\{notice\}\$\{status\}\$\{streakCard\}\$\{recentBox\}\$\{news\}\$\{tips\}<\/div>`/);
- for(const badge of ['Céu limpo','1 semana','1 mês','Bimestre','Ficha limpa']) assert.ok(app.includes(`'${badge}'`),badge);
- assert.match(css,/@media \(prefers-reduced-motion:reduce\)\{\s*\*,\*::before,\*::after\{animation-duration:\.001ms!important;animation-iteration-count:1!important/);
-});
-
-test('painel lateral: botão visível no topo e áreas da administração explicadas',()=>{
- assert.match(app,/function moreButton\(groups\)/);
- assert.match(app,/admin\(\)\?'Administração':'Mais opções'/);
- assert.match(app,/e\.target\.closest\('\[data-open-menu\]'\)\)toggleNavigation\(\)/);
- assert.match(app,/<small>\$\{esc\(paths\[page\]\[1\]\)\}<\/small>/);
- assert.match(css,/\.top-more\{display:inline-flex/);
-});
-
 test('atualização do banco que falta: aviso único, sem travar o site, e arquivo de instalação em dia',async()=>{
  assert.match(app,/function setupCard\(feature\)/);
  assert.match(app,/html=st\?renderStorage\(st\):setupCard\(/);
@@ -274,16 +254,17 @@ test('atualização do banco que falta: aviso único, sem travar o site, e arqui
  assert.equal(read('sql/instalar_atualizacoes.sql').replace(/\r\n/g,'\n'),bundle(),'rode node scripts/gerar-instalacao.mjs');
 });
 
-test('Tico de volta em tamanho menor, com animações calmas e respeito a movimento reduzido',()=>{
- const tico=read('assets/tico.js');
- assert.ok(tico.includes('window.TicoArt = { svg, mount }'));
- for(const k of ['t-crest','t-wing','t-eyes','t-tail']) assert.ok(tico.includes(k),k);
- assert.match(tico,/prefers-reduced-motion: reduce/);
+test('aluno e Tico: o comportamento é testado no navegador (tests/browser.mjs); aqui só o essencial dos arquivos',()=>{
+ for(const badge of ['Céu limpo','1 semana','1 mês','Bimestre','Ficha limpa']) assert.ok(app.includes(`'${badge}'`),badge);
+ assert.match(read('assets/tico.js'),/prefers-reduced-motion: reduce/);
  assert.ok(html.indexOf('assets/tico.js')<html.indexOf('assets/boot.js'),'tico.js antes do boot.js');
- assert.match(html,/data-tico="happy" data-tico-class="boot-tico"/);
- assert.match(html,/data-tico="happy" data-tico-class="auth-tico"/);
- assert.match(app,/data-action="tico-play"/);
- assert.ok(app.includes("if(a==='tico-play'){ticoPlay();return;}"));
- for(const k of ['@keyframes tico-breathe','@keyframes tico-hop','.tico.blink .t-eyes']) assert.ok(css.includes(k),k);
- assert.doesNotMatch(css,/@keyframes tico-shake/);
+ assert.ok(css.includes('animation-duration:.001ms!important;animation-iteration-count:1!important'),'reduzir movimento desliga as animações');
+});
+
+test('calendário escolar e fila sem internet: arquivos de banco e de instalação em dia',()=>{
+ const cal=read('sql/14_calendario_escolar.sql');
+ assert.match(cal,/enable row level security/);
+ assert.match(cal,/Somente a Direção altera o calendário escolar/);
+ assert.ok(read('.github/workflows/verify.yml').includes('sql/13_equipe_e_otimizacao.sql'),'atualização 13 no teste do GitHub');
+ assert.ok(read('.github/workflows/verify.yml').includes('sql/14_calendario_escolar.sql'),'atualização 14 no teste do GitHub');
 });

@@ -1,6 +1,6 @@
-import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME} from '../config.js?v=6.0.0';
+import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME} from '../config.js?v=5.0.0';
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/+esm';
-import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=6.0.0';
+import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.0.0';
 const $=id=>document.getElementById(id);
 if(!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL)||!/^sb_publishable_/.test(SUPABASE_PUBLISHABLE_KEY))throw Error('Configuração inválida');
 const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -19,7 +19,7 @@ function playRouteMotion(view,markupLength){
  (blocks.length?blocks:[view]).forEach((el,i)=>el.animate([{opacity:0,transform:'translateY(12px)'},{opacity:1,transform:'none'}],{duration:520,delay:i*90,easing:'cubic-bezier(.2,.7,.2,1)',fill:'backwards'}));
 }
 const reducedMotion=()=>Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)').matches);
-const paths={overview:['Visão geral','Resumo dos registros e avisos da escola.','M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z'],entry:['Registrar atraso','Localize o aluno e registre um atraso.','M12 8v4l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0'],students:['Alunos','Consulte alunos, matrículas, séries e turmas em um só lugar.','M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M20 8v6 M17 11h6'],history:['Histórico','Ocorrências preservadas, com suas correções e justificativas.','M4 3h16v18H4z M8 8h8 M8 12h8 M8 16h5'],enrollments:['Matrículas','Autorize o cadastro e mantenha os dados escolares.','M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h4'],classes:['Séries e turmas','Cadastre turmas e consulte seus estudantes.','M3 21V7l9-5 9 5v14 M9 21v-7h6v7 M7 9h1 M16 9h1'],approvals:['Aprovações','Aceite ou recuse alunos e funcionários que pediram acesso.','M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M16 11l2 2 4-4'],team:['Equipe','Adicione, gerencie e remova os funcionários da escola.','M4 21v-3a5 5 0 0 1 10 0v3 M13 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M17 4a4 4 0 0 1 0 8 M18 15a4 4 0 0 1 3 4v2'],adjustments:['Novas chances e ajustes','Consulte alterações e justificativas registradas.','M4 5h16v14H4z M8 10h8 M12 6v8'],announcements:['Comunicados','Consulte e publique avisos da escola.','M3 10v4h4l11 5V5L7 10z M7 14l2 7'],archive:['Arquivo escolar','Consulte matrículas encerradas e histórico.','M3 3h18v5H3z M5 8v13h14V8 M9 12h6'],period:['Período e regras','Gerencie os períodos e as regras da escola.','M4 5h16v16H4z M8 2v6 M16 2v6 M4 10h16'],audit:['Auditoria','Consulte as operações administrativas.','M5 3h14v18H5z M9 7h6 M9 12h6 M9 17h6'],reports:['Relatórios Excel','Gere planilhas conforme os filtros selecionados.','M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h8'],storage:['Armazenamento','Espaço do banco de dados e limpeza dos dados de quem saiu da escola.','M4 6h16v4H4z M4 14h16v4H4z'],achievements:['Minhas conquistas','Medalhas que você ganha chegando no horário.','M8 21h8 M12 17v4 M7 4h10v5a5 5 0 0 1-10 0z M7 6H4a3 3 0 0 0 3 4 M17 6h3a3 3 0 0 1-3 4'],privacy:['Privacidade','Consulte solicitações e incidentes de privacidade.','M12 2l8 4v6c0 5-8 10-8 10S4 17 4 12V6z M9 12l2 2 4-4']};
+const paths={overview:['Visão geral','Resumo dos registros e avisos da escola.','M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z'],entry:['Registrar atraso','Localize o aluno e registre um atraso.','M12 8v4l3 2 M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0'],students:['Alunos','Consulte alunos, matrículas, séries e turmas em um só lugar.','M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M20 8v6 M17 11h6'],history:['Histórico','Ocorrências preservadas, com suas correções e justificativas.','M4 3h16v18H4z M8 8h8 M8 12h8 M8 16h5'],enrollments:['Matrículas','Autorize o cadastro e mantenha os dados escolares.','M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h4'],classes:['Séries e turmas','Cadastre turmas e consulte seus estudantes.','M3 21V7l9-5 9 5v14 M9 21v-7h6v7 M7 9h1 M16 9h1'],approvals:['Aprovações','Aceite ou recuse alunos e funcionários que pediram acesso.','M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M16 11l2 2 4-4'],team:['Equipe','Adicione, gerencie e remova os funcionários da escola.','M4 21v-3a5 5 0 0 1 10 0v3 M13 6a4 4 0 1 1-8 0 4 4 0 0 1 8 0 M17 4a4 4 0 0 1 0 8 M18 15a4 4 0 0 1 3 4v2'],adjustments:['Novas chances e ajustes','Consulte alterações e justificativas registradas.','M4 5h16v14H4z M8 10h8 M12 6v8'],announcements:['Comunicados','Consulte e publique avisos da escola.','M3 10v4h4l11 5V5L7 10z M7 14l2 7'],archive:['Arquivo escolar','Consulte matrículas encerradas e histórico.','M3 3h18v5H3z M5 8v13h14V8 M9 12h6'],period:['Período e regras','Gerencie os períodos e as regras da escola.','M4 5h16v16H4z M8 2v6 M16 2v6 M4 10h16'],audit:['Auditoria','Consulte as operações administrativas.','M5 3h14v18H5z M9 7h6 M9 12h6 M9 17h6'],reports:['Relatórios Excel','Gere planilhas conforme os filtros selecionados.','M4 4h16v16H4z M8 8h8 M8 12h8 M8 16h8'],storage:['Armazenamento','Espaço do banco de dados e limpeza dos dados de quem saiu da escola.','M4 6h16v4H4z M4 14h16v4H4z'],achievements:['Minhas conquistas','Medalhas que você ganha chegando no horário.','M8 21h8 M12 17v4 M7 4h10v5a5 5 0 0 1-10 0z M7 6H4a3 3 0 0 0 3 4 M17 6h3a3 3 0 0 1-3 4'],calendar:['Calendário escolar','Feriados, recessos e férias: dias sem aula que não contam como letivos.','M4 5h16v15H4z M4 10h16 M8 3v4 M16 3v4'],privacy:['Privacidade','Consulte solicitações e incidentes de privacidade.','M12 2l8 4v6c0 5-8 10-8 10S4 17 4 12V6z M9 12l2 2 4-4']};
 const staff=()=>Boolean(state.me && state.me.role!=='aluno');
 const admin=()=>state.me?.role==='admin';
 const studentView=()=>state.me?.role==='aluno';
@@ -34,7 +34,8 @@ function dashboardTrendSvg(rows){
  const grid=Array.from({length:6},(_,i)=>{const val=Math.round(max-(max*i/5));const yy=top+(height-top-bottom)*(i/5);return `<g class="trend-grid"><line x1="${left}" y1="${yy}" x2="${width-right}" y2="${yy}"></line><text x="2" y="${yy+4}">${val}</text></g>`;}).join('');
  const labels=list.map((r,i)=>`<text class="trend-label" x="${left+i*step}" y="${height-7}" text-anchor="middle">${String(r.day||'').slice(8,10)}/${String(r.day||'').slice(5,7)}</text>`).join('');
  const dots=list.map((r,i)=>`<circle class="trend-dot" cx="${left+i*step}" cy="${y(r.total)}" r="4"></circle>`).join('');
- return `<svg class="dashboard-trend-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Atrasos nos últimos 14 dias">${grid}<polyline class="trend-line" pathLength="1" points="${points}"></polyline>${dots}${labels}</svg>`;
+ const off=offDays(),noClass=list.map((r,i)=>{const d=new Date(String(r.day||'').slice(0,10)+'T12:00:00');return Number.isNaN(d.getTime())||isSchoolDay(d,off)?'':`<rect class="trend-off" x="${left+i*step-step/2}" y="${top}" width="${step}" height="${height-top-bottom}"><title>Sem aula</title></rect>`;}).join('');
+ return `<svg class="dashboard-trend-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="Atrasos nos últimos 14 dias; faixas cinza são dias sem aula">${noClass}${grid}<polyline class="trend-line" pathLength="1" points="${points}"></polyline>${dots}${labels}</svg>`;
 }
 const allowed=()=>state.me?.role==='aluno'?['overview','achievements','history','announcements']:admin()?Object.keys(paths).filter(p=>p!=='achievements'):['overview','entry','students','history','enrollments','reports','announcements'];
 // Matrículas e séries/turmas ficam dentro de Alunos. As rotas antigas continuam aceitas.
@@ -55,7 +56,7 @@ const sidebarMenus={
  ],
  admin:[
   ['', [['overview','Início','overview'],['entry','Registrar atraso','plus'],['students','Alunos','students'],['history','Histórico','history'],['announcements','Comunicados','announcements'],['reports','Relatórios','reports']]],
-  ['ADMINISTRAÇÃO',[['approvals','Aprovações','approvals'],['team','Equipe','team'],['classes','Turmas','classes'],['enrollments','Cadastros','enrollments'],['period','Período e regras','period'],['storage','Armazenamento','storage'],['privacy','Privacidade','privacy'],['audit','Auditoria','audit']]]
+  ['ADMINISTRAÇÃO',[['approvals','Aprovações','approvals'],['team','Equipe','team'],['classes','Turmas','classes'],['enrollments','Cadastros','enrollments'],['period','Período e regras','period'],['calendar','Calendário','calendar'],['storage','Armazenamento','storage'],['privacy','Privacidade','privacy'],['audit','Auditoria','audit']]]
  ]
 };
 function renderSidebarNav(){
@@ -206,10 +207,20 @@ function studentSituation(d){
 function emptyState(icon,title,text=''){return `<div class="empty-state">${uiIcon(icon)}<strong>${title}</strong>${text?`<p>${text}</p>`:''}</div>`;}
 function newsList(rows){return `<ul class="news-list">${rows.map(n=>{const [label,klass]=announcementTone(n);return `<li><span class="pill ${klass}">${label}</span><h4>${esc(n.title)}</h4><p>${esc(n.body)}</p><small>${dateBR(n.created_at)}</small></li>`;}).join('')}</ul>`;}
 // Dias letivos (segunda a sexta) depois de "from" até hoje, contando hoje.
-function schoolDaysSince(from){
+let schoolCalendar=null;
+async function loadCalendar(force=false){
+ if(schoolCalendar&&!force)return schoolCalendar;
+ try{const rows=await rpc('calendar_manage',{p_action:'list',p_args:{}});schoolCalendar=Array.isArray(rows)?rows:[];}
+ catch(e){schoolCalendar=[];schoolCalendar.missing=['PGRST202','42883'].includes(e?.code);}
+ return schoolCalendar;
+}
+const dayKey=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+const offDays=()=>new Set((schoolCalendar||[]).map(r=>String(r.day).slice(0,10)));
+const isSchoolDay=(d,off=offDays())=>d.getDay()!==0&&d.getDay()!==6&&!off.has(dayKey(d));
+function schoolDaysSince(from,off=offDays()){
  const day=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate());
  const end=day(new Date());let cur=day(from),n=0;
- while(cur<end){cur=new Date(cur.getFullYear(),cur.getMonth(),cur.getDate()+1);const w=cur.getDay();if(w!==0&&w!==6)n++;}
+ while(cur<end){cur=new Date(cur.getFullYear(),cur.getMonth(),cur.getDate()+1);if(isSchoolDay(cur,off))n++;}
  return n;
 }
 // Sequência: dias letivos seguidos sem atraso. Sem nenhum atraso, conta desde o início do ano letivo (1º de fevereiro).
@@ -219,7 +230,7 @@ function studentStreak(recent){
  const never=!valid.length,lateToday=!never&&valid[0].toDateString()===now.toDateString();
  const days=lateToday?0:schoolDaysSince(never?new Date(yearStart.getTime()-864e5):valid[0]);
  const label=days===1?'1 dia letivo seguido sem atraso':`${days} dias letivos seguidos sem atraso`;
- const note=lateToday?'Hoje teve atraso registrado. A contagem recomeça amanhã.':never?'Contando desde o início do ano letivo. Você ainda não teve atrasos!':'Contando desde o seu último atraso. Sábados e domingos não entram.';
+ const note=lateToday?'Hoje teve atraso registrado. A contagem recomeça amanhã.':never?'Contando desde o início do ano letivo. Você ainda não teve atrasos!':'Contando desde o seu último atraso. Fins de semana, feriados e férias não entram.';
  return {days,never,lateToday,label,note};
 }
 // Tico: desenho do assets/tico.js; ao toque, dá um pulinho e muda o recado.
@@ -423,15 +434,65 @@ function syncPrefs(){
 $('theme').onclick=()=>{const dark=document.body.classList.toggle('dark');prefSet('presenca-theme',dark?'dark':'light');syncPrefs();};
 $('textSize').onclick=()=>{const big=document.body.classList.toggle('large-text');prefSet('presenca-text',big?'large':'normal');syncPrefs();};
 $('revealPassword').onclick=()=>{const input=$('authForm').elements.password,show=input.type==='password';input.type=show?'text':'password';$('revealPassword').setAttribute('aria-pressed',String(show));$('revealPassword').setAttribute('aria-label',show?'Esconder senha':'Mostrar senha');$('revealPassword').innerHTML=`<i class="fi fi-rr-${show?'eye-crossed':'eye'}" aria-hidden="true"></i>`;};
-function connection(){$('connection').hidden=navigator.onLine;}window.addEventListener('online',connection);window.addEventListener('offline',connection);connection();
+// ---------- Fila sem internet para o registro de atraso ----------
+// Cada registro já tem um identificador único (request): reenviar nunca duplica o atraso no banco.
+const QUEUE_KEY='presenca.fila-atrasos';
+function queueRead(){try{const q=JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]');return Array.isArray(q)?q:[];}catch{return [];}}
+function queueSave(q){try{localStorage.setItem(QUEUE_KEY,JSON.stringify(q));}catch{}renderQueue();}
+const offlineError=e=>!navigator.onLine||e instanceof TypeError||/failed to fetch|networkerror|load failed|fetch/i.test(String(e?.message||''));
+function queueAdd(item){const q=queueRead();if(!q.some(x=>x.request===item.request))q.push(item);queueSave(q);}
+let flushing=false;
+async function flushQueue(){
+ if(flushing||!navigator.onLine||!staff())return;
+ // Cada pessoa envia só o que ela mesma registrou neste aparelho.
+ let q=queueRead().filter(x=>x.op===state.me?.id);if(!q.length)return;
+ flushing=true;let sent=0;const failed=[];
+ try{
+  for(const item of [...q]){
+   const when=new Date(item.at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+   const note=[item.reason,`Registrado sem internet às ${when}`].filter(Boolean).join(' · ').slice(0,500);
+   try{await write('record',{student:item.student,request:item.request,reason:note});sent++;}
+   catch(e){if(offlineError(e))break;failed.push(`${item.name}: ${errorText(e)}`);}
+   q=queueRead().filter(x=>x.request!==item.request);queueSave(q);
+  }
+ }finally{flushing=false;}
+ if(sent||failed.length)msg([sent?`${sent} ${sent===1?'atraso pendente foi enviado':'atrasos pendentes foram enviados'}.`:'',failed.length?`Não foi possível enviar: ${failed.join('; ')}`:''].filter(Boolean).join(' '),failed.length?'error':'success');
+ if(sent&&state.page==='history')await render();
+}
+function renderQueue(){
+ const box=$('pendingQueue');const q=queueRead().filter(x=>!state.me||x.op===state.me.id);
+ const banner=$('connection');if(banner)banner.textContent=navigator.onLine?'':`Sem internet. Atrasos registrados agora ficam guardados neste aparelho e são enviados quando a conexão voltar.${q.length?` Pendentes: ${q.length}.`:''}`;
+ if(!box)return;
+ box.hidden=!q.length;
+ box.innerHTML=q.length?`<h3>${uiIcon('clock')} ${q.length} ${q.length===1?'atraso pendente de envio':'atrasos pendentes de envio'}</h3><ul>${q.map(x=>`<li><strong>${esc(x.name)}</strong><small>guardado às ${esc(new Date(x.at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}))}</small></li>`).join('')}</ul><p class="muted">${navigator.onLine?'A conexão voltou: envie agora.':'Serão enviados sozinhos quando a internet voltar.'}</p>${navigator.onLine?button('Enviar agora','queue-flush','','primary'):''}`:'';
+}
+function connection(){$('connection').hidden=navigator.onLine;renderQueue();if(navigator.onLine)void flushQueue();}
+window.addEventListener('online',connection);window.addEventListener('offline',connection);connection();
 window.addEventListener('hashchange',()=>{if(state.me)void route();});
-async function route(){const p=location.hash.replace('#/','');if((p==='enrollments'||p==='classes')&&allowed().includes(p))studentsTab=p==='classes'?'classes':'enrollments';else if(p==='students')studentsTab='list';state.page=allowed().includes(p)?(['enrollments','classes'].includes(p)?'students':p):'overview';if(state.academic?.pending&&state.page!=='history')state.page='overview';state.offset=0;state.selected=null;state.request=null;state.report=null;searchToken++;pendingRouteMotion=true;$('view').replaceChildren();closeNavigation();$('mobileNav').querySelectorAll('[data-page]').forEach(a=>{a.classList.toggle('active',a.dataset.page===state.page);a.setAttribute('aria-current',a.dataset.page===state.page?'page':'false');});$('nav').querySelectorAll('a').forEach(a=>{const p=a.dataset.page;const active=p===state.page||(state.page==='students'&&((studentsTab==='classes'&&p==='classes')||(studentsTab==='enrollments'&&p==='enrollments')||(studentsTab==='list'&&p==='students')));a.classList.toggle('active',active);});$('topNav')?.querySelectorAll('a').forEach(a=>{const on=a.dataset.page===state.page;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});const pageDescription=$('pageDescription');if(pageDescription)pageDescription.textContent=paths[state.page][1];renderPageProfile();renderHeaderChrome();
+async function route(){void flushQueue();const p=location.hash.replace('#/','');if((p==='enrollments'||p==='classes')&&allowed().includes(p))studentsTab=p==='classes'?'classes':'enrollments';else if(p==='students')studentsTab='list';state.page=allowed().includes(p)?(['enrollments','classes'].includes(p)?'students':p):'overview';if(state.academic?.pending&&state.page!=='history')state.page='overview';state.offset=0;state.selected=null;state.request=null;state.report=null;searchToken++;pendingRouteMotion=true;$('view').replaceChildren();closeNavigation();$('mobileNav').querySelectorAll('[data-page]').forEach(a=>{a.classList.toggle('active',a.dataset.page===state.page);a.setAttribute('aria-current',a.dataset.page===state.page?'page':'false');});$('nav').querySelectorAll('a').forEach(a=>{const p=a.dataset.page;const active=p===state.page||(state.page==='students'&&((studentsTab==='classes'&&p==='classes')||(studentsTab==='enrollments'&&p==='enrollments')||(studentsTab==='list'&&p==='students')));a.classList.toggle('active',active);});$('topNav')?.querySelectorAll('a').forEach(a=>{const on=a.dataset.page===state.page;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});const pageDescription=$('pageDescription');if(pageDescription)pageDescription.textContent=paths[state.page][1];renderPageProfile();renderHeaderChrome();
  const home=studentView()&&state.page==='overview';
  document.body.classList.toggle('student-overview-mode',home);document.body.classList.toggle('desktop-overview-mode',staff()&&state.page==='overview');document.body.classList.toggle('staff-shell',staff());document.body.classList.toggle('history-page',staff()&&state.page==='history');document.body.classList.toggle('students-page',staff()&&state.page==='students');
  document.body.classList.toggle('student-area',studentView());
  setStudentMood(studentView()?moodFromProfile(state.me):'');
  window.scrollTo({top:0,behavior:'auto'});
  await render();}
+// ---------- Calendário escolar (Direção cadastra; todos consultam) ----------
+const calendarKinds={feriado:'Feriado',recesso:'Recesso',ferias:'Férias'};
+function calendarPeriods(rows){
+ const out=[];
+ for(const r of rows){const day=String(r.day).slice(0,10),last=out[out.length-1];
+  const next=last&&new Date(new Date(last.to+'T12:00:00').getTime()+864e5).toISOString().slice(0,10);
+  if(last&&last.kind===r.kind&&last.label===r.label&&next===day)last.to=day;else out.push({from:day,to:day,kind:r.kind,label:r.label});}
+ return out;
+}
+function renderCalendar(rows){
+ if(rows.missing)return setupCard('O calendário escolar (feriados, recessos e férias) fica disponível depois dela.');
+ const br=d=>d.split('-').reverse().join('/');
+ const periods=calendarPeriods(rows);
+ const form=`<section class="panel" aria-labelledby="calNew"><div class="section-head"><h3 id="calNew">${uiIcon('plus')} Cadastrar dias sem aula</h3></div><p class="muted">Esses dias não contam na sequência sem atraso dos alunos e aparecem como "sem aula" nos gráficos. Para um dia só, deixe a data final vazia.</p><form id="calendarForm" class="form-grid"><label>Primeiro dia<input name="from" type="date" required></label><label>Último dia<input name="to" type="date"></label><label>Tipo<select name="kind"><option value="feriado">Feriado</option><option value="recesso">Recesso</option><option value="ferias">Férias</option></select></label><label>Nome<input name="label" maxlength="80" placeholder="Ex.: Proclamação da República" required></label><button class="primary">Salvar no calendário</button></form></section>`;
+ const list=periods.length?`<ul class="calendar-list">${periods.map(p=>`<li><span class="calendar-when"><strong>${br(p.from)}${p.to!==p.from?' a '+br(p.to):''}</strong><small>${calendarKinds[p.kind]||p.kind}</small></span><span class="calendar-name">${esc(p.label)}</span>${button('Remover','calendar-remove',p.from+'|'+p.to,'danger')}</li>`).join('')}</ul>`:emptyState('calendar','Nenhum dia sem aula cadastrado.','Cadastre os feriados e as férias do ano letivo.');
+ return `<div class="calendar-page">${admin()?form:''}<section class="panel" aria-labelledby="calList"><div class="section-head"><h3 id="calList">${uiIcon('calendar')} Dias sem aula</h3></div>${list}</section></div>`;
+}
 // ---------- Equipe e aprovações (somente Direção) ----------
 const staffManage=(action,args={})=>rpc('staff_manage',{p_action:action,p_args:args});
 const missingRpc=e=>['PGRST202','42883'].includes(e?.code);
@@ -439,7 +500,7 @@ let staffData=null;
 // Atualização do banco que ainda não foi instalada: o site continua funcionando e explica o passo a passo uma vez só.
 const SQL_EDITOR_URL='https://supabase.com/dashboard/project/'+(String(SUPABASE_URL).match(/https:\/\/([a-z0-9]+)\.supabase\.co/)?.[1]||'_')+'/sql/new';
 function setupCard(feature){
- return `<section class="setup-card" aria-labelledby="setupTitle"><h3 id="setupTitle">${uiIcon('info')} Falta uma atualização do banco de dados</h3><p>${feature} O restante do portal continua funcionando normalmente.</p><ol><li>Abra o <a href="${SQL_EDITOR_URL}" target="_blank" rel="noopener noreferrer">SQL Editor do Supabase</a> com a conta da escola.</li><li>Cole o conteúdo do arquivo <code>sql/instalar_atualizacoes.sql</code> do projeto e clique em <strong>Run</strong>.</li><li>Volte aqui e atualize a página.</li></ol><p class="muted">O arquivo junta as atualizações 10, 11, 12 e 13 na ordem certa. Pode rodar mais de uma vez sem problema.</p><div class="setup-actions">${button('Atualizar a página','reload-page','','outline')}</div></section>`;
+ return `<section class="setup-card" aria-labelledby="setupTitle"><h3 id="setupTitle">${uiIcon('info')} Falta uma atualização do banco de dados</h3><p>${feature} O restante do portal continua funcionando normalmente.</p><ol><li>Abra o <a href="${SQL_EDITOR_URL}" target="_blank" rel="noopener noreferrer">SQL Editor do Supabase</a> com a conta da escola.</li><li>Cole o conteúdo do arquivo <code>sql/instalar_atualizacoes.sql</code> do projeto e clique em <strong>Run</strong>.</li><li>Volte aqui e atualize a página.</li></ol><p class="muted">O arquivo junta as atualizações 10 a 14 na ordem certa. Pode rodar mais de uma vez sem problema.</p><div class="setup-actions">${button('Atualizar a página','reload-page','','outline')}</div></section>`;
 }
 const migrationNotice=setupCard('Os pedidos de acesso da equipe, a troca de senha e a remoção de funcionários ficam disponíveis depois dela.');
 async function loadStaffData(){try{staffData=await staffManage('list');}catch(e){if(!missingRpc(e))throw e;staffData=null;}return staffData;}
@@ -493,6 +554,11 @@ const reportKinds=[
 ];
 const reportStatusLabels={active:'Válidos',forgiven:'Perdoados',void:'Anulados'};
 const reportScopeLabels={students:{active:'Ativos',archived:'Arquivados',all:'Todos'},enrollments:{active:'Ativas',inactive:'Inativas',all:'Todas'}};
+function schoolDaysThisMonth(){
+ const now=new Date(),off=offDays();let n=0,skipped=0;
+ for(let d=new Date(now.getFullYear(),now.getMonth(),1);d<=now;d=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1)){if(isSchoolDay(d,off))n++;else if(d.getDay()!==0&&d.getDay()!==6)skipped++;}
+ return {n,skipped};
+}
 function renderReports(d){
  const grades=[...new Set(state.classes.map(c=>c.grade))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
  const kind=reportFilter.kind||'students';
@@ -516,7 +582,9 @@ function renderReports(d){
  </form>`;
  const summary=[['Hoje',d.today],['Nesta semana',d.week],['Neste mês',d.month]];
  const aggregate=`<section class="panel report-aggregate" aria-labelledby="aggregateTitle"><div class="section-head"><h3 id="aggregateTitle">${uiIcon('limit')} Resumo da escola</h3>${button('Baixar resumo (.xlsx)','export-report','','outline')}</div><p class="muted">Só totais, sem nomes de alunos. Bom para reuniões e murais.</p><div class="report-counters">${summary.map(([label,n])=>`<div><small>${label}</small><strong>${Number(n)||0}</strong></div>`).join('')}</div><h4 class="sub-title">Atrasos por turma no mês</h4>${table(['Turma','Atrasos'],d.classes.map(c=>[esc(c.grade||'Sem turma'),Number(c.total)||0]))}</section>`;
- return `<div class="report-page">${builder}${aggregate}</div>`;
+ const sd=schoolDaysThisMonth();
+ const days=`<p class="notice">${uiIcon('calendar')} Este mês teve <strong>${sd.n} ${sd.n===1?'dia letivo':'dias letivos'}</strong> até hoje${sd.skipped?`, sem contar ${sd.skipped} ${sd.skipped===1?'dia sem aula':'dias sem aula'} do calendário escolar`:''}.</p>`;
+ return `<div class="report-page">${days}${builder}${aggregate}</div>`;
 }
 function bindReportForm(){
  const form=$('reportForm');if(!form)return;
@@ -559,7 +627,7 @@ function bindReportForm(){
     if(offset>10000)throw Error('Relatório muito grande. Escolha uma turma, série ou período menor.');
    }
    if(!records.length)return {notice:'Nenhum registro encontrado com esses filtros. Nenhum arquivo foi criado.'};
-   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=6.0.0');
+   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.0.0');
    const statusLabel=args.kind==='history'?(reportStatusLabels[args.status]||'Todas'):(reportScopeLabels[args.kind==='enrollments'?'enrollments':'students'][args.scope]||'Todas');
    saveInstitutionalWorkbook(args.kind,records,{grade:args.grade,className:chosenClass?.name||'',from:args.from,to:args.to,status:args.status,scope:args.scope,statusLabel});
    return {notice:`Planilha baixada com ${records.length} ${records.length===1?'registro':'registros'}.`};
@@ -571,7 +639,7 @@ function bindReportForm(){
 function renderEntry(){
  return `<div class="entry-layout"><section class="panel entry-panel" aria-labelledby="entryTitle"><h2 id="entryTitle">Quem chegou atrasado?</h2>
  <form id="entryForm"><label>Aluno<span class="entry-search">${uiIcon('search')}<input id="entrySearch" type="search" autocomplete="off" placeholder="Ex.: Maria ou 0000111" aria-controls="entryResults" aria-expanded="false" role="combobox"></span></label><div id="entryResults" class="results" role="listbox" aria-label="Alunos encontrados"></div><div id="selectedStudent" aria-live="polite"></div><label><span>Observação <small class="muted">(opcional)</small></span><textarea id="entryReason" maxlength="500" rows="2" placeholder="Ex.: ônibus atrasou"></textarea></label><button class="primary" id="recordBtn" type="submit" disabled>${uiIcon('clock')}<span>Registrar atraso</span></button></form><div id="lastRecord" aria-live="polite"></div></section>
- <aside class="panel entry-help" aria-labelledby="entryHelpTitle"><h3 id="entryHelpTitle">Como funciona</h3><ol class="steps-list"><li><span><strong>Busque</strong> o aluno pelo nome ou RA.</span></li><li><span><strong>Confira</strong> a turma e a contagem de atrasos.</span></li><li><span><strong>Registre.</strong> Errou? Dá para desfazer em até 2 minutos.</span></li></ol><p class="muted entry-keys">Pelo teclado: ↑ e ↓ escolhem, Enter confirma.</p></aside></div>`;
+ <aside class="panel entry-help" aria-labelledby="entryHelpTitle"><h3 id="entryHelpTitle">Como funciona</h3><ol class="steps-list"><li><span><strong>Busque</strong> o aluno pelo nome ou RA.</span></li><li><span><strong>Confira</strong> a turma e a contagem de atrasos.</span></li><li><span><strong>Registre.</strong> Errou? Dá para desfazer em até 2 minutos.</span></li></ol><p class="muted entry-keys">Pelo teclado: ↑ e ↓ escolhem, Enter confirma.</p><p class="muted">Sem internet, o atraso fica guardado neste aparelho e é enviado sozinho quando a conexão voltar.</p></aside><section id="pendingQueue" class="panel pending-queue" aria-live="polite" hidden></section></div>`;
 }
 // Diz por que um aluno não pode receber registro, em vez de só travar o botão.
 function entryBlocker(s){
@@ -619,7 +687,7 @@ function annualCalendarPanel(){
  return `<section class="panel annual-calendar"><h3>Virada de ano letivo</h3><p>Defina quando as matrículas deixarão de valer e quando começará o próximo ano. Nenhum aluno é movido apenas por mudar o calendário civil.</p><form id="annualCalendarForm" class="annual-form"><label>Próximo ano<input name="year" type="number" min="2020" max="2100" required value="${state.academic?.year_status==='planned'?state.academic.year:year+1}"></label><label>Encerrar ano atual em<input name="close" type="date" required value="${esc(state.academic?.closes_on||'')}"></label><label>Abrir próximo ano em<input name="open" type="date" required value="${esc(state.academic?.opens_on||'')}"></label><button type="submit" class="primary">Salvar calendário letivo</button></form><div class="toolbar">${button('Ver renovações','annual-open-list')}${button('Processar datas já alcançadas','annual-process')}</div><p class="hint">A rotina automática verifica as datas periodicamente. A Direção deve conferir o calendário antes de salvar.</p></section>`;
 }
 async function render(){if(!state.me)return;const token=++renderToken,page=state.page;const view=$('view');view.setAttribute('aria-busy','true');if(!view.childElementCount)view.innerHTML='<p class="empty">Carregando informações…</p>';try{let html='',rows=[];
-if(studentView()&&state.academic?.pending&&page!=='history'){html=renderAnnualPending();}else if(page==='reports'){const d=await read('dashboard');state.report=d;html=renderReports(d);}else if(page==='overview'){const [d,notes,recent,waiting]=await Promise.all([read('dashboard'),read('announcements'),studentView()?read('history',{offset:0}).catch(()=>[]):Promise.resolve([]),admin()?staffManage('counts').then(c=>Number(c?.total)||0).catch(()=>0):Promise.resolve(0)]);html=studentView()?renderStudentHome(d,notes,recent):renderStaffHome(d,notes,waiting);}else if(page==='achievements'){const [d,recent]=await Promise.all([read('dashboard'),read('history',{offset:0}).catch(()=>[])]);html=renderAchievements(d,recent);}else if(page==='entry'){html=renderEntry();
+if(studentView()&&state.academic?.pending&&page!=='history'){html=renderAnnualPending();}else if(page==='reports'){const [d]=await Promise.all([read('dashboard'),loadCalendar()]);state.report=d;html=renderReports(d);}else if(page==='overview'){const [d,notes,recent,waiting]=await Promise.all([read('dashboard'),read('announcements'),studentView()?read('history',{offset:0}).catch(()=>[]):Promise.resolve([]),admin()?staffManage('counts').then(c=>Number(c?.total)||0).catch(()=>0):Promise.resolve(0),loadCalendar()]);html=studentView()?renderStudentHome(d,notes,recent):renderStaffHome(d,notes,waiting);}else if(page==='achievements'){const [d,recent]=await Promise.all([read('dashboard'),read('history',{offset:0}).catch(()=>[]),loadCalendar()]);html=renderAchievements(d,recent);}else if(page==='entry'){html=renderEntry();
  }else if(page==='students'&&studentsTab==='classes'){
  html=`<section class="student-reference-shell student-hub">${studentReferenceTop('classes')}${classManager()}</section>`;
  }else if(page==='students'&&studentsTab==='enrollments'){
@@ -635,7 +703,7 @@ if(studentView()&&state.academic?.pending&&page!=='history'){html=renderAnnualPe
 }else if(page==='adjustments'){rows=await read('adjustments',{offset:state.offset});html=`<section class="panel">${table(['Data','Aluno','Ação','Justificativa'],rows.map(r=>[dateBR(r.created_at),esc(r.full_name),esc({chance:'Nova chance',forgive:'Perdão',correct:'Correção',undo:'Desfeito',approve:'Matrícula validada',reset_student:'Novo período',archive:'Arquivado',restore:'Restaurado',edit_student:'Dados corrigidos'}[r.action]||r.action),esc(r.reason)]))}${pager(rows)}</section>`;
 }else if(page==='announcements'){rows=await read('announcements',{offset:state.offset});html=renderAnnouncements(rows);}else if(page==='audit'){rows=await read('audit',{offset:state.offset});html=`<section class="panel">${table(['Data','Operação','Responsável','Detalhe'],rows.map(r=>[dateBR(r.created_at),esc(r.action),esc(r.actor_name||'Sistema'),esc(r.detail||'—')]))}${pager(rows)}</section>`;
 }else if(page==='privacy'){rows=await read('privacy',{offset:state.offset});html=`<section class="panel">${button('Registrar solicitação ou incidente','privacy-new')}${table(['Data','Tipo','Situação','Descrição','Ações'],rows.map(r=>[dateBR(r.created_at),r.kind==='incidente'?'Incidente':'Solicitação',esc(r.status.replace('_',' ')),esc(r.description),button('Acompanhar','privacy-edit',r.id)]))}${pager(rows)}</section>`;
-}else if(page==='storage'){let st=null;try{st=await rpc('storage_manage',{p_action:'status',p_args:{}});}catch(e){if(!['PGRST202','42883'].includes(e?.code))throw e;}html=st?renderStorage(st):setupCard('O controle de armazenamento (quanto do limite de 500 MB está em uso e a limpeza automática) fica disponível depois dela.');
+}else if(page==='calendar'){html=renderCalendar(await loadCalendar(true));}else if(page==='storage'){let st=null;try{st=await rpc('storage_manage',{p_action:'status',p_args:{}});}catch(e){if(!['PGRST202','42883'].includes(e?.code))throw e;}html=st?renderStorage(st):setupCard('O controle de armazenamento (quanto do limite de 500 MB está em uso e a limpeza automática) fica disponível depois dela.');
 }else if(page==='period'){const [settings,resets]=await Promise.all([read('settings'),read('resets',{offset:state.offset})]);rows=resets;state.settings=settings;html=`<div class="grid-two"><section class="panel"><h3>Regras e privacidade</h3><p>O limite padrão vale para novos cadastros e novos períodos. Limites individuais atuais são preservados.</p><form id="settingsForm">${field('Limite padrão de atrasos','limit','number',settings.default_limit,'min="1" max="100"')}${field('Responsável pelo tratamento de dados','controller','text',settings.controller,'maxlength="200"')}${field('Contato de privacidade','contact','text',settings.privacy_contact,'maxlength="200"')}<label>Aviso institucional<textarea name="notice" maxlength="4000" required>${esc(settings.privacy_notice)}</textarea></label><label>Política de retenção<textarea name="retention" maxlength="2000" required>${esc(settings.retention_policy)}</textarea></label>${save}</form></section><section class="panel"><h3>Período letivo</h3><p>Encerrar o período zera a contagem atual e preserva todas as ocorrências.</p><form id="periodForm">${field('Agendar encerramento','date','date')}<button class="primary" type="submit">Agendar</button></form><div class="toolbar">${button('Encerrar agora','reset-period','','danger')}</div><p>Agendamentos automáticos precisam do agendador configurado no Supabase.</p>${table(['Data','Situação','Ações'],resets.map(r=>[dateBR(r.scheduled_for),r.executed_at?'Executado':r.cancelled_at?'Cancelado':'Pendente',!r.executed_at&&!r.cancelled_at?button('Cancelar','cancel-reset',r.id):'—']))}${pager(rows)}</section></div>${annualCalendarPanel()}`;}
 if(token!==renderToken)return;view.innerHTML=html;state.rows=rows;bindPager(rows);bindPage();playRouteMotion(view,html.length);}catch(e){if(token===renderToken){pendingRouteMotion=false;view.innerHTML=`<section class="panel"><h3>Não foi possível carregar os dados</h3><p>${esc(errorText(e))}</p>${button('Tentar novamente','retry')}</section>`;}}finally{if(token===renderToken)view.removeAttribute('aria-busy');}}
 function studentTabs(){
@@ -688,6 +756,7 @@ if($('announcementFilters')){$('announcementFilters').onsubmit=e=>e.preventDefau
 if($('renewalSearchForm')){const previous=$('view').querySelector('[data-action=renewal-prev]'),next=$('view').querySelector('[data-action=renewal-next]');if(previous)previous.disabled=renewalOffset===0;if(next)next.disabled=(renewalData?.rows?.length||0)<25;}
 if($('renewalSearchForm'))$('renewalSearchForm').onsubmit=e=>{e.preventDefault();renewalSearch=e.target.elements.search.value.trim();renewalOffset=0;void render();};
 if($('annualCalendarForm'))$('annualCalendarForm').onsubmit=e=>{e.preventDefault();const d=dataForm(e.target);if(d.open<d.close){msg('A abertura precisa ser na mesma data do encerramento ou depois.','error');return;}void run(async()=>{const result=await academicManage('configure',d);state.academic=await academicState();return result;});};
+if($('calendarForm'))$('calendarForm').onsubmit=e=>{e.preventDefault();const d=dataForm(e.target);void run(async()=>{const r=await rpc('calendar_manage',{p_action:'add',p_args:d});return {notice:`${r?.saved||0} ${r?.saved===1?'dia salvo':'dias salvos'} no calendário.`};});};
 if($('storagePolicyForm'))$('storagePolicyForm').onsubmit=e=>{e.preventDefault();const d=dataForm(e.target);void run(async()=>{await rpc('storage_manage',{p_action:'policy',p_args:d});return {notice:'Regras de armazenamento salvas.'};});};
 if($('settingsForm'))$('settingsForm').onsubmit=e=>{e.preventDefault();void run(()=>write('settings',dataForm(e.target)));};
 if($('periodForm'))$('periodForm').onsubmit=e=>{e.preventDefault();void run(()=>rpc('schedule_period_reset',{p_date:dataForm(e.target).date}));};}
@@ -695,7 +764,7 @@ function bindStudentSelection(){ /* seleção em massa removida: não havia aç�
 function bindEntry(){state.selected=null;state.request=null;const search=$('entrySearch');search.focus();search.oninput=async()=>{state.selected=null;state.request=null;$('selectedStudent').innerHTML='';$('recordBtn').disabled=true;const term=search.value.trim(),token=++searchToken;if(!term){$('entryResults').innerHTML='';search.setAttribute('aria-expanded','false');return;}try{const rows=await read('students',{search:term});if(token!==searchToken||!$('entryResults'))return;state.search=rows;state.index=-1;$('entryResults').innerHTML=rows.map((s,i)=>`<button class="result" type="button" id="result-${i}" role="option" aria-selected="false" data-pick="${i}"><span>${esc(s.full_name)}<small>${esc(s.ra)} · ${esc(s.grade)}</small><span>${s.unjustified_count}/${s.late_limit}</span></button>`).join('')||'<p class="empty">Nenhum aluno encontrado.</p>';search.setAttribute('aria-expanded','true');}catch(e){msg(errorText(e),'error');}};
 search.onkeydown=e=>{if(e.isComposing)return;if(['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();state.index=Math.max(0,Math.min(state.search.length-1,state.index+(e.key==='ArrowDown'?1:-1)));document.querySelectorAll('[data-pick]').forEach((b,i)=>b.setAttribute('aria-selected',String(i===state.index)));search.setAttribute('aria-activedescendant','result-'+state.index);}else if(e.key==='Enter'&&!state.selected){e.preventDefault();if(state.search.length)pick(Math.max(0,state.index));}};
 $('entryResults').onclick=e=>{const b=e.target.closest('[data-pick]');if(b)pick(Number(b.dataset.pick));};
-$('entryForm').onsubmit=async e=>{e.preventDefault();if(busy||!state.selected)return;const s=state.selected;busy=true;$('recordBtn').disabled=true;state.request??=crypto.randomUUID();try{const r=await write('record',{student:s.id,request:state.request,reason:$('entryReason').value.trim()});msg(r.duplicate?'Este registro já havia sido confirmado.':'Atraso registrado.');state.selected=null;state.request=null;state.search=[];$('entryForm').reset();$('selectedStudent').innerHTML='';$('entryResults').innerHTML='';$('lastRecord').innerHTML=`<p>Último registro: ${esc(s.full_name)}</p>${button('Desfazer em até 2 minutos','undo',r.id)}`;search.focus();}catch(err){msg(errorText(err),'error');$('recordBtn').disabled=false;}finally{busy=false;}};}
+renderQueue();$('entryForm').onsubmit=async e=>{e.preventDefault();if(busy||!state.selected)return;const s=state.selected;busy=true;$('recordBtn').disabled=true;state.request??=crypto.randomUUID();const reason=$('entryReason').value.trim();const keep=()=>{queueAdd({op:state.me.id,request:state.request,student:s.id,name:s.full_name,reason,at:new Date().toISOString()});msg(`Sem internet: o atraso de ${s.full_name} ficou guardado neste aparelho e está pendente de envio.`,'warn');state.selected=null;state.request=null;state.search=[];$('entryForm').reset();$('selectedStudent').innerHTML='';$('entryResults').innerHTML='';};if(!navigator.onLine){keep();busy=false;return;}try{const r=await write('record',{student:s.id,request:state.request,reason});msg(r.duplicate?'Este registro já havia sido confirmado.':'Atraso registrado.');state.selected=null;state.request=null;state.search=[];$('entryForm').reset();$('selectedStudent').innerHTML='';$('entryResults').innerHTML='';$('lastRecord').innerHTML=`<p>Último registro: ${esc(s.full_name)}</p>${button('Desfazer em até 2 minutos','undo',r.id)}`;search.focus();}catch(err){if(offlineError(err)){keep();}else{msg(errorText(err),'error');$('recordBtn').disabled=false;}}finally{busy=false;}};}
 function pick(i){const s=state.search[i];if(!s)return;state.selected=s;state.request=crypto.randomUUID();$('entrySearch').value=s.full_name;$('entrySearch').setAttribute('aria-expanded','false');$('entryResults').innerHTML='';const blocker=entryBlocker(s);$('selectedStudent').innerHTML=`<div class="selected-student${blocker?' is-blocked':''}"><div><h3>${esc(s.full_name)}</h3><p>${esc(s.grade)} · RA ${esc(s.ra)}</p></div><p class="selected-count"><strong>${s.unjustified_count} de ${s.late_limit}</strong> atrasos ${status(s)}</p>${blocker?`<p class="selected-blocker" role="alert">${uiIcon('info')}<span>${blocker}</span></p>`:''}</div>`;$('recordBtn').disabled=Boolean(blocker);if(!blocker)$('recordBtn').focus();}
 async function run(fn,refresh=true){if(busy)return;busy=true;const buttons=[...$('view').querySelectorAll('button')];buttons.forEach(b=>b.disabled=true);try{const r=await fn();msg(r?.notice||'Operação concluída.');if(refresh)await render();}catch(e){msg(errorText(e),'error');}finally{busy=false;buttons.filter(b=>b.isConnected).forEach(b=>b.disabled=false);bindPager(state.rows);}}
 $('view').onclick=e=>{const b=e.target.closest('[data-action]');if(!b||b.disabled)return;void action(b.dataset.action,b.dataset.id).catch(err=>msg(errorText(err),'error'));};
@@ -720,7 +789,7 @@ if(a==='students-tab'){renewalView=false;studentsTab=['list','enrollments','clas
 if(a==='history-prev'||a==='history-next'){state.offset=Math.max(0,state.offset+(a==='history-next'?historyPageSize:-historyPageSize));await render();return;}
 if(a==='prev'||a==='next'){state.offset=Math.max(0,state.offset+(a==='next'?25:-25));await render();return;}
 if(a==='open-reports'){reportFilter={kind:state.page==='history'?'history':state.page==='enrollments'||state.page==='students'&&studentsTab==='enrollments'?'enrollments':'students',class:state.page==='history'?historyFilter.class||'':state.page==='students'?studentsFilter.class||'':'',grade:''};location.hash='/reports';return;}
-if(a==='tico-play'){ticoPlay();return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=6.0.0');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
+if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.0.0');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
 if(a==='privacy-notice'){const policy=await read('settings');openModal('Privacidade da escola',`<p class="prewrap">${esc(policy.privacy_notice)}</p><p>Responsável: ${esc(policy.controller||'Consulte a secretaria')}</p><p>Contato: ${esc(policy.privacy_contact||'Consulte a secretaria')}</p><p class="prewrap">${esc(policy.retention_policy)}</p>`);return;}
 if(a==='retry'){await render();return;}
 if(a==='history-actions'){

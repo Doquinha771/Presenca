@@ -14,7 +14,7 @@ const browser=await chromium.launch({headless:true,args:['--no-sandbox'],...(pro
 async function setup(role='admin',width=1366,signedOut=false,annual=false){const context=await browser.newContext({viewport:{width,height:900}});await context.addInitScript(({role,signedOut,annual})=>{window.__testRole=role;window.__signedOut=signedOut;window.__annualFixture=annual;window.__pendingStudent=annual&&role==='aluno';},{role,signedOut,annual});await context.route('https://cdn.jsdelivr.net/**',r=>r.fulfill({contentType:'text/javascript',body:fixture}));const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto(base);await page.locator(signedOut?'#authView':'#dashboard').waitFor({state:'visible'});return {context,page};}
 try{
  const {context,page}=await setup();
- for(const name of ['overview','entry','students','history','enrollments','classes','team','adjustments','announcements','archive','period','audit','privacy','reports','storage']){await page.goto(base+'#/'+name);await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));const navLink=page.locator(`#nav [data-page="${name}"]`);if(await navLink.count())assert.equal(await navLink.first().evaluate(el=>el.classList.contains('active')),true,`menu ${name} deveria estar ativo`);assert.equal(await page.locator('#view').getByText('Não foi possível carregar os dados',{exact:true}).count(),0);checks++;}
+ for(const name of ['overview','entry','students','history','enrollments','classes','team','adjustments','announcements','archive','period','audit','privacy','reports','storage','calendar']){await page.goto(base+'#/'+name);await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));const navLink=page.locator(`#nav [data-page="${name}"]`);if(await navLink.count())assert.equal(await navLink.first().evaluate(el=>el.classList.contains('active')),true,`menu ${name} deveria estar ativo`);assert.equal(await page.locator('#view').getByText('Não foi possível carregar os dados',{exact:true}).count(),0);checks++;}
  // As três abas continuam dentro de Alunos; a sidebar também oferece atalhos para Cadastros e Turmas.
  await page.goto(base+'#/enrollments');
  await page.waitForFunction(()=>document.querySelector('.student-tabs button.selected')?.dataset.id==='enrollments');
@@ -122,5 +122,36 @@ try{
  // Link de trocar senha do e-mail: o site confere o código e abre a tela de nova senha (sem passar por localhost).
  {const {context,page}=await setup('aluno',390,true);await page.goto(base+'?token_hash=abc123&type=recovery');await page.locator('#authTitle',{hasText:'Definir nova senha'}).waitFor();assert.deepEqual(await page.evaluate(()=>window.__verify),{token_hash:'abc123',type:'recovery'});assert.equal(await page.evaluate(()=>location.search),'');assert.equal(await page.locator('#emailField').isVisible(),false);await page.locator('[name="password"]').fill('NovaSenha123!');await page.locator('#authSubmit').click();await page.getByText('Senha alterada. Entre com a nova senha.',{exact:true}).waitFor();checks++;await page.goto('about:blank');await page.goto(base+'#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired');await page.getByText('Este link expirou ou já foi usado. Peça um novo link abaixo.',{exact:true}).waitFor();checks++;await page.evaluate(()=>{window.__otpFail=true;});await context.addInitScript(()=>{window.__otpFail=true;});await page.goto(base+'?token_hash=velho&type=recovery');await page.locator('#authTitle',{hasText:'Recuperar senha'}).waitFor();await page.getByText('Este link expirou ou já foi usado. Peça um novo link abaixo.',{exact:true}).waitFor();checks++;await context.close();}
  {const {context,page}=await setup('aluno',390,true);await page.locator('[data-auth="signup"]').click();await page.locator('[name="name"]').fill('João Pedro');await page.locator('[name="ra"]').fill('0000111');await page.locator('[name="grade"]').fill('3º A');await page.locator('[name="birth"]').fill('2007-12-27');await page.locator('[name="email"]').fill('0000111@al.educacao.sp.gov.br');await page.locator('[name="password"]').fill('Teste-123456');await page.locator('[name="consent"]').check();await page.locator('#authSubmit').click();await page.waitForFunction(()=>window.__signup);assert.equal(await page.evaluate(()=>window.__signup.options.data.ra),'0000111');assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.screenshot({path:path.join(root,'tests/login.png'),fullPage:true});checks++;await context.close();}
+ // ---------- Comportamento: o que a pessoa vê e faz, sem depender do texto do código ----------
+ // Fila sem internet: o atraso fica pendente no aparelho e é enviado uma vez só quando a conexão volta.
+ {const {context,page}=await setup('admin');await page.goto(base+'#/entry');await page.locator('#entrySearch').fill('João');await page.locator('[data-pick="0"]').waitFor();await page.locator('#entrySearch').press('ArrowDown');await page.locator('#entrySearch').press('Enter');
+  await context.setOffline(true);await page.locator('#recordBtn').click();await page.locator('#pendingQueue',{hasText:'1 atraso pendente de envio'}).waitFor();
+  assert.equal(await page.evaluate(()=>window.__calls.filter(c=>c.args?.p_action==='record').length),0,'sem internet nada vai para o banco');
+  assert.equal(await page.locator('#connection').isVisible(),true,'faixa de sem internet aparece');
+  await context.setOffline(false);await page.evaluate(()=>window.dispatchEvent(new Event('online')));await page.locator('#pendingQueue').waitFor({state:'hidden'});
+  const sent=await page.evaluate(()=>window.__calls.filter(c=>c.args?.p_action==='record'));assert.equal(sent.length,1,'enviado uma vez ao voltar');assert.match(sent[0].args.p_args.reason,/Registrado sem internet às/);
+  checks++;await context.close();}
+ // Início do aluno: sequência sempre com número, Tico reage ao toque e escola da estação no topo.
+ {const {context,page}=await setup('aluno');await page.goto(base+'#/overview');await page.locator('.s-streak .streak strong').waitFor();
+  assert.match(await page.locator('.s-streak .streak strong').innerText(),/^\d+$/,'número de dias visível');
+  const before=await page.locator('.s-message').innerText();await page.locator('.tico-btn').click();await page.waitForFunction(b=>document.querySelector('.s-message').textContent!==b,before);
+  assert.equal(await page.locator('.tico.hop').count(),1,'Tico pula ao toque');
+  const season=await page.evaluate(()=>document.documentElement.dataset.season);assert.ok(['primavera','verao','outono','inverno'].includes(season),'estação marcada');
+  assert.ok((await page.evaluate(()=>getComputedStyle(document.querySelector('.page-head-inner'),'::after').backgroundImage)).includes(`escola-${season}.svg`),'escola da estação no topo');
+  checks++;await context.close();}
+ // Painel lateral: o botão visível do topo abre as áreas da Direção; calendário cadastra e lista.
+ {const {context,page}=await setup('admin');await page.goto(base+'#/overview');await page.locator('.top-more').click();await page.locator('#sidebar.open').waitFor();
+  await page.locator('#sidebar a[data-page="calendar"]').click();await page.locator('#calendarForm').waitFor();
+  assert.ok(await page.locator('.calendar-list li',{hasText:'Proclamação da República'}).count()>=1,'dias sem aula listados');
+  assert.equal(await page.locator('.calendar-list li',{hasText:'Férias'}).count(),1,'dias seguidos viram um período só');
+  await page.locator('#calendarForm [name="from"]').fill('2026-11-20');await page.locator('#calendarForm [name="label"]').fill('Consciência Negra');await page.locator('#calendarForm button').click();await page.getByText('1 dia salvo no calendário.').waitFor();
+  checks++;await context.close();}
+ // Equipe: cada pessoa em um cartão e a própria conta sem botões de remover.
+ {const {context,page}=await setup('admin');await page.goto(base+'#/team');await page.locator('.team-member').first().waitFor();
+  assert.equal(await page.locator('.team-member',{hasText:'Sua conta'}).locator('[data-action="staff-remove"]').count(),0,'não dá para remover a si mesmo');
+  checks++;await context.close();}
+ // Login: a escola ocupa a lateral esquerda e não cobre o texto.
+ {const {context,page}=await setup('aluno',1366,true);const art=await page.locator('.auth-art').boundingBox(),hero=await page.locator('.auth-hero').boundingBox(),pts=await page.locator('.auth-points').boundingBox();
+  assert.ok(art.width>=hero.width*0.6,'escola larga');assert.ok(art.y>=pts.y+pts.height-2,'escola abaixo dos tópicos');checks++;await context.close();}
  assert.deepEqual(errors,[]);console.log(`${checks} verificações de navegador passaram (rede Supabase simulada).`);
 }finally{await browser.close();server.close();}

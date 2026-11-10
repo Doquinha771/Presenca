@@ -1240,16 +1240,37 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 .tico-btn:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 
 /* Escola em lápis de cor: as árvores mudam com a estação do ano (o boot.js marca html[data-season]) */
-:root{--escola:url("escola-primavera.svg?v=6.0.0")}
-:root[data-season="verao"]{--escola:url("escola-verao.svg?v=6.0.0")}
-:root[data-season="outono"]{--escola:url("escola-outono.svg?v=6.0.0")}
-:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=6.0.0")}
+:root{--escola:url("escola-primavera.svg?v=5.0.0")}
+:root[data-season="verao"]{--escola:url("escola-verao.svg?v=5.0.0")}
+:root[data-season="outono"]{--escola:url("escola-outono.svg?v=5.0.0")}
+:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.0.0")}
 @media (min-width:960px){
- .auth-art{aspect-ratio:364/205;width:min(46%,380px)}
+ .auth-hero{align-content:start;padding-top:clamp(104px,14vh,150px)}
+ .auth-art{aspect-ratio:364/205;width:min(calc(100% - 96px),calc((100vh - 470px) * 1.55),680px);right:auto;left:50%;bottom:0;transform:translateX(-50%)}
+ .auth-hero::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;background:linear-gradient(180deg,#3c9d4f,#2f8a43);z-index:1}
+ .auth-art{z-index:2}
  .auth-art .auth-school{filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
  .auth-tico{left:43%;bottom:90%;width:14%}
  .auth-cloud.c1{top:-14%}.auth-cloud.c2{top:4%}
 }
+
+.message.warn{background:var(--warn-bg);color:var(--warn);border-color:color-mix(in srgb,var(--warn-line) 40%,transparent)}
+.pending-queue{display:grid;gap:10px;border:1.5px solid var(--warn-line);background:var(--warn-bg)}
+.pending-queue h3{display:flex;align-items:center;gap:8px;margin:0;color:var(--warn);font-size:1.05rem}
+.pending-queue ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pending-queue li{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:10px;background:var(--surface)}
+.pending-queue li small{color:var(--ink-2)}
+.pending-queue[hidden]{display:none}
+@media (min-width:960px){.entry-layout>.pending-queue{grid-column:1/-1}}
+
+/* Calendário escolar */
+.calendar-page{display:grid;gap:16px}
+.calendar-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.calendar-list li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.calendar-when{display:grid;gap:2px}.calendar-when small{color:var(--ink-2)}
+.calendar-name{grid-column:1;color:var(--ink)}
+.calendar-list li>button{grid-column:2;grid-row:1/3}
+.trend-off{fill:var(--surface-3);opacity:.7}
 
 /* ---------- 14. Alto contraste do sistema e impressão ---------- */
 @media (forced-colors:active){

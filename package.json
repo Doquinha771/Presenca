@@ -6,6 +6,11 @@
   "scripts": {
     "test": "node --test tests/unit.test.js tests/legal.test.js tests/report.test.js tests/student-flow.test.js tests/annual-year.test.js tests/keepalive.test.js tests/interface.test.js",
     "test:browser": "node tests/browser.mjs",
-    "check": "node --check assets/app.js && node --check assets/utils.js && node --check assets/boot.js && node --check assets/tico.js && node --check assets/report-xlsx.js"
+    "check": "node --check assets/app.js && node --check assets/utils.js && node --check assets/boot.js && node --check assets/tico.js && node --check assets/report-xlsx.js",
+    "gerar:escola": "node scripts/gerar-escola.mjs",
+    "gerar:sql": "node scripts/gerar-instalacao.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.58.2"
   }
 }
