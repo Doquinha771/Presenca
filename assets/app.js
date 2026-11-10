@@ -73,6 +73,7 @@ function renderSidebarNav(){
  const topNav=$('topNav');if(topNav)topNav.innerHTML=mainItems.filter(([page])=>allowed().includes(page)).map(([page,text,icon])=>page==='entry'
   ?`<a href="#/entry" data-page="entry" class="top-cta">${uiIcon('plus')}<span>${esc(text)}</span></a>`
   :`<a href="#/${page}" data-page="${page}">${esc(text)}</a>`).join('')+moreButton(groups);
+ fitHeader();
 }
 // Botão visível no topo que abre o painel lateral com as outras áreas (Equipe, Turmas, Armazenamento…).
 function moreButton(groups){
@@ -87,6 +88,19 @@ function renderPageProfile(){const el=$('pageProfile');if(el){el.replaceChildren
 
 // O cabeçalho mostra o nome da área por extenso e uma frase curta.
 // A busca existe uma única vez: dentro da própria página.
+// Cabeçalho do computador: se os itens não couberem (tela estreita, fonte maior, letras mais largas),
+// ele compacta em etapas, do menos ao mais importante, em vez de deixar um botão por cima do outro.
+const FIT_STEPS=['fit-1','fit-2','fit-3','fit-4'];
+function fitHeader(){
+ const header=document.querySelector('.site-header'),nav=$('topNav'),tools=document.querySelector('.topbar-tools');
+ if(!header||!nav||!tools)return;
+ header.classList.remove(...FIT_STEPS);
+ if(getComputedStyle(nav).display==='none')return;
+ const crowded=()=>{const last=[...nav.children].reduce((m,el)=>Math.max(m,el.getBoundingClientRect().right),0);return nav.scrollWidth>nav.clientWidth+1||last>tools.getBoundingClientRect().left-8;};
+ for(const step of FIT_STEPS){if(!crowded())break;header.classList.add(step);}
+}
+if(window.ResizeObserver)new ResizeObserver(()=>fitHeader()).observe(document.documentElement);
+document.fonts?.ready.then(fitHeader);window.addEventListener('load',fitHeader);document.fonts?.addEventListener?.('loadingdone',fitHeader);
 function renderHeaderChrome(){
  const title=$('pageTitle');
  if(title&&state.me){const home=state.page==='overview';title.textContent=home?(studentView()?`Olá, ${String(state.me.full_name||'').split(' ')[0]}!`:'Início'):paths[state.page][0];}
@@ -469,7 +483,7 @@ function renderQueue(){
 function connection(){$('connection').hidden=navigator.onLine;renderQueue();if(navigator.onLine)void flushQueue();}
 window.addEventListener('online',connection);window.addEventListener('offline',connection);connection();
 window.addEventListener('hashchange',()=>{if(state.me)void route();});
-async function route(){void flushQueue();const p=location.hash.replace('#/','');if((p==='enrollments'||p==='classes')&&allowed().includes(p))studentsTab=p==='classes'?'classes':'enrollments';else if(p==='students')studentsTab='list';state.page=allowed().includes(p)?(['enrollments','classes'].includes(p)?'students':p):'overview';if(state.academic?.pending&&state.page!=='history')state.page='overview';state.offset=0;state.selected=null;state.request=null;state.report=null;searchToken++;pendingRouteMotion=true;$('view').replaceChildren();closeNavigation();$('mobileNav').querySelectorAll('[data-page]').forEach(a=>{a.classList.toggle('active',a.dataset.page===state.page);a.setAttribute('aria-current',a.dataset.page===state.page?'page':'false');});$('nav').querySelectorAll('a').forEach(a=>{const p=a.dataset.page;const active=p===state.page||(state.page==='students'&&((studentsTab==='classes'&&p==='classes')||(studentsTab==='enrollments'&&p==='enrollments')||(studentsTab==='list'&&p==='students')));a.classList.toggle('active',active);});$('topNav')?.querySelectorAll('a').forEach(a=>{const on=a.dataset.page===state.page;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});const pageDescription=$('pageDescription');if(pageDescription)pageDescription.textContent=paths[state.page][1];renderPageProfile();renderHeaderChrome();
+async function route(){void flushQueue();const p=location.hash.replace('#/','');if((p==='enrollments'||p==='classes')&&allowed().includes(p))studentsTab=p==='classes'?'classes':'enrollments';else if(p==='students')studentsTab='list';state.page=allowed().includes(p)?(['enrollments','classes'].includes(p)?'students':p):'overview';if(state.academic?.pending&&state.page!=='history')state.page='overview';state.offset=0;state.selected=null;state.request=null;state.report=null;searchToken++;pendingRouteMotion=true;$('view').replaceChildren();closeNavigation();$('mobileNav').querySelectorAll('[data-page]').forEach(a=>{a.classList.toggle('active',a.dataset.page===state.page);a.setAttribute('aria-current',a.dataset.page===state.page?'page':'false');});$('nav').querySelectorAll('a').forEach(a=>{const p=a.dataset.page;const active=p===state.page||(state.page==='students'&&((studentsTab==='classes'&&p==='classes')||(studentsTab==='enrollments'&&p==='enrollments')||(studentsTab==='list'&&p==='students')));a.classList.toggle('active',active);});$('topNav')?.querySelectorAll('a').forEach(a=>{const on=a.dataset.page===state.page;a.classList.toggle('active',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});fitHeader();const pageDescription=$('pageDescription');if(pageDescription)pageDescription.textContent=paths[state.page][1];renderPageProfile();renderHeaderChrome();
  const home=studentView()&&state.page==='overview';
  document.body.classList.toggle('student-overview-mode',home);document.body.classList.toggle('desktop-overview-mode',staff()&&state.page==='overview');document.body.classList.toggle('staff-shell',staff());document.body.classList.toggle('history-page',staff()&&state.page==='history');document.body.classList.toggle('students-page',staff()&&state.page==='students');
  document.body.classList.toggle('student-area',studentView());

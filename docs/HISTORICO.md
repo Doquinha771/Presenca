@@ -2,6 +2,9 @@
 
 Todas as mudanças em um só lugar, das mais novas para as mais antigas. Documentos de referência que continuam valendo: [Permissões](PERMISSOES.md), [E-mails do Supabase](EMAILS_SUPABASE.md), [Armazenamento](ARMAZENAMENTO_20261106.md), [Virada do ano letivo](VIRADA_ANO_LETIVO_20260923.md), [Exportações](EXPORTACOES.md), [Validação](VALIDACAO.md), [Avaliação institucional](AVALIACAO_INSTITUCIONAL.md) e [Limites jurídicos](LIMITES_JURIDICOS_E_OPERACIONAIS.md).
 
+## Digital 5.0 — cabeçalho que se ajusta (10/11/2026)
+- No teste do GitHub (Linux, letras mais largas), o menu do topo invadia o botão do modo escuro. O cabeçalho agora mede o espaço e compacta em etapas: some o nome da conta, depois os textos de "Administração" e "Registrar atraso" (fica o ícone), depois a fonte do menu diminui. Um teste confere 960 a 1366 px, com letras normais e largas.
+
 ## Digital 5.0 — revisão de acabamento e acessibilidade (10/11/2026, noite)
 - **Calendário escolar refeito:** o ano inteiro em meses, com feriado, recesso e férias em cores diferentes, fins de semana e o dia de hoje marcados. Tocar num dia preenche o cadastro (dois toques marcam um período). Mostra os dias letivos previstos no ano.
 - **Acabamento:** o botão "Registrar atraso" não some mais na própria página; Relatórios sem espaço vazio (dias letivos entram no resumo); textos não grudam nos formulários; meses do histórico do aluno em faixa clara; escola mais suave no modo escuro.

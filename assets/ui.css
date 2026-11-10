@@ -1306,6 +1306,22 @@ button.cal-day:hover{border-color:var(--primary);background:var(--primary-soft)}
 @media (min-width:1100px){.calendar-page{grid-template-columns:minmax(0,1fr) 360px}.cal-side{position:sticky;top:calc(var(--strip) + 72px)}}
 .trend-off{fill:var(--surface-3);opacity:.7}
 
+/* Cabeçalho que se compacta quando falta espaço (o app.js mede e aplica fit-1, fit-2, fit-3) */
+.top-nav{min-width:0}
+.site-header.fit-1 .account-text{display:none}
+.site-header.fit-1 .top-more span,.site-header.fit-2 .top-cta span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.site-header.fit-1 .top-more{padding:0 10px}
+.site-header.fit-2 .top-nav a:not(.top-cta){padding:0 8px;font-size:.88rem}
+.site-header.fit-2 .top-nav a.top-cta{padding:0 12px}
+.site-header.fit-3 .brand strong{display:none}
+.site-header.fit-3 .top-nav a:not(.top-cta){padding:0 6px;font-size:.84rem}
+.site-header.fit-3 .top-nav a::before{left:1px;right:1px}
+.site-header.fit-4 .site-header-inner{gap:6px}
+.site-header.fit-4 .top-nav a:not(.top-cta){padding:0 4px;font-size:.8rem}
+.site-header.fit-4 .top-more{margin-left:2px;padding:0 8px}
+.site-header.fit-4 .top-more-count{display:none}
+.site-header.fit-4 .topbar-tools{gap:0}
+
 /* Revisão de acabamento */
 .ach-card em{color:color-mix(in srgb,var(--c) 70%,#000)}
 body.dark .ach-card em{color:color-mix(in srgb,var(--c) 40%,#fff)}

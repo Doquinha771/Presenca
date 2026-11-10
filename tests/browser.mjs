@@ -153,6 +153,14 @@ try{
  // Login: a escola ocupa a lateral esquerda e não cobre o texto.
  {const {context,page}=await setup('aluno',1366,true);const art=await page.locator('.auth-art').boundingBox(),hero=await page.locator('.auth-hero').boundingBox(),pts=await page.locator('.auth-points').boundingBox();
   assert.ok(art.width>=hero.width*0.6,'escola larga');assert.ok(art.y>=pts.y+pts.height-2,'escola abaixo dos tópicos');checks++;await context.close();}
+ // Cabeçalho do computador: nada fica por cima de nada, mesmo com letras mais largas (como as fontes do Linux do GitHub).
+ for(const wide of [false,true])for(const width of [960,1024,1180,1280,1366]){
+  const context=await browser.newContext({viewport:{width,height:800}});await context.addInitScript(w=>{window.__testRole='admin';if(w)document.addEventListener('DOMContentLoaded',()=>{const st=document.createElement('style');st.textContent='*{letter-spacing:.06em!important;word-spacing:.12em!important}';document.head.append(st);});},wide);
+  await context.route('https://cdn.jsdelivr.net/**',r=>r.fulfill({contentType:'text/javascript',body:fixture}));const page=await context.newPage();await page.goto(base+'#/entry');await page.locator('#dashboard').waitFor({state:'visible'});await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
+  const r=await page.evaluate(()=>{const nav=document.getElementById('topNav'),tools=document.querySelector('.topbar-tools').getBoundingClientRect();const right=Math.max(...[...nav.children].map(e=>e.getBoundingClientRect().right));return {right,left:tools.left,overflow:nav.scrollWidth>nav.clientWidth+1};});
+  assert.ok(r.right<=r.left&&!r.overflow,`cabeçalho apertado em ${width}px${wide?' com letras largas':''}: ${JSON.stringify(r)}`);
+  await page.locator('#theme').click({timeout:3000});checks++;await context.close();
+ }
  // ---------- Interface: o que antes era conferido lendo o texto do código, agora usando o site ----------
  {const {context,page}=await setup('admin');await page.goto(base+'#/students');await page.waitForFunction(()=>!document.getElementById('view').hasAttribute('aria-busy'));
   // Computador: navegação no topo, sem barra inferior; título por extenso; item ativo marcado.
