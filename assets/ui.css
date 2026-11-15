@@ -787,7 +787,7 @@ table.responsive tr{box-shadow:var(--shadow-sm)}
 @media (min-width:960px){
  .page-head-inner{min-height:150px}
  .page-head-inner{position:relative}
- .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:0;width:250px;height:150px;background:var(--escola) center bottom 14px/auto 128px no-repeat,url("chao-grama.svg?v=5.2.0") center bottom/100% 26px no-repeat;pointer-events:none}
+ .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:0;width:250px;height:150px;background:var(--escola) center bottom 14px/auto 128px no-repeat,url("chao-grama.svg?v=5.2.1") center bottom/100% 26px no-repeat;pointer-events:none}
  .page-head-text{max-width:calc(100% - 300px)}
  .page-icon{width:52px;height:52px;border-radius:15px;font-size:1.35rem}
  .auth-hero{justify-items:start;text-align:left}
@@ -1223,10 +1223,10 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 .tico-btn:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 
 /* Escola em lápis de cor: as árvores mudam com a estação do ano (o boot.js marca html[data-season]) */
-:root{--escola:url("escola-primavera.svg?v=5.2.0")}
-:root[data-season="verao"]{--escola:url("escola-verao.svg?v=5.2.0")}
-:root[data-season="outono"]{--escola:url("escola-outono.svg?v=5.2.0")}
-:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.2.0")}
+:root{--escola:url("escola-primavera.svg?v=5.2.1")}
+:root[data-season="verao"]{--escola:url("escola-verao.svg?v=5.2.1")}
+:root[data-season="outono"]{--escola:url("escola-outono.svg?v=5.2.1")}
+:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.2.1")}
 @media (min-width:960px){
  .auth-hero{align-content:start;padding-top:clamp(104px,14vh,150px)}
  .auth-art{display:block;position:absolute;z-index:2;left:50%;bottom:0;width:var(--art-w);aspect-ratio:364/205;transform:translateX(-50%);pointer-events:none}
@@ -1314,7 +1314,7 @@ button.cal-day:hover{border-color:var(--primary);background:var(--primary-soft)}
  .sky-cloud.k2{top:8%;width:calc(var(--art-w) * .34);animation-duration:70s;animation-delay:-48s}
  .sky-cloud.k3{top:52%;width:calc(var(--art-w) * .24);opacity:.8;animation-duration:105s;animation-delay:-75s}
  .sky-cloud.k4{top:0;width:calc(var(--art-w) * .2);opacity:.75;animation-duration:120s;animation-delay:-95s}
- .auth-ground{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;height:110px;background:url("chao-grama.svg?v=5.2.0") 0 0/600px 100% repeat-x;pointer-events:none}
+ .auth-ground{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;height:110px;background:url("chao-grama.svg?v=5.2.1") 0 0/600px 100% repeat-x;pointer-events:none}
  .ground-tufo,.ground-moita{position:absolute;height:auto;transform-origin:50% 100%}
  .ground-tufo{width:64px;animation:grama-vento 4.8s ease-in-out infinite alternate}
  .ground-moita{width:118px;animation:moita-vento 7s ease-in-out infinite alternate}
