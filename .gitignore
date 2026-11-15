@@ -16,3 +16,6 @@ test-results/
 
 # Cópia antiga do site, guardada só como referência local.
 presenca/
+
+# Cache local do npm e do navegador de testes (fica no HD, fora do Git).
+.cache/

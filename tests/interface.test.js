@@ -7,7 +7,7 @@ const html=read('index.html'),app=read('assets/app.js'),css=read('assets/ui.css'
 
 test('uma única folha de estilo, sem camadas legadas',()=>{
  const sheets=[...html.matchAll(/<link rel="stylesheet" href="([^"]+)"/g)].map(m=>m[1]);
- assert.deepEqual(sheets,['https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css','./assets/ui.css?v=5.1.0','./assets/app-extra.css?v=5.1.0']);
+ assert.deepEqual(sheets,['https://cdn-uicons.flaticon.com/4.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css','./assets/ui.css?v=5.2.0']);
  for(const old of ['app','portal-layout','desktop-shell','ergonomia','header-minimal','motion','interface-refresh','dashboard-reference','students-reference','history-reference'])
   assert.ok(!existsSync(new URL(`../assets/${old}.css`,import.meta.url)),old);
  assert.doesNotMatch(css,/https?:\/\//);

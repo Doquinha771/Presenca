@@ -212,7 +212,7 @@ body.nav-open{overflow:hidden}
 .empty-state strong{color:var(--ink)}
 .empty-card{text-align:center;display:grid;gap:4px}
 .grid-two{display:grid;gap:16px}
-.pager,.history-reference-pager,.student-reference-pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin-top:14px}
 .pager span{font-weight:600;color:var(--ink-2);font-size:.9rem}
 .history-page-nav,.student-page-nav{display:flex;align-items:center;gap:8px;font-size:.9rem;color:var(--ink-2)}
 .history-page-size select,.student-page-size select,.inline-select select,.history-sort select{width:auto;min-height:40px;padding:6px 10px;font-size:.9rem}
@@ -779,7 +779,6 @@ table.responsive tr{box-shadow:var(--shadow-sm)}
 #mobileNav .tab-main .fi{box-shadow:0 6px 14px -6px var(--primary)}
 
 /* Login: pontos de destaque e ilustração escolar */
-.auth-art{display:none}
 .auth-card{box-shadow:var(--lift);border-radius:18px}
 
 @media (min-width:640px){
@@ -787,11 +786,11 @@ table.responsive tr{box-shadow:var(--shadow-sm)}
 }
 @media (min-width:960px){
  .page-head-inner{min-height:150px}
- .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:6px;width:240px;height:136px;background:var(--escola) right bottom/contain no-repeat;pointer-events:none}
+ .page-head-inner{position:relative}
+ .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:0;width:250px;height:150px;background:var(--escola) center bottom 14px/auto 128px no-repeat,url("chao-grama.svg?v=5.2.0") center bottom/100% 26px no-repeat;pointer-events:none}
  .page-head-text{max-width:calc(100% - 300px)}
  .page-icon{width:52px;height:52px;border-radius:15px;font-size:1.35rem}
  .auth-hero{justify-items:start;text-align:left}
- .auth-art{display:block;width:min(400px,80%);height:auto;margin-top:28px;filter:drop-shadow(0 18px 24px rgba(0,0,0,.25))}
  .auth-card{background:var(--surface);border:1px solid var(--line)}
  .today-card::before{width:110px;height:110px;right:-46px;bottom:-46px;border-width:12px}
 }
@@ -1047,7 +1046,6 @@ html:has(dialog[open]){overflow:hidden}
 
 /* Login: painel azul da escola com tópicos e o prédio em traço */
 .auth-points{display:none;list-style:none;margin:0;padding:0}
-.auth-school{display:none}
 @media (min-width:960px){
  .auth-hero{background:linear-gradient(160deg,#0b56b3 0%,#0a4aa0 55%,#073a80 100%);justify-content:stretch}
  body.dark .auth-hero{background:linear-gradient(160deg,#0d3366,#0a2850)}
@@ -1057,7 +1055,6 @@ html:has(dialog[open]){overflow:hidden}
  .auth-points{display:grid;gap:14px;margin-top:26px;max-width:40ch}
  .auth-points li{display:grid;grid-template-columns:40px 1fr;gap:14px;align-items:center;color:#fff;font-size:1rem;line-height:1.4}
  .auth-points .fi{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.14);box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);font-size:1.05rem}
- .auth-school{display:block;position:absolute;right:48px;bottom:40px;width:min(42%,340px);height:auto;opacity:.9;pointer-events:none}
 }
 @media (max-width:959px){
  .auth-hero{background:linear-gradient(160deg,#0b56b3,#0a4aa0);color:#fff;padding:18px var(--gutter) 34px}
@@ -1070,11 +1067,6 @@ html:has(dialog[open]){overflow:hidden}
  .auth-card{margin-top:-18px}
 }
 
-/* Faixa de título: prédio da escola em traço no lugar dos livros e do relógio */
-@media (max-width:959px){
- .page-head-inner{padding-right:calc(var(--gutter) + 92px)}
- .page-head-inner::after{content:"";position:absolute;right:var(--gutter);bottom:6px;width:92px;height:52px;background:var(--escola) right bottom/contain no-repeat;pointer-events:none}
-}
 
 /* Botão "Administração / Mais opções" no topo: deixa claro que há mais áreas no painel lateral */
 .top-more{display:none}
@@ -1221,11 +1213,6 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 
 /* Login: nuvens passando devagar atrás do prédio e o Tico no telhado */
 .auth-art{display:none}
-@media (min-width:960px){
- .auth-art{display:block;position:absolute;right:40px;bottom:36px;width:min(44%,360px);aspect-ratio:2/1.25;pointer-events:none}
- .auth-art .auth-school{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto}
- .auth-tico{position:absolute;left:64%;bottom:55.5%;width:16%;height:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18))}
-}
 
 /* Início do aluno: Tico ao lado do recado; tocar nele faz um pulinho e muda a frase */
 .s-tico-row{display:flex;align-items:center;gap:12px}
@@ -1236,16 +1223,15 @@ body.dark .role-tag.role-admin{background:#3a2a10;color:#ffb44d}
 .tico-btn:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
 
 /* Escola em lápis de cor: as árvores mudam com a estação do ano (o boot.js marca html[data-season]) */
-:root{--escola:url("escola-primavera.svg?v=5.1.0")}
-:root[data-season="verao"]{--escola:url("escola-verao.svg?v=5.1.0")}
-:root[data-season="outono"]{--escola:url("escola-outono.svg?v=5.1.0")}
-:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.1.0")}
+:root{--escola:url("escola-primavera.svg?v=5.2.0")}
+:root[data-season="verao"]{--escola:url("escola-verao.svg?v=5.2.0")}
+:root[data-season="outono"]{--escola:url("escola-outono.svg?v=5.2.0")}
+:root[data-season="inverno"]{--escola:url("escola-inverno.svg?v=5.2.0")}
 @media (min-width:960px){
  .auth-hero{align-content:start;padding-top:clamp(104px,14vh,150px)}
- .auth-art{aspect-ratio:364/205;width:var(--art-w);right:auto;left:50%;bottom:0;transform:translateX(-50%)}
- .auth-art{z-index:2}
- .auth-art .auth-school{filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
- .auth-tico{left:43%;bottom:90%;width:14%}
+ .auth-art{display:block;position:absolute;z-index:2;left:50%;bottom:0;width:var(--art-w);aspect-ratio:364/205;transform:translateX(-50%);pointer-events:none}
+ .auth-art .auth-school{position:absolute;left:0;right:0;bottom:0;width:100%;height:auto;filter:drop-shadow(0 10px 18px rgba(0,0,0,.22))}
+ .auth-tico{position:absolute;left:43%;bottom:90%;width:14%;height:auto;filter:drop-shadow(0 4px 6px rgba(0,0,0,.18))}
 }
 
 .message.warn{background:var(--warn-bg);color:var(--warn);border-color:color-mix(in srgb,var(--warn-line) 40%,transparent)}
@@ -1328,7 +1314,7 @@ button.cal-day:hover{border-color:var(--primary);background:var(--primary-soft)}
  .sky-cloud.k2{top:8%;width:calc(var(--art-w) * .34);animation-duration:70s;animation-delay:-48s}
  .sky-cloud.k3{top:52%;width:calc(var(--art-w) * .24);opacity:.8;animation-duration:105s;animation-delay:-75s}
  .sky-cloud.k4{top:0;width:calc(var(--art-w) * .2);opacity:.75;animation-duration:120s;animation-delay:-95s}
- .auth-ground{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;height:110px;background:url("chao-grama.svg?v=5.1.0") 0 0/600px 100% repeat-x;pointer-events:none}
+ .auth-ground{display:block;position:absolute;left:0;right:0;bottom:0;z-index:1;height:110px;background:url("chao-grama.svg?v=5.2.0") 0 0/600px 100% repeat-x;pointer-events:none}
  .ground-tufo,.ground-moita{position:absolute;height:auto;transform-origin:50% 100%}
  .ground-tufo{width:64px;animation:grama-vento 4.8s ease-in-out infinite alternate}
  .ground-moita{width:118px;animation:moita-vento 7s ease-in-out infinite alternate}
@@ -1416,3 +1402,152 @@ body.dark .auth-art .auth-school{filter:brightness(.9) drop-shadow(0 10px 18px r
  #nav a.active,.top-nav a.active{outline:2px solid Highlight}
 }
 @media print{body::before,.site-header,#sidebar,#mobileNav,.topbar-tools,.site-footer,.app-footer{display:none!important}.page-head{border:0}}
+
+/* ---------- 21. Modo escuro: azul-noite com acentos suaves ---------- */
+body.dark{
+ --bg:#0b1020;--surface:#121a2e;--surface-2:#172139;--surface-3:#202c49;
+ --ink:#edf1fb;--ink-2:#b6c0d8;--ink-3:#8590ad;--line:#232f4d;--line-strong:#33426a;
+ --primary:#86acff;--primary-dark:#a8c3ff;--primary-soft:#1b2a52;--on-primary:#0a1430;
+ --red:#ff7a8a;--red-soft:#3b1a29;
+ --ok:#5fe0a8;--ok-bg:#0f3129;--warn:#ffc864;--warn-bg:#382a10;--warn-line:#ffc864;--danger:#ff8c9a;--danger-bg:#3b1a29;
+ --focus:#ffd166;
+ --shadow-sm:0 1px 0 rgba(255,255,255,.03) inset;--shadow:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px -14px rgba(0,0,0,.8);--shadow-lift:0 18px 40px -14px rgba(0,0,0,.85);
+ background:radial-gradient(1200px 600px at 85% -10%,#1a2550 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#13203f 0,transparent 55%),var(--bg);
+ background-attachment:fixed;
+}
+body.dark .panel,body.dark .tile,body.dark .today-card,body.dark .s-status,body.dark .announcement-card,body.dark .student-reference-filter-card,body.dark .student-reference-list-card,body.dark .student-secondary-panel{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 92%,#fff 8%),var(--surface))}
+body.dark .site-header,body.dark .page-head{background:color-mix(in srgb,var(--surface) 88%,transparent)}
+body.dark .chip.active{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+body.dark .step-n{background:var(--primary);color:var(--on-primary)}
+body.dark .auth-hero{background:linear-gradient(160deg,#16275a 0%,#0e1a3d 60%,#0b1020 100%)}
+body.dark input,body.dark select,body.dark textarea{background:var(--surface-2)}
+body.dark ::selection{background:#35508f;color:#fff}
+
+/* ---------- 22. Avisos em popup ---------- */
+.toasts{position:fixed;inset:auto 0 auto auto;top:calc(var(--strip) + 12px);right:12px;left:auto;bottom:auto;z-index:200;width:min(400px,calc(100vw - 24px));margin:0;padding:0;border:0;background:transparent;overflow:visible;display:grid;gap:10px;pointer-events:none}
+.toasts:popover-open{display:grid}
+.toasts:empty{display:none}
+.toast{pointer-events:auto;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:12px 10px 12px 14px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:5px solid var(--primary);box-shadow:var(--shadow-lift);animation:toast-in .32s cubic-bezier(.2,1.2,.4,1)}
+.toast p{font-size:.92rem;font-weight:600;line-height:1.4;padding-top:2px}
+.toast-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary-soft);color:var(--primary)}
+.toast-close{display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:var(--ink-3)}
+.toast-close:hover{background:var(--surface-3);color:var(--ink)}
+.toast-success{border-left-color:var(--ok)}.toast-success .toast-icon{background:var(--ok-bg);color:var(--ok)}
+.toast-error{border-left-color:var(--danger)}.toast-error .toast-icon{background:var(--danger-bg);color:var(--danger)}
+.toast-warn{border-left-color:var(--warn-line)}.toast-warn .toast-icon{background:var(--warn-bg);color:var(--warn)}
+.toast-achievement{border-left-color:#e6a700;background:linear-gradient(100deg,color-mix(in srgb,#ffd34d 16%,var(--surface)),var(--surface) 70%)}
+.toast-achievement .toast-icon{background:#ffd34d;color:#5a3d00}
+.toast.leaving{animation:toast-out .24s var(--ease) forwards}
+@keyframes toast-in{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toast-out{to{opacity:0;transform:translateX(24px)}}
+/* As caixas fixas de mensagem foram trocadas pelos popups. */
+#flash,#authMessage,#modalError{display:none!important}
+
+/* ---------- 23. Ajustes gerais ---------- */
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px}
+.modal-actions>*{flex:1 1 180px}
+.auto-field{background:var(--surface-2)!important;color:var(--ink-2);cursor:default}
+.load-failed{display:grid;gap:12px;justify-items:center}
+.ach-group{display:flex;align-items:baseline;gap:8px;margin:18px 0 10px;font-size:.95rem;color:var(--ink-2)}
+.ach-group:first-of-type{margin-top:4px}
+.ach-group small{color:var(--ink-3);font-weight:600}
+.ach-season{display:inline-flex!important;align-items:center;gap:6px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.78rem;color:var(--primary)}
+.ach-reset{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:.86rem;color:var(--ink-2)}
+.ach-reset .fi{margin-top:3px;color:var(--primary)}
+
+/* ---------- 24. Celular (< 960px): interface de aplicativo ---------- */
+@media (max-width:959px){
+ html{-webkit-tap-highlight-color:transparent}
+ body{overscroll-behavior-y:none}
+ body::before{height:0}
+ :root{--strip:0px;--tabbar:68px}
+
+ /* Barra superior fina e translúcida */
+ .site-header{top:0;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);padding-top:env(safe-area-inset-top)}
+ .site-header-inner{height:54px;padding:0 12px 0 16px}
+ .site-header .brand{font-size:1.02rem}
+ .site-header .brand img{width:28px;height:28px}
+ .topbar-tools .icon-btn{width:40px;height:40px;border-radius:50%}
+
+ /* Título grande, como nos aplicativos */
+ .page-head{background:transparent;border:0}
+ .page-head-inner{padding:18px 16px 4px!important;min-height:0}
+ .page-head-inner::after{display:none}
+ .page-head-inner{display:flex;align-items:center;gap:12px}
+ .page-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:14px;background:var(--primary-soft);color:var(--primary);font-size:1.15rem}
+ #pageTitle{font-size:1.65rem;font-weight:800;letter-spacing:-.03em}
+ #pageDescription{font-size:.86rem;line-height:1.4}
+ .page-body{padding:14px 12px 8px}
+ #view{gap:12px}
+
+ /* Cartões arredondados e macios */
+ .panel,.tile,.today-card,.s-status,.announcement-card,.student-reference-filter-card,.student-reference-list-card,.student-secondary-panel,.history-card,.application-card{border-radius:20px}
+ .panel,.student-reference-filter-card,.student-reference-list-card,.student-secondary-panel{padding:16px;border-color:color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 2px rgba(20,27,45,.04),0 6px 20px -12px rgba(20,27,45,.18)}
+ table.responsive tr{border-radius:16px;padding:4px 14px}
+ .primary,.outline,.danger{min-height:48px;border-radius:14px}
+ input,select,textarea{min-height:48px;border-radius:12px;font-size:16px}
+ .chip{min-height:40px}
+ .staff-tiles{grid-template-columns:1fr 1fr}
+ .student-row-actions{flex-wrap:wrap}
+
+ /* Barra de abas flutuante */
+ #mobileNav{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));height:var(--tabbar);padding:6px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:24px;background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);box-shadow:0 12px 32px -10px rgba(10,20,45,.35)}
+ #mobileNav a,#mobileNav button{border-radius:18px;font-size:.68rem;gap:2px}
+ #mobileNav a.active::before{display:none}
+ #mobileNav a.active{background:var(--primary-soft);color:var(--primary)}
+ #mobileNav a.active .fi{background:transparent}
+ #mobileNav .fi{height:26px}
+ #mobileNav .tab-main{flex:0 0 64px}
+ #mobileNav .tab-main .fi{width:52px;height:52px;margin-top:-26px;border-radius:18px;font-size:1.3rem;box-shadow:0 10px 22px -8px color-mix(in srgb,var(--primary) 80%,transparent);border:4px solid var(--bg)}
+ #mobileNav .tab-main.active{background:transparent}
+ #mobileNav a:active,#mobileNav button:active{transform:scale(.94)}
+ #content{padding-bottom:calc(var(--tabbar) + 30px + env(safe-area-inset-bottom))}
+
+ /* Menu "Mais" vira uma folha que sobe de baixo */
+ #sidebar{inset:auto 0 0 0;width:100%;max-height:86vh;border-radius:26px 26px 0 0;padding:10px 14px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%)}
+ #sidebar::before{content:"";align-self:center;flex:none;width:44px;height:5px;border-radius:99px;background:var(--line-strong);margin-bottom:4px}
+ #sidebar.open{transform:none}
+ #nav a{min-height:52px;border-radius:14px}
+ #nav a.active::before{display:none}
+ #navScrim{backdrop-filter:blur(2px)}
+
+ /* Janelas: folha de baixo com puxador */
+ dialog{border-radius:26px 26px 0 0;padding-top:6px;max-height:92vh}
+ dialog::before{content:"";display:block;width:44px;height:5px;margin:6px auto 0;border-radius:99px;background:var(--line-strong)}
+ .dialog-head{padding-top:10px}
+
+ /* Avisos no topo, ocupando a largura */
+ .toasts{top:calc(8px + env(safe-area-inset-top));right:10px;left:10px;width:auto}
+
+ /* Rodapé discreto */
+ .app-footer{justify-content:center;text-align:center;font-size:.74rem;padding:8px 16px 16px;opacity:.85}
+
+ /* Login: tela de boas-vindas de aplicativo */
+ .auth{background:linear-gradient(180deg,var(--primary) 0,var(--primary) 230px,var(--bg) 230px)}
+ body.dark .auth{background:linear-gradient(180deg,#16275a 0,#0e1a3d 230px,var(--bg) 230px)}
+ .auth-hero{padding:calc(22px + env(safe-area-inset-top)) 20px 8px;color:#fff;text-align:left;justify-items:start}
+ .auth-hero .brand,.auth-hero .brand strong{color:#fff}
+ .auth-hero .brand strong span{color:#ffd166}
+ .auth-hero h1{color:#fff;font-size:1.7rem;margin-top:10px}
+ .auth-hero h1 em{color:#ffd166}
+ .auth-hero p{color:rgba(255,255,255,.86)}
+ .auth-points{display:none}
+ .auth-card{margin:14px 12px 8px;border-radius:26px;padding:22px 18px;border:0;box-shadow:0 18px 40px -18px rgba(10,20,45,.45)}
+ .auth .site-footer{justify-content:center;text-align:center}
+}
+@media (max-width:959px) and (prefers-reduced-motion:reduce){#mobileNav a:active,#mobileNav button:active{transform:none}}
+
+/* ---------- 25. Paginação única, ajuda do login e zona de perigo ---------- */
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:14px}
+.pager-nav{display:flex;align-items:center;gap:8px;margin-left:auto}
+.pager-nav strong{min-width:90px;text-align:center;font-weight:600;font-size:.9rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.pager-nav .outline{min-height:40px;padding:6px 12px}
+.pager-size select{width:auto;min-height:40px;padding:6px 10px;font-size:.9rem}
+.access-line{font-size:.88rem;color:var(--ink-2);text-align:center}
+.auth-help{border-radius:var(--r);background:var(--surface-2);border:1px solid var(--line);font-size:.86rem;color:var(--ink-2)}
+.auth-help summary{min-height:44px;display:flex;align-items:center;gap:6px;padding:0 14px;cursor:pointer;font-weight:600;color:var(--primary)}
+.auth-help p{padding:0 14px 12px;line-height:1.5}
+.danger-zone{border:1.5px solid color-mix(in srgb,var(--danger) 45%,transparent);background:var(--danger-bg)}
+.danger-zone h3{display:flex;align-items:center;gap:8px;color:var(--danger)}
+.danger-zone p{margin:6px 0 12px;color:var(--ink)}
+@media (max-width:639px){.pager-nav{width:100%;justify-content:space-between}.pager-nav strong{min-width:0}}
