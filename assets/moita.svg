@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 80">
+ <title>Moita</title>
+ <defs><filter id="g" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="21" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="3" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9 .35" numOctaves="2" seed="24" result="g"/><feColorMatrix in="g" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -8 5.96" result="m"/><feComposite in="d" in2="m" operator="in"/></filter><filter id="h" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="2" seed="27" result="w"/><feDisplacementMap in="SourceGraphic" in2="w" scale="3" result="d"/><feTurbulence type="fractalNoise" baseFrequency=".9 .35" numOctaves="2" seed="30" result="g"/><feColorMatrix in="g" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -8 5.80" result="m"/><feComposite in="d" in2="m" operator="in"/></filter></defs>
+ <path d="M8 76C2 62 10 48 24 48C24 34 40 26 52 34C58 20 80 18 88 32C100 24 118 30 118 44C132 44 140 60 132 76Z" fill="#7cc46a" filter="url(#h)"/>
+ <path d="M8 76C2 62 10 48 24 48C24 34 40 26 52 34C58 20 80 18 88 32C100 24 118 30 118 44C132 44 140 60 132 76" fill="none" stroke="#2f7d33" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" filter="url(#g)"/>
+ <g fill="none" stroke="#2f7d33" stroke-width="3.2" stroke-linecap="round" filter="url(#g)"><path d="M40 56q8-8 16 0"/><path d="M76 50q8-8 16 0"/><path d="M58 66q7-7 14 0"/></g>
+</svg>

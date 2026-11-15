@@ -1,0 +1,59 @@
+PRESENÇA+ — RESTRICTED INSTITUTIONAL SOFTWARE LICENSE
+Version 1.0 | September 20, 2026
+
+Copyright (c) 2026 Presença+ contributors. All rights reserved.
+
+1. SCOPE AND OWNERSHIP
+This license applies to the Presença+ source code, interfaces, documentation,
+and accompanying materials (the "Software"), unless a file explicitly states
+otherwise. Copyright and all rights not expressly granted remain with their
+respective owners. Third-party components remain subject to their own licenses.
+
+2. LIMITED PERMISSION
+Subject to documented authorization from the competent educational authority,
+permission is granted to E.E. Amador e Catharina Saporito Augusto, São Paulo,
+Brazil, solely to use, inspect, and internally adapt the Software for legitimate
+school administrative activities, through its authorized personnel. This license
+does not constitute authorization from the school, the State of São Paulo, or
+its education authority to deploy the Software or process student information.
+
+3. RESTRICTIONS
+No third party may represent an altered version as the official Presença+
+product, claim endorsement by an educational authority, sublicense this
+Software, or distribute its proprietary source code or adaptations without
+separate written permission from the relevant rights holder. No person may
+use the Software for unlawful surveillance, disclosure of student records,
+unauthorized access, or purposes unrelated to an institutionally approved use.
+Public availability of the repository does not grant an open-source license.
+
+4. PERSONAL DATA AND SECURITY
+This license grants no rights to student, staff, or institutional data. Every
+use of personal data must have an independently documented legal basis and
+comply with applicable privacy law, education rules, institutional approvals,
+security duties, confidentiality obligations, and relevant contracts with
+service providers. Credentials, personal records, and secret API keys must
+never be embedded in public source code or distributed to unauthorized persons.
+
+5. RESPONSIBILITIES AND WARRANTIES
+The Software is supplied in its current state, without a promise of continuous
+availability or fitness for any particular institutional purpose. Before
+production use, the institution and any legally responsible operator must
+perform appropriate legal, technical, security, and accessibility reviews.
+Nothing in this license waives statutory consumer, student, data-subject, or
+public-law rights, excuses unlawful conduct, or limits liability where doing
+so is prohibited by applicable law.
+
+6. TERMINATION AND RECORDS
+Permission under this license ends if its conditions are materially breached,
+subject to applicable law. Termination of software use does not authorize the
+immediate destruction of records that must legally be preserved; data return,
+retention, transfer, and deletion are governed by separate lawful institutional
+procedures and contractual arrangements.
+
+7. THIRD-PARTY SOFTWARE
+Presença+ uses components, services, and dependencies provided by third
+parties. Their respective licenses and terms continue to apply independently.
+
+For permissions outside this license, contact the authorized Presença+
+rights holder through the project repository. No student data should be
+included in a public request.

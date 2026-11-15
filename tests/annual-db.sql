@@ -1,0 +1,55 @@
+-- Executado dentro da transação descartável de tests/database.sql após os testes antigos.
+-- Nenhuma destas operações se destina ao Supabase real.
+select pg_temp.check_true((select count(*)=1 from public.academic_years where status='open'),'ano corrente preservado na instalação');
+select pg_temp.check_true((select count(*)=0 from public.academic_renewals),'instalação não move aluno nenhum');
+update public.school_classes set grade='2 Ano - Ensino médio' where id='a4000000-0000-4000-8000-000000000010';
+insert into public.school_classes(id,grade,name) values('a4000000-0000-4000-8000-000000000011','3 Ano - Ensino médio','B');
+insert into public.school_enrollments(ra,email,full_name,birth_date,class_id) values
+ ('9999999999005','9999999999005@al.educacao.sp.gov.br','Concluinte teste','2007-01-01','a4000000-0000-4000-8000-000000000011');
+insert into auth.users(id,email,raw_user_meta_data,email_confirmed_at) values
+ ('a4000000-0000-4000-8000-000000000005','9999999999005@al.educacao.sp.gov.br','{"full_name":"Concluinte teste"}',now());
+set local role anon;
+select pg_temp.denied($q$select public.academic_portal_state()$q$,'permission denied');
+reset role;
+set local role authenticated;
+set local request.jwt.claim.sub='a4000000-0000-4000-8000-000000000003';
+select pg_temp.denied($q$select public.academic_renewals_list()$q$,'Acesso restrito à equipe');
+select pg_temp.denied($q$select public.academic_manage('configure','{}')$q$,'Acesso restrito à equipe');
+set local request.jwt.claim.sub='a4000000-0000-4000-8000-000000000001';
+select public.academic_manage('configure',jsonb_build_object('year',extract(year from now() at time zone 'America/Sao_Paulo')::integer+1,'close',((now() at time zone 'America/Sao_Paulo')::date)::text,'open',((now() at time zone 'America/Sao_Paulo')::date)::text));
+reset role;
+select pg_temp.check_true((select count(*)=1 from public.academic_years where status='planned'),'Direção programa ano seguinte');
+select pg_temp.check_true((select enrollment_approved from public.profiles where id='a4000000-0000-4000-8000-000000000003'),'não bloqueia alunos ao programar o calendário');
+select private.academic_process_due();
+select private.academic_process_due();
+select pg_temp.check_true((select count(*)=1 from public.academic_years where status='open' and year=extract(year from now() at time zone 'America/Sao_Paulo')::integer+1),'abre o novo ano somente na data agendada');
+select pg_temp.check_true((select count(*)=1 from public.academic_years where status='closed'),'encerra o ano anterior');
+select pg_temp.check_true((select count(*)=1 from public.academic_renewals where student_id='a4000000-0000-4000-8000-000000000003'),'processamento repetido não duplica renovação');
+select pg_temp.check_true((select not enrollment_approved and active from public.profiles where id='a4000000-0000-4000-8000-000000000003'),'aluno fica pendente com conta ainda ativa');
+select pg_temp.check_true((select not active from public.school_enrollments where profile_id='a4000000-0000-4000-8000-000000000003'),'matrícula anterior fica inativa');
+select pg_temp.check_true((select count(*)=2 from public.attendance_events where student_id='a4000000-0000-4000-8000-000000000003'),'histórico de atrasos preservado após virada');
+set local role authenticated;
+set local request.jwt.claim.sub='a4000000-0000-4000-8000-000000000003';
+select pg_temp.check_true(public.academic_portal_state()->>'pending'='true','aluno consulta estado de renovação na própria sessão');
+select pg_temp.check_true(public.portal_read('me')->>'role'='aluno','aluno pendente entra na conta');
+select pg_temp.check_true(jsonb_array_length(public.portal_read('history'))=2,'aluno pendente mantém histórico');
+select pg_temp.denied($q$select public.portal_read('dashboard')$q$,'Matrícula pendente de renovação');
+set local request.jwt.claim.sub='a4000000-0000-4000-8000-000000000001';
+select pg_temp.check_true((public.academic_renewals_list()->>'pending_count')::integer>=3,'Direção consulta fila de renovações');
+select pg_temp.denied($q$select public.portal_write('enrollment','{"ra":"9999999999001"}')$q$,'Use o fluxo de renovação anual');
+reset role;
+select set_config('test.renewal_003',(select id::text from public.academic_renewals where student_id='a4000000-0000-4000-8000-000000000003'),true);
+select set_config('test.renewal_004',(select id::text from public.academic_renewals where student_id='a4000000-0000-4000-8000-000000000004'),true);
+select set_config('test.renewal_005',(select id::text from public.academic_renewals where student_id='a4000000-0000-4000-8000-000000000005'),true);
+set local role authenticated;
+set local request.jwt.claim.sub='a4000000-0000-4000-8000-000000000001';
+select pg_temp.denied($q$select public.academic_manage('renew',jsonb_build_object('id',current_setting('test.renewal_003'),'outcome','approved','class','a4000000-0000-4000-8000-000000000010'))$q$,'A série de destino não corresponde à progressão');
+select public.academic_manage('renew',jsonb_build_object('id',current_setting('test.renewal_003'),'outcome','approved','class','a4000000-0000-4000-8000-000000000011'));
+select public.academic_manage('renew',jsonb_build_object('id',current_setting('test.renewal_004'),'outcome','reproved','class','a4000000-0000-4000-8000-000000000010'));
+select public.academic_manage('renew',jsonb_build_object('id',current_setting('test.renewal_005'),'outcome','completed'));
+select pg_temp.denied($q$select public.academic_manage('renew',jsonb_build_object('id',current_setting('test.renewal_003'),'outcome','approved','class','a4000000-0000-4000-8000-000000000011'))$q$,'já processada');
+reset role;
+select pg_temp.check_true((select enrollment_approved and grade='3 Ano - Ensino médio • B' and unjustified_count=0 from public.profiles where id='a4000000-0000-4000-8000-000000000003'),'aprovado avança e ganha contador novo');
+select pg_temp.check_true((select enrollment_approved and grade='2 Ano - Ensino médio • T' from public.profiles where id='a4000000-0000-4000-8000-000000000004'),'reprovado permanece na série');
+select pg_temp.check_true((select archived_at is not null and not active from public.profiles where id='a4000000-0000-4000-8000-000000000005'),'concluinte sai das listas ativas');
+select pg_temp.check_true((select previous_grade='2 Ano - Ensino médio' from public.academic_renewals where student_id='a4000000-0000-4000-8000-000000000003'),'última série do ano anterior fica registrada no histórico anual');

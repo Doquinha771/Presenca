@@ -1,0 +1,27 @@
+name: Manter Supabase ativo
+
+on:
+  schedule:
+    # O plano Free avalia baixa atividade em uma janela de 7 dias.
+    # Executamos diariamente, em vez de esperar 5 dias, para manter margem segura.
+    - cron: '17 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: presenca-supabase-keepalive
+  cancel-in-progress: true
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Gerar atividade mínima no banco
+        run: node scripts/supabase-keepalive.mjs

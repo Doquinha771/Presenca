@@ -1,0 +1,145 @@
+/* =====================================================================
+   Presença+ 5.1 · camada final (carrega depois do ui.css)
+   1. Modo escuro novo   2. Avisos em popup   3. Escola com chão no Início
+   4. Ajustes gerais     5. Celular: interface de aplicativo
+   ===================================================================== */
+
+/* ---------- 1. Modo escuro: azul-noite com acentos suaves ---------- */
+body.dark{
+ --bg:#0b1020;--surface:#121a2e;--surface-2:#172139;--surface-3:#202c49;
+ --ink:#edf1fb;--ink-2:#b6c0d8;--ink-3:#8590ad;--line:#232f4d;--line-strong:#33426a;
+ --primary:#86acff;--primary-dark:#a8c3ff;--primary-soft:#1b2a52;--on-primary:#0a1430;
+ --red:#ff7a8a;--red-soft:#3b1a29;
+ --ok:#5fe0a8;--ok-bg:#0f3129;--warn:#ffc864;--warn-bg:#382a10;--warn-line:#ffc864;--danger:#ff8c9a;--danger-bg:#3b1a29;
+ --focus:#ffd166;
+ --shadow-sm:0 1px 0 rgba(255,255,255,.03) inset;--shadow:0 1px 0 rgba(255,255,255,.04) inset,0 8px 24px -14px rgba(0,0,0,.8);--shadow-lift:0 18px 40px -14px rgba(0,0,0,.85);
+ background:radial-gradient(1200px 600px at 85% -10%,#1a2550 0,transparent 60%),radial-gradient(900px 500px at -10% 110%,#13203f 0,transparent 55%),var(--bg);
+ background-attachment:fixed;
+}
+body.dark .panel,body.dark .tile,body.dark .today-card,body.dark .s-status,body.dark .announcement-card,body.dark .student-reference-filter-card,body.dark .student-reference-list-card,body.dark .student-secondary-panel{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 92%,#fff 8%),var(--surface))}
+body.dark .site-header,body.dark .page-head{background:color-mix(in srgb,var(--surface) 88%,transparent)}
+body.dark .chip.active{background:var(--primary);border-color:var(--primary);color:var(--on-primary)}
+body.dark .step-n{background:var(--primary);color:var(--on-primary)}
+body.dark .auth-hero{background:linear-gradient(160deg,#16275a 0%,#0e1a3d 60%,#0b1020 100%)}
+body.dark input,body.dark select,body.dark textarea{background:var(--surface-2)}
+body.dark ::selection{background:#35508f;color:#fff}
+
+/* ---------- 2. Avisos em popup ---------- */
+.toasts{position:fixed;inset:auto 0 auto auto;top:calc(var(--strip) + 12px);right:12px;left:auto;bottom:auto;z-index:200;width:min(400px,calc(100vw - 24px));margin:0;padding:0;border:0;background:transparent;overflow:visible;display:grid;gap:10px;pointer-events:none}
+.toasts:popover-open{display:grid}
+.toasts:empty{display:none}
+.toast{pointer-events:auto;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:start;padding:12px 10px 12px 14px;border-radius:16px;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-left:5px solid var(--primary);box-shadow:var(--shadow-lift);animation:toast-in .32s cubic-bezier(.2,1.2,.4,1)}
+.toast p{font-size:.92rem;font-weight:600;line-height:1.4;padding-top:2px}
+.toast-icon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--primary-soft);color:var(--primary)}
+.toast-close{display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:transparent;color:var(--ink-3)}
+.toast-close:hover{background:var(--surface-3);color:var(--ink)}
+.toast-success{border-left-color:var(--ok)}.toast-success .toast-icon{background:var(--ok-bg);color:var(--ok)}
+.toast-error{border-left-color:var(--danger)}.toast-error .toast-icon{background:var(--danger-bg);color:var(--danger)}
+.toast-warn{border-left-color:var(--warn-line)}.toast-warn .toast-icon{background:var(--warn-bg);color:var(--warn)}
+.toast-achievement{border-left-color:#e6a700;background:linear-gradient(100deg,color-mix(in srgb,#ffd34d 16%,var(--surface)),var(--surface) 70%)}
+.toast-achievement .toast-icon{background:#ffd34d;color:#5a3d00}
+.toast.leaving{animation:toast-out .24s var(--ease) forwards}
+@keyframes toast-in{from{opacity:0;transform:translateY(-12px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes toast-out{to{opacity:0;transform:translateX(24px)}}
+/* As caixas fixas de mensagem foram trocadas pelos popups. */
+#flash,#authMessage,#modalError{display:none!important}
+
+/* ---------- 3. Início: a escola fica em cima de um gramado (antes ela flutuava) ---------- */
+@media (min-width:960px){
+ .page-head-inner{position:relative}
+ .page-head-inner::after{bottom:0;height:150px;width:250px;background:var(--escola) center bottom 14px/auto 128px no-repeat,url("chao-grama.svg?v=5.1.0") center bottom/100% 26px no-repeat;border-radius:0}
+}
+
+/* ---------- 4. Ajustes gerais ---------- */
+.modal-actions{display:flex;flex-wrap:wrap;gap:10px}
+.modal-actions>*{flex:1 1 180px}
+.auto-field{background:var(--surface-2)!important;color:var(--ink-2);cursor:default}
+.load-failed{display:grid;gap:12px;justify-items:center}
+.ach-group{display:flex;align-items:baseline;gap:8px;margin:18px 0 10px;font-size:.95rem;color:var(--ink-2)}
+.ach-group:first-of-type{margin-top:4px}
+.ach-group small{color:var(--ink-3);font-weight:600}
+.ach-season{display:inline-flex!important;align-items:center;gap:6px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.78rem;color:var(--primary)}
+.ach-reset{display:flex;gap:8px;align-items:flex-start;margin-top:12px;font-size:.86rem;color:var(--ink-2)}
+.ach-reset .fi{margin-top:3px;color:var(--primary)}
+
+/* ---------- 5. Celular (< 960px): interface de aplicativo ---------- */
+@media (max-width:959px){
+ html{-webkit-tap-highlight-color:transparent}
+ body{overscroll-behavior-y:none}
+ body::before{height:0}
+ :root{--strip:0px;--tabbar:68px}
+
+ /* Barra superior fina e translúcida */
+ .site-header{top:0;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:saturate(1.6) blur(14px);-webkit-backdrop-filter:saturate(1.6) blur(14px);border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);padding-top:env(safe-area-inset-top)}
+ .site-header-inner{height:54px;padding:0 12px 0 16px}
+ .site-header .brand{font-size:1.02rem}
+ .site-header .brand img{width:28px;height:28px}
+ .topbar-tools .icon-btn{width:40px;height:40px;border-radius:50%}
+
+ /* Título grande, como nos aplicativos */
+ .page-head{background:transparent;border:0}
+ .page-head-inner{padding:18px 16px 4px!important;min-height:0}
+ .page-head-inner::after{display:none!important}
+ .page-head-inner{display:flex;align-items:center;gap:12px}
+ .page-icon{display:grid;place-items:center;flex:none;width:44px;height:44px;border-radius:14px;background:var(--primary-soft);color:var(--primary);font-size:1.15rem}
+ #pageTitle{font-size:1.65rem;font-weight:800;letter-spacing:-.03em}
+ #pageDescription{font-size:.86rem;line-height:1.4}
+ .page-body{padding:14px 12px 8px}
+ #view{gap:12px}
+
+ /* Cartões arredondados e macios */
+ .panel,.tile,.today-card,.s-status,.announcement-card,.student-reference-filter-card,.student-reference-list-card,.student-secondary-panel,.history-card,.application-card{border-radius:20px}
+ .panel,.student-reference-filter-card,.student-reference-list-card,.student-secondary-panel{padding:16px;border-color:color-mix(in srgb,var(--line) 70%,transparent);box-shadow:0 1px 2px rgba(20,27,45,.04),0 6px 20px -12px rgba(20,27,45,.18)}
+ table.responsive tr{border-radius:16px;padding:4px 14px}
+ .primary,.outline,.danger{min-height:48px;border-radius:14px}
+ input,select,textarea{min-height:48px;border-radius:12px;font-size:16px}
+ .chip{min-height:40px}
+ .staff-tiles{grid-template-columns:1fr 1fr}
+ .student-row-actions{flex-wrap:wrap}
+
+ /* Barra de abas flutuante */
+ #mobileNav{left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));height:var(--tabbar);padding:6px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:24px;background:color-mix(in srgb,var(--surface) 86%,transparent);backdrop-filter:saturate(1.6) blur(16px);-webkit-backdrop-filter:saturate(1.6) blur(16px);box-shadow:0 12px 32px -10px rgba(10,20,45,.35)}
+ #mobileNav a,#mobileNav button{border-radius:18px;font-size:.68rem;gap:2px}
+ #mobileNav a.active::before{display:none}
+ #mobileNav a.active{background:var(--primary-soft);color:var(--primary)}
+ #mobileNav a.active .fi{background:transparent}
+ #mobileNav .fi{height:26px}
+ #mobileNav .tab-main{flex:0 0 64px}
+ #mobileNav .tab-main .fi{width:52px;height:52px;margin-top:-26px;border-radius:18px;font-size:1.3rem;box-shadow:0 10px 22px -8px color-mix(in srgb,var(--primary) 80%,transparent);border:4px solid var(--bg)}
+ #mobileNav .tab-main.active{background:transparent}
+ #mobileNav a:active,#mobileNav button:active{transform:scale(.94)}
+ #content{padding-bottom:calc(var(--tabbar) + 30px + env(safe-area-inset-bottom))}
+
+ /* Menu "Mais" vira uma folha que sobe de baixo */
+ #sidebar{inset:auto 0 0 0;width:100%;max-height:86vh;border-radius:26px 26px 0 0;padding:10px 14px calc(18px + env(safe-area-inset-bottom));transform:translateY(105%)}
+ #sidebar::before{content:"";align-self:center;flex:none;width:44px;height:5px;border-radius:99px;background:var(--line-strong);margin-bottom:4px}
+ #sidebar.open{transform:none}
+ #nav a{min-height:52px;border-radius:14px}
+ #nav a.active::before{display:none}
+ #navScrim{backdrop-filter:blur(2px)}
+
+ /* Janelas: folha de baixo com puxador */
+ dialog{border-radius:26px 26px 0 0;padding-top:6px;max-height:92vh}
+ dialog::before{content:"";display:block;width:44px;height:5px;margin:6px auto 0;border-radius:99px;background:var(--line-strong)}
+ .dialog-head{padding-top:10px}
+
+ /* Avisos no topo, ocupando a largura */
+ .toasts{top:calc(8px + env(safe-area-inset-top));right:10px;left:10px;width:auto}
+
+ /* Rodapé discreto */
+ .app-footer{justify-content:center;text-align:center;font-size:.74rem;padding:8px 16px 16px;opacity:.85}
+
+ /* Login: tela de boas-vindas de aplicativo */
+ .auth{background:linear-gradient(180deg,var(--primary) 0,var(--primary) 230px,var(--bg) 230px)}
+ body.dark .auth{background:linear-gradient(180deg,#16275a 0,#0e1a3d 230px,var(--bg) 230px)}
+ .auth-hero{padding:calc(22px + env(safe-area-inset-top)) 20px 8px;color:#fff;text-align:left;justify-items:start}
+ .auth-hero .brand,.auth-hero .brand strong{color:#fff}
+ .auth-hero .brand strong span{color:#ffd166}
+ .auth-hero h1{color:#fff;font-size:1.7rem;margin-top:10px}
+ .auth-hero h1 em{color:#ffd166}
+ .auth-hero p{color:rgba(255,255,255,.86)}
+ .auth-points{display:none}
+ .auth-card{margin:14px 12px 8px;border-radius:26px;padding:22px 18px;border:0;box-shadow:0 18px 40px -18px rgba(10,20,45,.45)}
+ .auth .site-footer{justify-content:center;text-align:center}
+}
+@media (max-width:959px) and (prefers-reduced-motion:reduce){#mobileNav a:active,#mobileNav button:active{transform:none}}

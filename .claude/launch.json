@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "presenca-teste",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["tests/servidor-teste.mjs"],
+      "port": 5173
+    }
+  ]
+}
