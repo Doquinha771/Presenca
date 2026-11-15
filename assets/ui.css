@@ -1320,7 +1320,8 @@ button.cal-day:hover{border-color:var(--primary);background:var(--primary-soft)}
  .ground-moita{width:118px;animation:moita-vento 7s ease-in-out infinite alternate}
  .ground-moita.m1{left:3%;bottom:62px}.ground-moita.m2{right:4%;bottom:58px;width:96px;animation-delay:-3s}
  .ground-tufo.t1{left:18%;bottom:66px;animation-delay:-1.2s}.ground-tufo.t2{right:20%;bottom:70px;width:52px;animation-delay:-2.6s}.ground-tufo.t3{left:44%;bottom:14px;width:46px;animation-delay:-.6s}
- .auth-art{bottom:72px}
+ /* A base do prédio fica 2,5% da largura acima da borda da imagem; assim ela afunda ~9px abaixo do ponto mais baixo da grama (77px). */
+ .auth-art{bottom:calc(68px - var(--art-w) * .025)}
 }
 @media (min-width:960px) and (max-height:800px){
  .auth-points{display:none}
