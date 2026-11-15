@@ -23,12 +23,19 @@ try{
  assert.equal(await page.locator('.student-tabs button').count(),3);
  assert.equal(await page.locator('[data-action="students-tab"][data-id="enrollments"]').count(),1);
  assert.equal(await page.locator('#studentClassManager').count(),0);
- assert.equal(await page.locator('#applicationsTitle').count(),1);
- assert.equal(await page.locator('.application-card').count(),1);
+ // "Cadastros e acessos" é só consulta: sem botão de cadastrar e sem pedidos (eles ficam em Aprovações).
+ assert.equal(await page.locator('#applicationsTitle').count(),0);
+ assert.equal(await page.locator('#view [data-action="enrollment-new"]').count(),0);
+ assert.equal(await page.locator('#view [data-action="enrollment-edit"]').count(),0);
+ await page.goto(base+'#/approvals');
+ await page.waitForFunction(()=>document.querySelector('#approvalStudents'));
+ assert.equal(await page.locator('.application-card [data-action="enrollment-from-application"]').count(),1);
  await page.locator('[data-action="enrollment-from-application"]').click();
  assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').inputValue(),'0000222');
  assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="email"]').inputValue(),'0000222@al.educacao.sp.gov.br');
  await page.locator('#modal').evaluate(el=>el.close());
+ await page.goto(base+'#/enrollments');
+ await page.waitForFunction(()=>document.querySelector('.student-tabs button.selected')?.dataset.id==='enrollments');
  await page.locator('[data-action="students-tab"][data-id="classes"]').click();
  await page.waitForFunction(()=>document.querySelector('.student-tabs button.selected')?.dataset.id==='classes');
  assert.equal(await page.locator('#studentClassManager').count(),1);
@@ -68,7 +75,7 @@ try{
  assert.equal(await page.locator('[data-action="class-new"]').count(),0);
  assert.equal(await page.locator('[data-action="class-edit"]').count(),0);checks++;
  }
- if(role==='aluno'){await page.goto(base+'#/achievements');await page.locator('.ach-grid').waitFor();assert.equal(await page.locator('.ach-card').count(),10);assert.equal(await page.locator('#mobileNav [data-page="achievements"]').count(),1);checks++;await page.goto(base+'#/reports');await page.waitForFunction(()=>document.querySelector('#nav a.active')?.dataset.page==='overview');assert.equal(await page.locator('#nav [data-page=reports]').count(),0);checks++;await page.goto(base+'#/team');await page.waitForFunction(()=>document.querySelector('#nav a.active')?.dataset.page==='overview');assert.equal(await page.locator('#nav [data-page="team"]').count(),0);checks++;}if(role==='admin'){await page.goto(base+'#/overview');await page.waitForFunction(()=>document.querySelector('.staff-home'));await page.screenshot({path:path.join(root,'tests/mobile.png'),fullPage:true});}await page.reload();await page.locator('#dashboard').waitFor();checks++;await context.setOffline(true);await page.locator('#connection').waitFor({state:'visible'});checks++;await context.close();}
+ if(role==='aluno'){await page.goto(base+'#/achievements');await page.locator('.ach-grid').waitFor();assert.equal(await page.locator('.ach-card').count(),50);assert.equal(await page.locator('#mobileNav [data-page="achievements"]').count(),1);checks++;await page.goto(base+'#/reports');await page.waitForFunction(()=>document.querySelector('#nav a.active')?.dataset.page==='overview');assert.equal(await page.locator('#nav [data-page=reports]').count(),0);checks++;await page.goto(base+'#/team');await page.waitForFunction(()=>document.querySelector('#nav a.active')?.dataset.page==='overview');assert.equal(await page.locator('#nav [data-page="team"]').count(),0);checks++;}if(role==='admin'){await page.goto(base+'#/overview');await page.waitForFunction(()=>document.querySelector('.staff-home'));await page.screenshot({path:path.join(root,'tests/mobile.png'),fullPage:true});}await page.reload();await page.locator('#dashboard').waitFor();checks++;await context.setOffline(true);await page.locator('#connection').waitFor({state:'visible'});checks++;await context.close();}
  // Renovação anual: aluno pendente entra na conta sem acessar painel escolar.
  {
   const {context:pendingContext,page:pendingPage}=await setup('aluno',390,false,true);
@@ -200,7 +207,7 @@ try{
   assert.ok(['Tudo certo','Atenção','Limite atingido'].includes((await page.locator('#statusTitle').innerText()).trim()),'situação em linguagem simples');
   assert.equal(await page.locator('.ach-link[href="#/achievements"]').count(),1,'um atalho para conquistas no Início');
   await page.goto(base+'#/achievements');await page.locator('.ach-card').first().waitFor();
-  assert.equal(await page.locator('.ach-card').count(),10,'dez medalhas');assert.ok(await page.locator('.ach-bar[role="progressbar"]').count()>=1,'barras com papel de progresso');
+  assert.equal(await page.locator('.ach-card').count(),50,'cinquenta medalhas da temporada');assert.ok(await page.locator('.ach-bar[role="progressbar"]').count()>=1,'barras com papel de progresso');
   await page.goto(base+'#/history');await page.locator('.lh-month').first().waitFor();
   for(const label of ['Conta no limite','Perdoado','Anulado'])assert.ok(await page.getByText(label,{exact:false}).count()>=1,label);
   checks++;await context.close();}
@@ -211,15 +218,16 @@ try{
   const small=await page.evaluate(()=>[...document.querySelectorAll('#view button,#mobileNav a,#mobileNav button')].filter(b=>b.offsetParent&&b.getBoundingClientRect().height<40).map(b=>b.textContent.trim()||b.getAttribute('aria-label')));
   assert.deepEqual(small,[],'alvos de toque com pelo menos 40px');
   checks++;await context.close();}
- // Cadastro de aluno pela secretaria: e-mail sugerido pelo RA, sem senha provisória, e RA/e-mail que não batem são recusados.
+ // Cadastro de aluno: o e-mail sai do RA (campo só leitura), RA digitado com pontos/SP é arrumado e RA inválido é recusado.
  {const {context,page}=await setup('admin');await page.goto(base+'#/students');await page.locator('[data-action="enrollment-new"]').click();await page.locator('#modal[open] [name="ra"]').waitFor();
   await page.locator('#modal form:not(#inlineClassForm) [name="name"]').fill('Ana Teste');await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').fill('0000222');
   assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="email"]').inputValue(),'0000222@al.educacao.sp.gov.br','e-mail sugerido a partir do RA');
-  await page.locator('#modal form:not(#inlineClassForm) [name="email"]').fill('outro@al.educacao.sp.gov.br');await page.locator('#modal form:not(#inlineClassForm) [name="birth"]').fill('2008-05-05');
+  assert.equal(await page.locator('#modal form:not(#inlineClassForm) [name="email"]').getAttribute('readonly'),'','e-mail é preenchido pelo RA');
+  await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').fill('12ab');await page.locator('#modal form:not(#inlineClassForm) [name="birth"]').fill('2008-05-05');
   const cls=await page.locator('#enrollmentClassSelect option').nth(1).getAttribute('value');if(cls)await page.locator('#enrollmentClassSelect').selectOption(cls);
-  await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();await page.getByText('Confira o RA e o e-mail institucional').waitFor();
-  assert.equal(await page.evaluate(()=>window.__calls.filter(c=>c.args?.p_action==='enrollment').length),0,'nada salvo com RA e e-mail diferentes');
-  await page.locator('#modal form:not(#inlineClassForm) [name="email"]').fill('0000222@al.educacao.sp.gov.br');await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();
+  await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();await page.getByText('RA inválido').waitFor();
+  assert.equal(await page.evaluate(()=>window.__calls.filter(c=>c.args?.p_action==='enrollment').length),0,'nada salvo com RA inválido');
+  await page.locator('#modal form:not(#inlineClassForm) [name="ra"]').fill(' 000.0222 ');await page.locator('#modal form button.primary, #modal form button[type="submit"]').first().click();
   await page.waitForFunction(()=>window.__calls.some(c=>c.args?.p_action==='enrollment'));
   const call=await page.evaluate(()=>window.__calls.find(c=>c.args?.p_action==='enrollment'));assert.equal(call.args.p_args.email,'0000222@al.educacao.sp.gov.br');assert.ok(!('password' in call.args.p_args),'sem senha provisória');
   assert.equal(await page.evaluate(()=>window.__calls.filter(c=>/provision/.test(c.name+(c.args?.p_action||''))).length),0,'não cria acesso automático');
