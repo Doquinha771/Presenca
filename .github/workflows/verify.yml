@@ -54,6 +54,7 @@ jobs:
           # Atualizações instaladas depois dos testes acima (que desfazem tudo ao final).
           psql -v ON_ERROR_STOP=1 -f sql/13_equipe_e_otimizacao.sql
           psql -v ON_ERROR_STOP=1 -f sql/14_calendario_escolar.sql
+          psql -v ON_ERROR_STOP=1 -f sql/15_periodo_de_testes.sql
           psql -v ON_ERROR_STOP=1 -f tests/equipe-calendario-db.sql
       - name: Instalar navegador para testes
         run: |

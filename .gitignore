@@ -19,3 +19,5 @@ presenca/
 
 # Cache local do npm e do navegador de testes (fica no HD, fora do Git).
 .cache/
+# Configurações locais de editores e ferramentas.
+.vscode/
