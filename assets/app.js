@@ -1,7 +1,7 @@
-import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.4.1';
+import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.4.3';
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/+esm';
-import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.4.1';
-import {seasonInfo,buildAchievements} from './conquistas.js?v=5.4.1';
+import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.4.3';
+import {seasonInfo,buildAchievements} from './conquistas.js?v=5.4.3';
 const $=id=>document.getElementById(id);
 if(!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL)||!/^sb_publishable_/.test(SUPABASE_PUBLISHABLE_KEY))throw Error('Configuração inválida');
 const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -107,7 +107,7 @@ function renderHeaderChrome(){
  if(title&&state.me){const home=state.page==='overview';title.textContent=home?(studentView()?`Olá, ${String(state.me.full_name||'').split(' ')[0]}!`:state.me.role==='secretaria'?'Atrasos do dia':'Início'):paths[state.page][0];}
  const icon=$('pageIcon');if(icon&&state.me)icon.innerHTML=uiIcon(state.page);
  const desc=$('pageDescription');
- if(desc&&state.me)desc.textContent=state.page==='overview'?(studentView()?'Aqui você confere seus atrasos e os avisos da escola.':state.me.role==='secretaria'?'Registre quem chegou atrasado e acompanhe os alunos perto do limite.':cap(longDateBR())):paths[state.page][1];
+ if(desc&&state.me)desc.textContent=state.page==='overview'?(studentView()?'Aqui você confere seus atrasos e os avisos da escola.':state.me.role==='secretaria'?'Registre quem chegou atrasado e acompanhe os alunos perto do limite.':cap(longDateBR())):state.page==='announcements'&&!admin()?'Avisos da escola para alunos e equipe.':paths[state.page][1];
 }
 function historyStatus(r){
  if(r.status==='void')return ['Anulado','status-void'];
@@ -539,7 +539,7 @@ async function route(){void flushQueue();renderTestBanner();const p=location.has
 // ---------- Período de testes (datas em config.js) ----------
 // Antes: aviso de quando começa. Durante: faixa com o dia do teste e "Relatar problema"; erros técnicos vão sozinhos para a Direção.
 // Depois do último dia, a faixa e o envio automático somem sem precisar mexer no código.
-const APP_VERSION='5.4.1';
+const APP_VERSION='5.4.3';
 function testPeriod(now=new Date()){
  if(!TEST_PERIOD?.start||!TEST_PERIOD?.end)return {state:'off'};
  const start=new Date(TEST_PERIOD.start+'T00:00:00'),end=new Date(TEST_PERIOD.end+'T23:59:59');
@@ -606,6 +606,9 @@ function renderTests(data){
  const list=rows.length?`<div class="report-list">${rows.map(card).join('')}</div>`:emptyState('forgiven',testFilter==='aberto'?'Nenhum relato em aberto.':'Nenhum relato por aqui.','Quando alguém relatar um problema, ele aparece nesta lista.');
  return `<div class="tests-page">${period}${head}<section class="panel"><div class="section-head"><h3>${uiIcon('flag')} Relatos</h3><div class="chip-row">${chips}</div></div>${list}</section></div>`;
 }
+// Nomes das operações da Auditoria. Código desconhecido aparece como está.
+const auditNames={V4_RECORD:'Atraso registrado',V4_UNDO:'Registro desfeito',V4_CORRECT:'Registro anulado',V4_FORGIVE:'Atraso perdoado',V4_CHANCE:'Nova chance',V4_ENROLLMENT:'Matrícula salva',V4_APPROVE:'Matrícula validada',V4_ARCHIVE:'Aluno arquivado',V4_RESTORE:'Aluno restaurado',V4_RESET_STUDENT:'Novo período do aluno',V4_EDIT_STUDENT:'Dados do aluno corrigidos',V4_CLASS:'Turma salva',V4_ROLE:'Cargo alterado',V4_ANNOUNCEMENT:'Comunicado salvo',V4_SETTINGS:'Regras alteradas',V4_PRIVACY:'Caso de privacidade',STAFF_INVITE:'Funcionário convidado',STAFF_ACCEPT:'Funcionário aceito',STAFF_REJECT:'Pedido da equipe recusado',STUDENT_REJECT:'Pedido de aluno recusado',STAFF_REMOVE:'Funcionário removido',STAFF_PASSWORD:'Senha de funcionário trocada',STAFF_CANCEL_INVITE:'Convite cancelado',CALENDAR_ADD:'Dias sem aula cadastrados',CALENDAR_REMOVE:'Dias sem aula removidos',PERIOD_RESET:'Período encerrado',STORAGE_CLEANUP:'Limpeza do banco',STORAGE_POLICY:'Regras de armazenamento'};
+const auditLabel=a=>auditNames[a]||String(a||'—');
 // ---------- Calendário escolar (Direção cadastra; todos consultam) ----------
 const calendarKinds={feriado:'Feriado',recesso:'Recesso',ferias:'Férias'};
 function calendarPeriods(rows){
@@ -657,7 +660,7 @@ const migrationNotice=setupCard('Os pedidos de acesso da equipe, a troca de senh
 async function loadStaffData(){try{staffData=await staffManage('list');}catch(e){if(!missingRpc(e))throw e;staffData=null;}return staffData;}
 function renderApprovals(applications){
  const requests=staffData?.requests||[],total=applications.length+requests.length;
- const summary=`<section class="approval-summary" aria-label="Resumo dos pedidos"><div class="tile"><strong>${applications.length}</strong><span>${applications.length===1?'aluno aguardando':'alunos aguardando'}</span></div><div class="tile"><strong>${requests.length}</strong><span>${requests.length===1?'pedido da equipe':'pedidos da equipe'}</span></div></section>`;
+ const summary=`<section class="approval-summary" aria-label="Resumo dos pedidos"><div class="tile"><strong>${applications.length}</strong><span>${applications.length===1?'aluno aguardando':'alunos aguardando'}</span></div>${admin()?`<div class="tile"><strong>${requests.length}</strong><span>${requests.length===1?'pedido da equipe':'pedidos da equipe'}</span></div>`:''}</section>`;
  const students=applications.length?`<div class="application-grid">${applications.map(r=>`<article class="application-card"><div class="application-card-head"><strong>${esc(r.full_name)}</strong><span class="pill ${r.verified?'ok':'warn'}">${r.verified?'E-mail confirmado':'E-mail pendente'}</span></div><dl><div><dt>RA informado</dt><dd>${esc(r.ra)}</dd></div><div><dt>Série / turma informada</dt><dd>${esc(r.grade||'Não informada')}</dd></div><div><dt>Nascimento informado</dt><dd>${esc(r.birth_date?dateBR(r.birth_date):'Não informado')}</dd></div></dl><div class="approval-actions">${button('Aceitar','enrollment-from-application',r.id,'primary')}${staffData?button('Recusar','student-reject',r.id,'danger'):''}</div></article>`).join('')}</div>`:emptyState('forgiven','Nenhum aluno aguardando.','Quando um aluno criar a conta, o pedido aparece aqui.');
  const team=!admin()?'':!staffData?migrationNotice:requests.length?`<div class="application-grid">${requests.map(r=>`<article class="application-card"><div class="application-card-head"><strong>${esc(r.full_name)}</strong><span class="pill ok">E-mail confirmado</span></div><dl><div><dt>E-mail</dt><dd>${esc(r.email)}</dd></div><div><dt>Pediu em</dt><dd>${esc(dateBR(r.created_at))}</dd></div></dl><div class="approval-actions">${button('Aceitar','staff-accept',r.id,'primary')}${button('Recusar','staff-reject',r.id,'danger')}</div></article>`).join('')}</div>`:emptyState('forgiven','Nenhum pedido da equipe.','Funcionários sem convite aparecem aqui depois de confirmar o e-mail.');
  return `<div class="approval-page">${summary}<section class="panel" aria-labelledby="approvalStudents"><div class="section-head"><h3 id="approvalStudents">${uiIcon('students')} Alunos</h3></div><p class="muted approval-help">Confira os dados com a matrícula oficial antes de aceitar. ${total?'':'Tudo em dia por aqui.'}</p>${students}</section>${admin()?`<section class="panel" aria-labelledby="approvalTeam"><div class="section-head"><h3 id="approvalTeam">${uiIcon('team')} Equipe</h3></div>${team}</section>`:''}</div>`;
@@ -719,7 +722,7 @@ function storageForecast(u,pol,d){
  const until=(target)=>yearMB>0?Math.max(0,(target-usedMB)/yearMB):Infinity;
  const fmt=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:v<10?1:0});
  const now=yearMB>0
-  ?`<p class="forecast-main">No ritmo de hoje (<strong>${fmt(perDay)}</strong> ${Math.round(perDay)===1?'atraso':'atrasos'} por dia de aula e <strong>${students}</strong> alunos), o banco cresce cerca de <strong>${fmt(yearMB)} MB por ano</strong>.</p><ul class="forecast-list"><li><strong>${yearsLabel(until(cleanMB))}</strong><span>até chegar a ${trigger}% (${fmt(cleanMB)} MB), quando a limpeza automática começa</span></li><li><strong>${yearsLabel(until(limitMB))}</strong><span>até encher de vez (${fmt(limitMB)} MB), se nada for limpo</span></li></ul>`
+  ?`<p class="forecast-main">No ritmo de hoje (<strong>${fmt(perDay)}</strong> ${Math.round(perDay)===1?'atraso':'atrasos'} por dia de aula e <strong>${students}</strong> alunos), o banco cresce cerca de <strong>${yearMB<0.1?'menos de 0,1':fmt(yearMB)} MB por ano</strong>.</p><ul class="forecast-list"><li><strong>${yearsLabel(until(cleanMB))}</strong><span>até chegar a ${trigger}% (${fmt(cleanMB)} MB), quando a limpeza automática começa</span></li><li><strong>${yearsLabel(until(limitMB))}</strong><span>até encher de vez (${fmt(limitMB)} MB), se nada for limpo</span></li></ul>`
   :`<p class="forecast-main">Ainda não há atrasos suficientes para medir o ritmo da escola. Veja abaixo as estimativas para cada cenário.</p>`;
  const base=Math.max(students,500);
  const rows=[['Tranquilo','3%',.03],['Normal','8%',.08],['Muito movimento','15%',.15]].map(([name,pct,rate])=>{const y=growthPerYearMB(base*rate,base);return [name,`${pct} dos alunos (${Math.round(base*rate)} por dia)`,`${fmt(y)} MB`,yearsLabel(Math.max(0,(cleanMB-usedMB)/y))];});
@@ -804,7 +807,7 @@ function bindReportForm(){
     if(offset>10000)throw Error('Relatório muito grande. Escolha uma turma, série ou período menor.');
    }
    if(!records.length)return {notice:'Nenhum registro encontrado com esses filtros. Nenhum arquivo foi criado.'};
-   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.4.1');
+   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.4.3');
    const statusLabel=args.kind==='history'?(reportStatusLabels[args.status]||'Todas'):(reportScopeLabels[args.kind==='enrollments'?'enrollments':'students'][args.scope]||'Todas');
    saveInstitutionalWorkbook(args.kind,records,{grade:args.grade,className:chosenClass?.name||'',from:args.from,to:args.to,status:args.status,scope:args.scope,statusLabel});
    return {notice:`Planilha baixada com ${records.length} ${records.length===1?'registro':'registros'}.`};
@@ -904,7 +907,7 @@ if(studentView()&&state.academic?.pending&&page!=='history'){html=renderAnnualPe
 }else if(page==='team'){await loadStaffData();rows=staffData?staffData.members||[]:await read('team',{offset:state.offset});html=renderTeam(rows);
 }else if(page==='approvals'){const [applications]=await Promise.all([readApplications(0,''),admin()?loadStaffData():Promise.resolve(null)]);signupApplications=Array.isArray(applications)?applications:[];html=renderApprovals(signupApplications);
 }else if(page==='adjustments'){rows=await read('adjustments',{offset:state.offset});html=`<section class="panel">${table(['Data','Aluno','Ação','Justificativa'],rows.map(r=>[dateBR(r.created_at),esc(r.full_name),esc({chance:'Nova chance',forgive:'Perdão',correct:'Correção',undo:'Desfeito',approve:'Matrícula validada',reset_student:'Novo período',archive:'Arquivado',restore:'Restaurado',edit_student:'Dados corrigidos'}[r.action]||r.action),esc(r.reason)]))}${pager(rows)}</section>`;
-}else if(page==='announcements'){rows=await read('announcements',{offset:state.offset});html=renderAnnouncements(rows);}else if(page==='audit'){rows=await read('audit',{offset:state.offset});html=`<section class="panel">${table(['Data','Operação','Responsável','Detalhe'],rows.map(r=>[dateBR(r.created_at),esc(r.action),esc(r.actor_name||'Sistema'),esc(r.detail||'—')]))}${pager(rows)}</section>`;
+}else if(page==='announcements'){rows=await read('announcements',{offset:state.offset});html=renderAnnouncements(rows);}else if(page==='audit'){rows=await read('audit',{offset:state.offset});html=`<section class="panel">${table(['Data','Operação','Responsável','Detalhe'],rows.map(r=>[dateBR(r.created_at),esc(auditLabel(r.action)),esc(r.actor_name||'Sistema'),esc(r.detail||'—')]))}${pager(rows)}</section>`;
 }else if(page==='privacy'){rows=await read('privacy',{offset:state.offset});html=`<section class="panel">${button('Registrar solicitação ou incidente','privacy-new')}${table(['Data','Tipo','Situação','Descrição','Ações'],rows.map(r=>[dateBR(r.created_at),r.kind==='incidente'?'Incidente':'Solicitação',esc(r.status.replace('_',' ')),esc(r.description),button('Acompanhar','privacy-edit',r.id)]))}${pager(rows)}</section>`;
 }else if(page==='tests'){let data=null;try{data=await rpc('test_feedback',{p_action:'list',p_args:{status:testFilter}});}catch(e){if(!missingRpc(e))throw e;}html=renderTests(data);
 }else if(page==='calendar'){html=renderCalendar(await loadCalendar(true));}else if(page==='storage'){let st=null;const dash=read('dashboard').catch(()=>null);try{[st]=await Promise.all([rpc('storage_manage',{p_action:'status',p_args:{}}),loadCalendar()]);}catch(e){if(!['PGRST202','42883'].includes(e?.code))throw e;}html=st?renderStorage(st,await dash):setupCard('O controle de armazenamento (quanto do limite de 500 MB está em uso e a limpeza automática) fica disponível depois dela.');
@@ -997,7 +1000,7 @@ if(a==='students-tab'){renewalView=false;studentsTab=['list','enrollments','clas
 if(a==='history-prev'||a==='history-next'){state.offset=Math.max(0,state.offset+(a==='history-next'?historyPageSize:-historyPageSize));await render();return;}
 if(a==='prev'||a==='next'){state.offset=Math.max(0,state.offset+(a==='next'?25:-25));await render();return;}
 if(a==='open-reports'){reportFilter={kind:state.page==='history'?'history':state.page==='enrollments'||state.page==='students'&&studentsTab==='enrollments'?'enrollments':'students',class:state.page==='history'?historyFilter.class||'':state.page==='students'?studentsFilter.class||'':'',grade:''};location.hash='/reports';return;}
-if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.4.1');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
+if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.4.3');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
 if(a==='privacy-notice'){const policy=await read('settings');openModal('Privacidade da escola',`<p class="prewrap">${esc(policy.privacy_notice)}</p><p>Responsável: ${esc(policy.controller||'Consulte a secretaria')}</p><p>Contato: ${esc(policy.privacy_contact||'Consulte a secretaria')}</p><p class="prewrap">${esc(policy.retention_policy)}</p>`);return;}
 if(a==='retry'){await render();return;}
 if(a==='history-actions'){
