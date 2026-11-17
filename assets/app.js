@@ -1,7 +1,7 @@
-import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.3.1';
+import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.3.2';
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/+esm';
-import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.3.1';
-import {seasonInfo,buildAchievements} from './conquistas.js?v=5.3.1';
+import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.3.2';
+import {seasonInfo,buildAchievements} from './conquistas.js?v=5.3.2';
 const $=id=>document.getElementById(id);
 if(!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL)||!/^sb_publishable_/.test(SUPABASE_PUBLISHABLE_KEY))throw Error('Configuração inválida');
 const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -539,7 +539,7 @@ async function route(){void flushQueue();renderTestBanner();const p=location.has
 // ---------- Período de testes (datas em config.js) ----------
 // Antes: aviso de quando começa. Durante: faixa com o dia do teste e "Relatar problema"; erros técnicos vão sozinhos para a Direção.
 // Depois do último dia, a faixa e o envio automático somem sem precisar mexer no código.
-const APP_VERSION='5.3.1';
+const APP_VERSION='5.3.2';
 function testPeriod(now=new Date()){
  if(!TEST_PERIOD?.start||!TEST_PERIOD?.end)return {state:'off'};
  const start=new Date(TEST_PERIOD.start+'T00:00:00'),end=new Date(TEST_PERIOD.end+'T23:59:59');
@@ -689,7 +689,7 @@ let historyRange='all',historyFilter={},studentsFilter={},historyOrder='recent',
 const mb=b=>(Number(b)||0)/1048576;
 const fmtMB=b=>{const v=mb(b);return (v>=100?v.toFixed(0):v.toFixed(1)).replace('.',',')+' MB';};
 const tableNames={attendance_events:'Atrasos',audit_events:'Auditoria',profiles:'Contas e perfis',student_adjustments:'Ajustes de alunos',school_enrollments:'Matrículas',academic_renewals:'Renovações',announcements:'Comunicados',staff_invites:'Convites da equipe',privacy_cases:'Privacidade',school_classes:'Turmas',period_resets:'Períodos',academic_years:'Anos letivos',storage_cleanups:'Limpezas',storage_policy:'Regras de armazenamento',school_settings:'Configurações',portal_migrations:'Versões do banco'};
-function renderStorage(st){
+function renderStorage(st,d=null){
  const u=st.usage||{},pol=st.policy||{},pre=st.preview||{},pct=Number(u.percent)||0,trigger=Number(pol.trigger_percent)||80;
  const tone=pct>=trigger?'danger':pct>=trigger-20?'warn':'ok';
  const label={ok:'Espaço tranquilo',warn:'Ficando cheio',danger:'Acima do limite: a limpeza automática vai agir'}[tone];
@@ -701,9 +701,37 @@ function renderStorage(st){
  const usage=`<section class="panel" aria-labelledby="tablesTitle"><h3 id="tablesTitle">O que mais ocupa espaço</h3><ul class="class-bars">${tables.map(t=>`<li><span class="class-name">${esc(tableNames[t.name]||t.name)}</span><span class="class-value">${fmtMB(t.bytes)} <small>· ${Number(t.rows).toLocaleString('pt-BR')} linhas</small></span>${barSvg(Math.round((Number(t.bytes)||0)/top*100))}</li>`).join('')}</ul></section>`;
  const hist=(st.history||[]);
  const history=`<section class="panel" aria-labelledby="historyTitle"><h3 id="historyTitle">Últimas limpezas</h3>${hist.length?table(['Data','Origem','Uso antes','Removidos'],hist.map(h=>[dateBR(h.ran_at),h.trigger==='auto'?'Automática':'Manual',`${String(h.percent_before).replace('.',',')}%`,`${h.students_removed} alunos · ${h.events_removed} atrasos · ${h.other_removed} outros`])):emptyState('history','Nenhuma limpeza feita ainda.','Ela só acontece quando o banco fica cheio ou quando a Direção pede.')}</section>`;
- return `<div class="storage-page">${gauge}${preview}${policy}${usage}${history}</div>`;
+ return `<div class="storage-page">${gauge}${storageForecast(u,pol,d)}${preview}${policy}${usage}${history}</div>`;
 }
 
+// ---------- Previsão: em quanto tempo o banco enche ----------
+// Tamanhos medidos no banco real em 16/11/2026 (linha + índices + folga de 20%):
+//  * 1 atraso ≈ 1 KB (o atraso, o registro na auditoria e a parte média de desfazer/perdoar);
+//  * 1 aluno ≈ 2,4 KB por ano (perfil, matrícula, conta de acesso e renovação anual).
+// O ritmo vem do próprio painel (atrasos no mês e número de alunos); por isso a previsão se ajusta sozinha com o uso.
+const GROWTH={lateKB:1.0,studentKB:2.4,schoolDays:200};
+function growthPerYearMB(latesPerDay,students){return (latesPerDay*GROWTH.schoolDays*GROWTH.lateKB+students*GROWTH.studentKB)/1024;}
+function yearsLabel(years){
+ if(!Number.isFinite(years)||years>99)return 'mais de 99 anos';
+ if(years<1){const m=Math.max(1,Math.round(years*12));return `${m} ${m===1?'mês':'meses'}`;}
+ const total=Math.round(years*12),y=Math.floor(total/12),m=total%12;
+ return `${y} ${y===1?'ano':'anos'}${m?` e ${m} ${m===1?'mês':'meses'}`:''}`;
+}
+function storageForecast(u,pol,d){
+ const usedMB=mb(u.bytes),limitMB=mb(u.limit_bytes)||Number(pol.limit_mb)||500,trigger=Number(pol.trigger_percent)||80;
+ const cleanMB=limitMB*trigger/100,students=Number(d?.students)||0;
+ // Atrasos por dia letivo: média do mês (quando já passaram 5 dias de aula) ou da semana.
+ const sd=schoolDaysThisMonth(),perDay=sd.n>=5?(Number(d?.month)||0)/sd.n:(Number(d?.week)||0)/5;
+ const yearMB=growthPerYearMB(perDay,students);
+ const until=(target)=>yearMB>0?Math.max(0,(target-usedMB)/yearMB):Infinity;
+ const fmt=v=>v.toLocaleString('pt-BR',{maximumFractionDigits:v<10?1:0});
+ const now=yearMB>0
+  ?`<p class="forecast-main">No ritmo de hoje (<strong>${fmt(perDay)}</strong> ${Math.round(perDay)===1?'atraso':'atrasos'} por dia de aula e <strong>${students}</strong> alunos), o banco cresce cerca de <strong>${fmt(yearMB)} MB por ano</strong>.</p><ul class="forecast-list"><li><strong>${yearsLabel(until(cleanMB))}</strong><span>até chegar a ${trigger}% (${fmt(cleanMB)} MB), quando a limpeza automática começa</span></li><li><strong>${yearsLabel(until(limitMB))}</strong><span>até encher de vez (${fmt(limitMB)} MB), se nada for limpo</span></li></ul>`
+  :`<p class="forecast-main">Ainda não há atrasos suficientes para medir o ritmo da escola. Veja abaixo as estimativas para cada cenário.</p>`;
+ const base=Math.max(students,500);
+ const rows=[['Tranquilo','3%',.03],['Normal','8%',.08],['Muito movimento','15%',.15]].map(([name,pct,rate])=>{const y=growthPerYearMB(base*rate,base);return [name,`${pct} dos alunos (${Math.round(base*rate)} por dia)`,`${fmt(y)} MB`,yearsLabel(Math.max(0,(cleanMB-usedMB)/y))];});
+ return `<section class="panel storage-forecast" aria-labelledby="forecastTitle"><div class="section-head"><h3 id="forecastTitle">${uiIcon('limit')} Previsão: em quanto tempo o banco enche</h3></div>${now}<h4 class="sub-title">Cenários com ${base} alunos e 200 dias letivos por ano</h4>${table(['Ritmo','Atrasos por dia','Crescimento por ano',`Tempo até ${trigger}%`],rows)}<p class="muted forecast-note">Conta usada: cada atraso ocupa cerca de 1 KB (com a auditoria e as correções) e cada aluno cerca de 2,4 KB por ano. A limpeza automática apaga só dados de quem saiu da escola, então o tempo real tende a ser ainda maior.</p></section>`;
+}
 // ---------- Relatórios Excel: escolher, filtrar, conferir e baixar ----------
 const reportKinds=[
  ['students','Lista de alunos','users','Nome, RA, turma, atrasos e situação de cada aluno.'],
@@ -783,7 +811,7 @@ function bindReportForm(){
     if(offset>10000)throw Error('Relatório muito grande. Escolha uma turma, série ou período menor.');
    }
    if(!records.length)return {notice:'Nenhum registro encontrado com esses filtros. Nenhum arquivo foi criado.'};
-   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.3.1');
+   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.3.2');
    const statusLabel=args.kind==='history'?(reportStatusLabels[args.status]||'Todas'):(reportScopeLabels[args.kind==='enrollments'?'enrollments':'students'][args.scope]||'Todas');
    saveInstitutionalWorkbook(args.kind,records,{grade:args.grade,className:chosenClass?.name||'',from:args.from,to:args.to,status:args.status,scope:args.scope,statusLabel});
    return {notice:`Planilha baixada com ${records.length} ${records.length===1?'registro':'registros'}.`};
@@ -859,7 +887,7 @@ if(studentView()&&state.academic?.pending&&page!=='history'){html=renderAnnualPe
 }else if(page==='announcements'){rows=await read('announcements',{offset:state.offset});html=renderAnnouncements(rows);}else if(page==='audit'){rows=await read('audit',{offset:state.offset});html=`<section class="panel">${table(['Data','Operação','Responsável','Detalhe'],rows.map(r=>[dateBR(r.created_at),esc(r.action),esc(r.actor_name||'Sistema'),esc(r.detail||'—')]))}${pager(rows)}</section>`;
 }else if(page==='privacy'){rows=await read('privacy',{offset:state.offset});html=`<section class="panel">${button('Registrar solicitação ou incidente','privacy-new')}${table(['Data','Tipo','Situação','Descrição','Ações'],rows.map(r=>[dateBR(r.created_at),r.kind==='incidente'?'Incidente':'Solicitação',esc(r.status.replace('_',' ')),esc(r.description),button('Acompanhar','privacy-edit',r.id)]))}${pager(rows)}</section>`;
 }else if(page==='tests'){let data=null;try{data=await rpc('test_feedback',{p_action:'list',p_args:{status:testFilter}});}catch(e){if(!missingRpc(e))throw e;}html=renderTests(data);
-}else if(page==='calendar'){html=renderCalendar(await loadCalendar(true));}else if(page==='storage'){let st=null;try{st=await rpc('storage_manage',{p_action:'status',p_args:{}});}catch(e){if(!['PGRST202','42883'].includes(e?.code))throw e;}html=st?renderStorage(st):setupCard('O controle de armazenamento (quanto do limite de 500 MB está em uso e a limpeza automática) fica disponível depois dela.');
+}else if(page==='calendar'){html=renderCalendar(await loadCalendar(true));}else if(page==='storage'){let st=null;const dash=read('dashboard').catch(()=>null);try{[st]=await Promise.all([rpc('storage_manage',{p_action:'status',p_args:{}}),loadCalendar()]);}catch(e){if(!['PGRST202','42883'].includes(e?.code))throw e;}html=st?renderStorage(st,await dash):setupCard('O controle de armazenamento (quanto do limite de 500 MB está em uso e a limpeza automática) fica disponível depois dela.');
 }else if(page==='period'){const [settings,resets]=await Promise.all([read('settings'),read('resets',{offset:state.offset})]);rows=resets;state.settings=settings;html=`<div class="grid-two"><section class="panel"><h3>Regras</h3><p class="muted">O limite padrão vale para novos cadastros e novos períodos. Limites individuais atuais são preservados.</p><form id="settingsForm">${field('Limite padrão de atrasos','limit','number',settings.default_limit,'min="1" max="100"')}${field('Responsável pelo tratamento de dados','controller','text',settings.controller,'maxlength="200"')}${field('Contato de privacidade','contact','text',settings.privacy_contact,'maxlength="200"')}<label>Aviso institucional<textarea name="notice" maxlength="4000" required>${esc(settings.privacy_notice)}</textarea></label><label>Política de retenção<textarea name="retention" maxlength="2000" required>${esc(settings.retention_policy)}</textarea></label>${save}</form></section><section class="panel"><h3>Agendar fim do período</h3><p class="muted">Escolha o dia em que a contagem de atrasos volta a zero. O histórico é preservado.</p><form id="periodForm">${field('Data do encerramento','date','date')}<button class="primary" type="submit">Agendar</button></form><p class="hint">O agendamento automático precisa do agendador configurado no Supabase.</p>${table(['Data','Situação','Ações'],resets.map(r=>[dateBR(r.scheduled_for),r.executed_at?'Executado':r.cancelled_at?'Cancelado':'Pendente',!r.executed_at&&!r.cancelled_at?button('Cancelar','cancel-reset',r.id):'—']))}${pager(rows)}</section></div><section class="panel danger-zone" aria-labelledby="dangerTitle"><h3 id="dangerTitle">${uiIcon('alert')} Encerrar período agora</h3><p>Zera na hora a contagem de atrasos de todos os alunos. O histórico continua guardado, mas não dá para desfazer. Você vai precisar digitar ENCERRAR para confirmar.</p>${button('Encerrar período agora','reset-period','','danger')}</section>${annualCalendarPanel()}`;}
 if(state.page==='system')html=systemTabs()+html;if(token!==renderToken)return;view.innerHTML=`<h2 class="sr-only">${esc(paths[page]?.[0]||'Conteúdo')}</h2>`+html;state.rows=rows;bindPager(rows);bindPage();playRouteMotion(view,html.length);}catch(e){if(token===renderToken){pendingRouteMotion=false;view.innerHTML=`<section class="panel load-failed">${emptyState('refresh','Esta tela não carregou.','Confira a internet e toque em tentar de novo.')}${button('Tentar de novo','retry','','primary')}</section>`;toast(errorText(e),'error');if(!offlineError(e))autoReport(errorText(e),'tela '+page);}}finally{if(token===renderToken)view.removeAttribute('aria-busy');}}
 function systemTabs(){
@@ -949,7 +977,7 @@ if(a==='students-tab'){renewalView=false;studentsTab=['list','enrollments','clas
 if(a==='history-prev'||a==='history-next'){state.offset=Math.max(0,state.offset+(a==='history-next'?historyPageSize:-historyPageSize));await render();return;}
 if(a==='prev'||a==='next'){state.offset=Math.max(0,state.offset+(a==='next'?25:-25));await render();return;}
 if(a==='open-reports'){reportFilter={kind:state.page==='history'?'history':state.page==='enrollments'||state.page==='students'&&studentsTab==='enrollments'?'enrollments':'students',class:state.page==='history'?historyFilter.class||'':state.page==='students'?studentsFilter.class||'':'',grade:''};location.hash='/reports';return;}
-if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.3.1');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
+if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.3.2');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
 if(a==='privacy-notice'){const policy=await read('settings');openModal('Privacidade da escola',`<p class="prewrap">${esc(policy.privacy_notice)}</p><p>Responsável: ${esc(policy.controller||'Consulte a secretaria')}</p><p>Contato: ${esc(policy.privacy_contact||'Consulte a secretaria')}</p><p class="prewrap">${esc(policy.retention_policy)}</p>`);return;}
 if(a==='retry'){await render();return;}
 if(a==='history-actions'){
