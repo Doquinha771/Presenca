@@ -1,7 +1,7 @@
-import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.4.0';
+import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.4.1';
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/+esm';
-import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.4.0';
-import {seasonInfo,buildAchievements} from './conquistas.js?v=5.4.0';
+import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.4.1';
+import {seasonInfo,buildAchievements} from './conquistas.js?v=5.4.1';
 const $=id=>document.getElementById(id);
 if(!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL)||!/^sb_publishable_/.test(SUPABASE_PUBLISHABLE_KEY))throw Error('Configuração inválida');
 const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -539,7 +539,7 @@ async function route(){void flushQueue();renderTestBanner();const p=location.has
 // ---------- Período de testes (datas em config.js) ----------
 // Antes: aviso de quando começa. Durante: faixa com o dia do teste e "Relatar problema"; erros técnicos vão sozinhos para a Direção.
 // Depois do último dia, a faixa e o envio automático somem sem precisar mexer no código.
-const APP_VERSION='5.4.0';
+const APP_VERSION='5.4.1';
 function testPeriod(now=new Date()){
  if(!TEST_PERIOD?.start||!TEST_PERIOD?.end)return {state:'off'};
  const start=new Date(TEST_PERIOD.start+'T00:00:00'),end=new Date(TEST_PERIOD.end+'T23:59:59');
@@ -550,18 +550,11 @@ function testPeriod(now=new Date()){
  const state=now<start?'antes':now>end?'depois':'durante';
  return {state,day,total,startLabel:fmt(start),endLabel:fmt(end),daysToStart:Math.max(0,1-day)};
 }
+// "Report bugs" no rodapé: aparece para quem está logado até o fim do período de testes.
 function renderTestBanner(){
- const box=$('testBanner');if(!box)return;
- const t=testPeriod(),logged=Boolean(state.me);
- box.hidden=!['antes','durante'].includes(t.state);
- $('reportProblem').hidden=!(logged&&t.state==='durante');
- document.body.classList.toggle('test-period',!box.hidden);
- if(box.hidden)return;
- const when=t.state==='antes'?(t.daysToStart===1?`O período de testes começa amanhã (${t.startLabel}) e vai até ${t.endLabel}.`:`O período de testes começa em ${t.startLabel} e vai até ${t.endLabel}.`):`Período de testes · dia ${t.day} de ${t.total} · vai até ${t.endLabel}.`;
- const ask=t.state==='durante'?(logged?' Achou algo estranho, confuso ou lento? Conte para a gente.':' Entre na sua conta para relatar problemas.'):' Use o portal normalmente e anote o que achar estranho.';
- const btn=logged&&t.state==='durante'?`<button type="button" class="test-banner-btn" data-test-report>${uiIcon('flag')}<span>Relatar problema</span></button>`:'';
- const admin_=logged&&admin()?`<a class="test-banner-link" href="#/tests">Ver relatos</a>`:'';
- box.innerHTML=`<div class="test-banner-inner">${uiIcon('flag')}<p><strong>${when}</strong><span>${ask}</span></p>${btn}${admin_}</div>`;
+ const btn=$('reportBugs');if(!btn)return;
+ const t=testPeriod();
+ btn.hidden=!(state.me&&['antes','durante'].includes(t.state));
 }
 // Relatos que não puderam ser enviados (sem internet ou banco sem a atualização 15) esperam neste aparelho.
 const REPORT_KEY='presenca.relatos-pendentes';
@@ -811,7 +804,7 @@ function bindReportForm(){
     if(offset>10000)throw Error('Relatório muito grande. Escolha uma turma, série ou período menor.');
    }
    if(!records.length)return {notice:'Nenhum registro encontrado com esses filtros. Nenhum arquivo foi criado.'};
-   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.4.0');
+   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.4.1');
    const statusLabel=args.kind==='history'?(reportStatusLabels[args.status]||'Todas'):(reportScopeLabels[args.kind==='enrollments'?'enrollments':'students'][args.scope]||'Todas');
    saveInstitutionalWorkbook(args.kind,records,{grade:args.grade,className:chosenClass?.name||'',from:args.from,to:args.to,status:args.status,scope:args.scope,statusLabel});
    return {notice:`Planilha baixada com ${records.length} ${records.length===1?'registro':'registros'}.`};
@@ -1004,7 +997,7 @@ if(a==='students-tab'){renewalView=false;studentsTab=['list','enrollments','clas
 if(a==='history-prev'||a==='history-next'){state.offset=Math.max(0,state.offset+(a==='history-next'?historyPageSize:-historyPageSize));await render();return;}
 if(a==='prev'||a==='next'){state.offset=Math.max(0,state.offset+(a==='next'?25:-25));await render();return;}
 if(a==='open-reports'){reportFilter={kind:state.page==='history'?'history':state.page==='enrollments'||state.page==='students'&&studentsTab==='enrollments'?'enrollments':'students',class:state.page==='history'?historyFilter.class||'':state.page==='students'?studentsFilter.class||'':'',grade:''};location.hash='/reports';return;}
-if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.4.0');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
+if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.4.1');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
 if(a==='privacy-notice'){const policy=await read('settings');openModal('Privacidade da escola',`<p class="prewrap">${esc(policy.privacy_notice)}</p><p>Responsável: ${esc(policy.controller||'Consulte a secretaria')}</p><p>Contato: ${esc(policy.privacy_contact||'Consulte a secretaria')}</p><p class="prewrap">${esc(policy.retention_policy)}</p>`);return;}
 if(a==='retry'){await render();return;}
 if(a==='history-actions'){

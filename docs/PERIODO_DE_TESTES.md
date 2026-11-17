@@ -1,6 +1,6 @@
 # Período de testes · 17/11 a 01/12/2026 (15 dias)
 
-Durante esses dias a escola usa o Presença+ de verdade e conta o que der errado. Depois de 01/12, a faixa e o envio automático somem sozinhos.
+Durante esses dias a escola usa o Presença+ de verdade e conta o que der errado. Depois de 01/12, o botão de relato e o envio automático somem sozinhos.
 
 ## Antes de começar (uma vez)
 1. No Supabase, abra o **SQL Editor** com a conta da escola.
@@ -10,9 +10,7 @@ Durante esses dias a escola usa o Presença+ de verdade e conta o que der errado
 Sem a atualização 15, o portal continua funcionando: os relatos ficam guardados no aparelho de quem relatou e são enviados quando ela for instalada.
 
 ## O que cada pessoa vê
-- **Hoje (16/11):** faixa amarela "O período de testes começa amanhã".
-- **De 17/11 a 01/12:** faixa "Período de testes · dia N de 15" com o botão **Relatar problema** (também no menu da conta).
-- **A partir de 02/12:** nada; o portal volta ao normal.
+No rodapé do portal (logado), um botão com bandeira escrito **Report bugs**. Ele abre a janela de relato. Aparece até 01/12; os erros técnicos são enviados sozinhos de 17/11 a 01/12.
 
 ## O que testar (roteiro sugerido)
 | Quem | O que fazer |
