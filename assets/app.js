@@ -1,7 +1,7 @@
-import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.3.0';
+import {SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,SCHOOL_NAME,TEST_PERIOD} from '../config.js?v=5.3.1';
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.0/+esm';
-import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.3.0';
-import {seasonInfo,buildAchievements} from './conquistas.js?v=5.3.0';
+import {esc,dateBR,errorText,roleName,SCHOOL_EMAIL} from './utils.js?v=5.3.1';
+import {seasonInfo,buildAchievements} from './conquistas.js?v=5.3.1';
 const $=id=>document.getElementById(id);
 if(!/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(SUPABASE_URL)||!/^sb_publishable_/.test(SUPABASE_PUBLISHABLE_KEY))throw Error('Configuração inválida');
 const db=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
@@ -428,11 +428,20 @@ function openModal(title,html,submit){$('modalBody').onclick=null;$('modalTitle'
 const field=(label,name,type='text',value='',extra='')=>`<label>${label}<input name="${name}" type="${type}" value="${esc(value)}" ${extra} required></label>`;
 // RA digitado de qualquer jeito (espaços, pontos, traços, SP maiúsculo, e-mail inteiro) vira o formato do sistema.
 const normalizeRA=v=>String(v||'').trim().toLowerCase().replace(/@al\.educacao\.sp\.gov\.br$/,'').replace(/[\s.\-/]/g,'');
+// Turma digitada pelo aluno → turma cadastrada. Só escolhe sozinho quando há uma única turma possível.
+function guessClass(text){
+ const t=String(text||'').toLocaleLowerCase('pt-BR').trim(),active=state.classes.filter(c=>c.active);
+ const exact=active.find(c=>(c.grade+' • '+c.name).toLocaleLowerCase('pt-BR')===t);if(exact)return exact.id;
+ const n=(t.match(/[1-9]/)||[])[0],l=(t.match(/([a-z])\W*$/i)||[])[1];if(!n||!l)return '';
+ const hits=active.filter(c=>(String(c.grade).match(/[1-9]/)||[])[0]===n&&String(c.name).trim().toLocaleLowerCase('pt-BR')===l.toLocaleLowerCase('pt-BR'));
+ return hits.length===1?hits[0].id:'';
+}
 const lastEnrollClass=()=>{const id=prefGet('presenca-ultima-turma');return state.classes.some(c=>c.id===id&&c.active)?id:'';};
 const strongPassword=p=>String(p||'').length>=10&&/[A-Za-z]/.test(p)&&/[0-9]/.test(p);
 const reasonField='<label>Justificativa<textarea name="reason" minlength="5" maxlength="500" required></textarea></label>';
 const save='<button class="primary" type="submit">Salvar</button>';
-async function reasonAction(title,action,args){openModal(title,`<form>${reasonField}${save}</form>`,d=>write(action,{...args,reason:d.reason}));}
+const actionNotices={undo:'Registro desfeito.',correct:'Registro anulado. Ele não conta mais.',forgive:'Atraso perdoado. Ele não conta mais no limite.',chance:'Nova chance concedida: o limite do aluno subiu 1.',archive:'Aluno arquivado.',restore:'Aluno restaurado.',approve:'Matrícula validada.',reset_student:'Novo período iniciado para o aluno.'};
+async function reasonAction(title,action,args){openModal(title,`<form>${reasonField}${save}</form>`,async d=>{const r=await write(action,{...args,reason:d.reason});return {...(r&&typeof r==='object'?r:{}),notice:actionNotices[action]||'Alterações salvas.'};});}
 function auth(next='login'){
  authMode=next;$('authView').hidden=false;$('dashboard').hidden=true;
  const signup=next==='signup',reset=next==='reset',recover=next==='recover';
@@ -530,7 +539,7 @@ async function route(){void flushQueue();renderTestBanner();const p=location.has
 // ---------- Período de testes (datas em config.js) ----------
 // Antes: aviso de quando começa. Durante: faixa com o dia do teste e "Relatar problema"; erros técnicos vão sozinhos para a Direção.
 // Depois do último dia, a faixa e o envio automático somem sem precisar mexer no código.
-const APP_VERSION='5.3.0';
+const APP_VERSION='5.3.1';
 function testPeriod(now=new Date()){
  if(!TEST_PERIOD?.start||!TEST_PERIOD?.end)return {state:'off'};
  const start=new Date(TEST_PERIOD.start+'T00:00:00'),end=new Date(TEST_PERIOD.end+'T23:59:59');
@@ -597,7 +606,7 @@ let testFilter='aberto';
 function renderTests(data){
  if(!data)return setupCard('Os relatos do período de testes (e os erros registrados sozinhos) ficam disponíveis depois dela.');
  const t=testPeriod(),rows=data.rows||[];
- const head=`<section class="approval-summary" aria-label="Resumo dos relatos"><div class="tile"><strong>${Number(data.open)||0}</strong><span>em aberto</span></div><div class="tile"><strong>${Number(data.resolved)||0}</strong><span>resolvidos</span></div><div class="tile"><strong>${Number(data.auto)||0}</strong><span>erros automáticos</span></div></section>`;
+ const head=`<section class="approval-summary" aria-label="Resumo dos relatos"><div class="tile"><strong>${Number(data.open)||0}</strong><span>em aberto</span></div><div class="tile"><strong>${Number(data.resolved)||0}</strong><span>${Number(data.resolved)===1?'resolvido':'resolvidos'}</span></div><div class="tile"><strong>${Number(data.auto)||0}</strong><span>${Number(data.auto)===1?'erro automático':'erros automáticos'}</span></div></section>`;
  const period=`<p class="context-note">${uiIcon('calendar')}<span>${t.state==='durante'?`Hoje é o dia ${t.day} de ${t.total} do período de testes (até ${t.endLabel}).`:t.state==='antes'?`O período de testes vai de ${t.startLabel} a ${t.endLabel}.`:'O período de testes terminou. Os relatos continuam aqui para consulta.'}</span></p>`;
  const chips=[['aberto','Em aberto'],['resolvido','Resolvidos'],['','Todos']].map(([v,l])=>`<button type="button" class="chip ${testFilter===v?'active':''}" data-action="tests-filter" data-id="${v}" aria-pressed="${testFilter===v}">${l}</button>`).join('');
  const card=r=>`<article class="report-card kind-${esc(r.kind)} ${r.status==='resolvido'?'is-done':''}"><div class="report-card-head"><span class="pill ${r.kind==='automatico'?'block':r.kind==='sugestao'?'ok':'warn'}">${feedbackKinds[r.kind]||esc(r.kind)}</span>${r.occurrences>1?`<span class="pill">${r.occurrences}× seguidas</span>`:''}<small>${dateBR(r.created_at)}</small></div><p class="report-message">${esc(r.message)}</p><dl class="report-meta"><div><dt>Quem</dt><dd>${esc(r.full_name)} · ${roleName(r.role)}</dd></div><div><dt>Tela</dt><dd>${esc(pageName(r.page))}</dd></div><div><dt>Aparelho</dt><dd>${esc(r.device||'—')}</dd></div><div><dt>Versão</dt><dd>${esc(r.version||'—')}</dd></div></dl><div class="report-actions">${r.status==='resolvido'?button('Reabrir','tests-reopen',String(r.id)):button('Marcar como resolvido','tests-resolve',String(r.id),'primary')}</div></article>`;
@@ -774,7 +783,7 @@ function bindReportForm(){
     if(offset>10000)throw Error('Relatório muito grande. Escolha uma turma, série ou período menor.');
    }
    if(!records.length)return {notice:'Nenhum registro encontrado com esses filtros. Nenhum arquivo foi criado.'};
-   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.3.0');
+   const {saveInstitutionalWorkbook}=await import('./report-xlsx.js?v=5.3.1');
    const statusLabel=args.kind==='history'?(reportStatusLabels[args.status]||'Todas'):(reportScopeLabels[args.kind==='enrollments'?'enrollments':'students'][args.scope]||'Todas');
    saveInstitutionalWorkbook(args.kind,records,{grade:args.grade,className:chosenClass?.name||'',from:args.from,to:args.to,status:args.status,scope:args.scope,statusLabel});
    return {notice:`Planilha baixada com ${records.length} ${records.length===1?'registro':'registros'}.`};
@@ -940,7 +949,7 @@ if(a==='students-tab'){renewalView=false;studentsTab=['list','enrollments','clas
 if(a==='history-prev'||a==='history-next'){state.offset=Math.max(0,state.offset+(a==='history-next'?historyPageSize:-historyPageSize));await render();return;}
 if(a==='prev'||a==='next'){state.offset=Math.max(0,state.offset+(a==='next'?25:-25));await render();return;}
 if(a==='open-reports'){reportFilter={kind:state.page==='history'?'history':state.page==='enrollments'||state.page==='students'&&studentsTab==='enrollments'?'enrollments':'students',class:state.page==='history'?historyFilter.class||'':state.page==='students'?studentsFilter.class||'':'',grade:''};location.hash='/reports';return;}
-if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.3.0');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
+if(a==='tico-play'){ticoPlay();return;}if(a==='queue-flush'){await flushQueue();return;}if(a==='calendar-remove'){const [from,to]=String(id).split('|');await run(async()=>{const r=await rpc('calendar_manage',{p_action:'remove',p_args:{from,to}});return {notice:`${r?.removed||0} ${r?.removed===1?'dia removido':'dias removidos'} do calendário.`};});return;}if(a==='reload-page'){location.reload();return;}if(a==='export-report'){if(!staff()||state.page!=='reports'||!state.report)throw Error('Relatório disponível apenas para a equipe institucional.');await run(async()=>{const {saveReportWorkbook}=await import('./report-xlsx.js?v=5.3.1');saveReportWorkbook(state.report);return {notice:'Resumo agregado exportado.'};},false);return;}
 if(a==='privacy-notice'){const policy=await read('settings');openModal('Privacidade da escola',`<p class="prewrap">${esc(policy.privacy_notice)}</p><p>Responsável: ${esc(policy.controller||'Consulte a secretaria')}</p><p>Contato: ${esc(policy.privacy_contact||'Consulte a secretaria')}</p><p class="prewrap">${esc(policy.retention_policy)}</p>`);return;}
 if(a==='retry'){await render();return;}
 if(a==='history-actions'){
@@ -962,9 +971,9 @@ if(a==='class-new'||a==='class-edit'){if(!admin()||state.page!=='students'||!['c
 if(a==='enrollment-new'||a==='enrollment-edit'||a==='enrollment-from-application'){
  const application=a==='enrollment-from-application'?signupApplications.find(p=>p.id===id):null;
  if(a==='enrollment-from-application'&&!application)throw Error('Ficha não encontrada. Atualize a página.');
- const r=application?{full_name:application.full_name,ra:application.ra,email:application.ra+'@al.educacao.sp.gov.br',birth_date:application.birth_date||'',class_id:state.classes.find(c=>c.grade+' • '+c.name===application.grade)?.id||''}:row||{};
+ const r=application?{full_name:application.full_name,ra:application.ra,email:application.ra+'@al.educacao.sp.gov.br',birth_date:application.birth_date||'',class_id:guessClass(application.grade)}:row||{};
  const editing=a==='enrollment-edit';
- openModal(editing?'Editar matrícula':application&&state.page==='approvals'?'Aceitar aluno':'Cadastrar matrícula escolar',`<form><p class="hint">${application?'Os dados abaixo foram informados pelo aluno e não foram conferidos. Compare com a matrícula oficial antes de salvar.':'Informe os dados oficiais. O e-mail escolar é sugerido automaticamente a partir do RA.'}</p><div class="form-grid">${field('Nome completo','name','text',r.full_name||'','maxlength="120"')}${field('RA','ra','text',r.ra||'','inputmode="text" autocomplete="off" placeholder="Ex.: 000123456789sp"')}<label>E-mail escolar <small class="muted">(preenchido pelo RA)</small><input name="email" type="email" value="${esc(r.email||'')}" readonly tabindex="-1" class="auto-field"></label>${field('Data de nascimento','birth','date',r.birth_date||'')}<div class="enrollment-class-picker"><label>Série e turma<select id="enrollmentClassSelect" name="class" required>${classesOptions(r.class_id||(editing?'':lastEnrollClass()),false)}</select></label>${admin()?'<button id="inlineClassToggle" class="outline" type="button" aria-controls="inlineClassForm" aria-expanded="false">+ Criar turma</button>':''}</div>${editing?`<label>Situação<select name="active"><option value="true">Ativa</option><option value="false" ${r.active===false?'selected':''}>Inativa</option></select></label>`:'<input type="hidden" name="active" value="true">'}</div><div class="modal-actions">${editing?save:`<button class="primary" type="submit">Salvar</button><button class="outline" type="submit" data-again="1">Salvar e cadastrar o próximo</button>`}</div></form>${admin()?`<form id="inlineClassForm" class="inline-class-form" hidden><h3>Nova série e turma</h3><p class="muted">Cadastre a turma sem perder os dados do aluno. Ela será selecionada automaticamente.</p><label>Série / ano<input name="grade" maxlength="70" required placeholder="Ex.: 3º ano do Ensino Médio"></label><label>Turma<input name="name" maxlength="20" required placeholder="Ex.: A"></label><div class="toolbar"><button type="submit" class="primary">Salvar turma</button><button id="inlineClassCancel" type="button" class="outline">Cancelar</button></div></form>`:''}`,async (d,submitter)=>{
+ openModal(editing?'Editar matrícula':application&&state.page==='approvals'?'Aceitar aluno':'Cadastrar matrícula escolar',`<form><p class="hint">${application?'Os dados abaixo foram informados pelo aluno e não foram conferidos. Compare com a matrícula oficial antes de salvar.':'Informe os dados oficiais. O e-mail escolar é sugerido automaticamente a partir do RA.'}</p><div class="form-grid">${field('Nome completo','name','text',r.full_name||'','maxlength="120"')}${field('RA','ra','text',r.ra||'','inputmode="text" autocomplete="off" placeholder="Ex.: 000123456789sp"')}<label>E-mail escolar <small class="muted">(preenchido pelo RA)</small><input name="email" type="email" value="${esc(r.email||'')}" readonly tabindex="-1" class="auto-field"></label>${field('Data de nascimento','birth','date',r.birth_date||'')}<div class="enrollment-class-picker"><label>Série e turma<select id="enrollmentClassSelect" name="class" required>${classesOptions(r.class_id||(editing?'':lastEnrollClass()),false)}</select></label>${admin()?'<button id="inlineClassToggle" class="outline" type="button" aria-controls="inlineClassForm" aria-expanded="false">+ Criar turma</button>':''}</div>${editing?`<label>Situação<select name="active"><option value="true">Ativa</option><option value="false" ${r.active===false?'selected':''}>Inativa</option></select></label>`:'<input type="hidden" name="active" value="true">'}</div><div class="modal-actions">${editing||application?save:`<button class="primary" type="submit">Salvar</button><button class="outline" type="submit" data-again="1">Salvar e cadastrar o próximo</button>`}</div></form>${admin()?`<form id="inlineClassForm" class="inline-class-form" hidden><h3>Nova série e turma</h3><p class="muted">Cadastre a turma sem perder os dados do aluno. Ela será selecionada automaticamente.</p><label>Série / ano<input name="grade" maxlength="70" required placeholder="Ex.: 3º ano do Ensino Médio"></label><label>Turma<input name="name" maxlength="20" required placeholder="Ex.: A"></label><div class="toolbar"><button type="submit" class="primary">Salvar turma</button><button id="inlineClassCancel" type="button" class="outline">Cancelar</button></div></form>`:''}`,async (d,submitter)=>{
   d.name=String(d.name||'').trim().replace(/\s+/g,' ');d.ra=normalizeRA(d.ra);d.email=d.ra+'@al.educacao.sp.gov.br';
   if(d.name.length<3)throw Error('Informe o nome completo do aluno.');
   if(!/^[0-9]{7,16}(sp)?$/.test(d.ra))throw Error('RA inválido. Use só os números do RA (7 a 16), com ou sem "sp" no final.');
